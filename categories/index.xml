@@ -2,84 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Cyber Security Blog</title>
-    <link>https://Barcode91.github.io/categories/</link>
+    <link>https://barcode91.github.io/categories/</link>
     <description>Recent content in Categories on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Mon, 24 Aug 2020 15:06:40 +0300</lastBuildDate>
+    <lastBuildDate>Mon, 24 Aug 2020 19:41:25 +0300</lastBuildDate>
     
-	<atom:link href="https://Barcode91.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://barcode91.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>cyber-security</title>
-      <link>https://Barcode91.github.io/categories/cyber-security/</link>
-      <pubDate>Mon, 24 Aug 2020 15:06:40 +0300</pubDate>
-      
-      <guid>https://Barcode91.github.io/categories/cyber-security/</guid>
-      <description></description>
-    </item>
     
     <item>
-      <title>write-up</title>
-      <link>https://Barcode91.github.io/categories/write-up/</link>
-      <pubDate>Mon, 24 Aug 2020 15:06:40 +0300</pubDate>
+      <title>genel</title>
+      <link>https://barcode91.github.io/categories/genel/</link>
+      <pubDate>Mon, 24 Aug 2020 19:41:25 +0300</pubDate>
       
-      <guid>https://Barcode91.github.io/categories/write-up/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>network</title>
-      <link>https://Barcode91.github.io/categories/network/</link>
-      <pubDate>Sun, 23 Aug 2020 17:52:13 +0300</pubDate>
-      
-      <guid>https://Barcode91.github.io/categories/network/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Hugo</title>
-      <link>https://Barcode91.github.io/categories/hugo/</link>
-      <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://Barcode91.github.io/categories/hugo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Development</title>
-      <link>https://Barcode91.github.io/categories/development/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://Barcode91.github.io/categories/development/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Go</title>
-      <link>https://Barcode91.github.io/categories/go/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://Barcode91.github.io/categories/go/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>golang</title>
-      <link>https://Barcode91.github.io/categories/golang/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://Barcode91.github.io/categories/golang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Jekyll</title>
-      <link>https://Barcode91.github.io/categories/jekyll/</link>
-      <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://Barcode91.github.io/categories/jekyll/</guid>
+      <guid>https://barcode91.github.io/categories/genel/</guid>
       <description></description>
     </item>
     

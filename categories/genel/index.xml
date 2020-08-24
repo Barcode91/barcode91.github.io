@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Cyber Security Blog</title>
-    <link>https://barcode91.github.io/</link>
-    <description>Recent content on Cyber Security Blog</description>
+    <title>genel on Cyber Security Blog</title>
+    <link>https://barcode91.github.io/categories/genel/</link>
+    <description>Recent content in genel on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
     <lastBuildDate>Mon, 24 Aug 2020 19:41:25 +0300</lastBuildDate>
     
-	<atom:link href="https://barcode91.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://barcode91.github.io/categories/genel/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,17 +20,6 @@
       <description>Kısa bir giriş Bilginin paylaştıkça çoğaldığına inanırım. Ayrıca Yunus Emre&amp;rsquo;nin güzel sözünüde hatırlamak gerekir; &amp;ldquo;Bölüşürsek tok oluruz, bölünürsek yok oluruz&amp;rdquo;. Hal böyle iken edindiğim bilgileri siz değerli insalarla paylaşmayı kendime bir vazife belledim.
 Blogumda siber güvenlik, network, bulut bilişim teknolojilerine dair bilgiler paylaşacağım.
  Siber güvenlik alanında hackthebox, tryhackme, priviahub vb. platformlarda yer alan zafiyetli makinalar ile challenge çözümleri Network alanında router, switch yapılandırmaları, network trafiğinin monitör edilmesi için kullanılan araçlar ve kurulumları gibi konular Bulut Bilişim alanında ise docker, kubernets, openvswitch vb.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://barcode91.github.io/about/</link>
-      <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://barcode91.github.io/about/</guid>
-      <description>Sayılı nefeslerini tüketen bir ademogluyum. Kendimi tamam etmek için maddi ve manevi olarak gayret etmekteyim. Bir üniversite de bilgisayar mühendisliği son sınıf öğrencisiyim. Çeşitli alanlarda projeler geliştirdim. Bu aralar siber güvenlik ile ilgileniyorum.
-Ben gibi blogumunda gelişimi devam etmektedir.
-    </description>
     </item>
     
   </channel>

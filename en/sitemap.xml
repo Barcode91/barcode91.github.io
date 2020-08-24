@@ -3,197 +3,73 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://Barcode91.github.io/posts/2014/09/creating-a-new-theme/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2014/03/migrate-to-hugo-from-jekyll/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2014/03/migrate-to-hugo-from-jekyll/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/categories/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
+    <loc>https://barcode91.github.io/categories/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
-                href="https://Barcode91.github.io/tr/categories/"
+                href="https://barcode91.github.io/tr/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Barcode91.github.io/categories/"
+                href="https://barcode91.github.io/categories/"
                 />
   </url>
   
   <url>
-    <loc>https://Barcode91.github.io/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
+    <loc>https://barcode91.github.io/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
-                href="https://Barcode91.github.io/tr/"
+                href="https://barcode91.github.io/tr/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Barcode91.github.io/"
+                href="https://barcode91.github.io/"
                 />
   </url>
   
   <url>
-    <loc>https://Barcode91.github.io/categories/cyber-security/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
+    <loc>https://barcode91.github.io/tags/genel/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://Barcode91.github.io/posts/2020/08/mehmet/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
+    <loc>https://barcode91.github.io/categories/genel/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://Barcode91.github.io/posts/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
+    <loc>https://barcode91.github.io/posts/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://Barcode91.github.io/categories/write-up/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/development/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2020/08/first-post/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/network/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/categories/network/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/oscp/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
+    <loc>https://barcode91.github.io/tags/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
-                href="https://Barcode91.github.io/tr/tags/"
+                href="https://barcode91.github.io/tr/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Barcode91.github.io/tags/"
+                href="https://barcode91.github.io/tags/"
                 />
   </url>
   
   <url>
-    <loc>https://Barcode91.github.io/posts/2014/09/cr%C3%A9ation-dun-nouveau-th%C3%A8me/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
+    <loc>https://barcode91.github.io/posts/2020/08/touch-first/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://Barcode91.github.io/categories/hugo/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/about/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2014/04/hugo-template-primer/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/categories/development/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2014/04/d%C3%A9buter-avec-hugo/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2014/04/getting-started-with-hugo/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/categories/go/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/go/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/golang/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/categories/golang/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/hugo/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2014/04/introduction-aux-mod%C3%A8les-hugo/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/templates/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/themes/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/categories/jekyll/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/posts/2014/03/migrer-vers-hugo-depuis-jekyll/</loc>
-    <lastmod>2020-08-24T17:10:51+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://Barcode91.github.io/tags/tcp/ip/</loc>
+    <loc>https://barcode91.github.io/about/</loc>
+    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
   </url>
   
 </urlset>
