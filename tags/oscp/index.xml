@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>oscp on Cyber Security Blog</title>
+    <link>https://Barcode91.github.io/tags/oscp/</link>
+    <description>Recent content in oscp on Cyber Security Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>tr</language>
+    <lastBuildDate>Sun, 23 Aug 2020 17:52:13 +0300</lastBuildDate>
+    
+	<atom:link href="https://Barcode91.github.io/tags/oscp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>First Post</title>
+      <link>https://Barcode91.github.io/posts/2020/08/first-post/</link>
+      <pubDate>Sun, 23 Aug 2020 17:52:13 +0300</pubDate>
+      
+      <guid>https://Barcode91.github.io/posts/2020/08/first-post/</guid>
+      <description>denemedir asdasdasd</description>
+    </item>
+    
+  </channel>
+</rss>
