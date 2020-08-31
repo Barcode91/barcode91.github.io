@@ -5,8 +5,40 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Mon, 24 Aug 2020 19:41:25 +0300</lastBuildDate>
+        <lastBuildDate>Mon, 31 Aug 2020 22:53:43 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>$Tmux Notları</title>
+            <link>https://barcode91.github.io/posts/2020/08/tmux-notlar%C4%B1/</link>
+            <pubDate>Mon, 31 Aug 2020 22:53:43 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/08/tmux-notlar%C4%B1/</guid>
+            <description>Tmux -&amp;gt; Terminal Multiplexer
+Tmux bir terminal çoklayıcıdır. Bir terminal ekranında birden fazla pencere ve bu pencere içerisinde biden fazla bölme oluşturulabilmektedir. Terminal üzerinde çalışanlar için oldukça bir araçtır.
+Kurulum #Debian, Ubuntu ve Türevleri için Kurulum Komutları $ sudo apt-get install tmux #Centos Kurulum Komutları $ yum -y install tmux Çalıştırma ve Kullanım #Tmux çalıştırılması $tmux Tmux çeşitli tuş kombinasyonları ile kullanılmaktadır. Komutlar prefix key tuşuna basıldıktan sonra girilmektedir.
+Prefix Key =&amp;gt; Crtl+B Tuşlara aynı anda basılır ve bırakılır daha sonra diğer tuşlara basılır.</description>
+            <content type="html"><![CDATA[<p><em>Tmux -&gt; Terminal Multiplexer</em></p>
+<p>Tmux bir terminal çoklayıcıdır. Bir terminal ekranında birden fazla pencere ve bu pencere içerisinde biden fazla bölme oluşturulabilmektedir. Terminal üzerinde çalışanlar için oldukça bir araçtır.</p>
+<h2 id="kurulum">Kurulum</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#Debian, Ubuntu ve Türevleri için Kurulum Komutları</span>
+    $ sudo apt-get install tmux
+
+    <span style="color:#75715e">#Centos Kurulum Komutları</span>
+    $ yum -y install tmux
+</code></pre></div><h2 id="çalıştırma-ve-kullanım">Çalıştırma ve Kullanım</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#Tmux çalıştırılması</span>
+    $tmux
+</code></pre></div><p>Tmux çeşitli tuş kombinasyonları ile kullanılmaktadır. Komutlar prefix key tuşuna basıldıktan sonra girilmektedir.</p>
+<p><strong>Prefix Key =&gt; Crtl+B</strong>  Tuşlara aynı anda basılır ve bırakılır daha sonra diğer tuşlara basılır.</p>
+<p>Ctrl+B Tuş Kombinasyonundan sonra kullanılan tuşlar;</p>
+<pre><code class="language-tmux" data-lang="tmux">    % pencereleri dikey olarak böler
+    &quot; pencereleri yatay olarak böler 
+    &lt;Yön Tuşları&gt; pencereler arası gezinti
+</code></pre><h2 id="pencerelerin-kapatılması">Pencerelerin Kapatılması</h2>
+<p>Aktif pencere de <strong><em>$ exit</em></strong> komutu yazılarak yada <strong><em>Ctrl+D</em></strong> tuş kombinasyonu kullanılarak bölme kapatılır.</p>
+]]></content>
+        </item>
         
         <item>
             <title>$touch First</title>
@@ -25,7 +57,7 @@ Blogumda siber güvenlik, network, bulut bilişim teknolojilerine dair bilgiler 
 <li>Network alanında router, switch yapılandırmaları, network trafiğinin monitör edilmesi için kullanılan araçlar ve kurulumları gibi konular</li>
 <li>Bulut Bilişim alanında ise docker, kubernets, openvswitch vb. konular</li>
 </ul>
-<p><strong>Sürçi lisan ise affola&hellip;</strong></p>
+<p><strong>Sürçi lisan ettik ise affola&hellip;</strong></p>
 ]]></content>
         </item>
         

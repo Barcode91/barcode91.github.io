@@ -3,13 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://barcode91.github.io/posts/2020/08/touch-first/</loc>
-    <lastmod>2020-08-24T21:19:18+03:00</lastmod>
+    <loc>https://barcode91.github.io/posts/2020/08/tmux-notlar%C4%B1/</loc>
+    <lastmod>2020-08-31T22:53:43+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/categories/</loc>
-    <lastmod>2020-08-24T21:19:18+03:00</lastmod>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -24,7 +24,7 @@
   
   <url>
     <loc>https://barcode91.github.io/</loc>
-    <lastmod>2020-08-24T21:19:18+03:00</lastmod>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -38,23 +38,18 @@
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/tags/genel/</loc>
-    <lastmod>2020-08-24T21:19:18+03:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://barcode91.github.io/categories/genel/</loc>
-    <lastmod>2020-08-24T21:19:18+03:00</lastmod>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/posts/</loc>
-    <lastmod>2020-08-24T21:19:18+03:00</lastmod>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/tags/</loc>
-    <lastmod>2020-08-24T21:19:18+03:00</lastmod>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -68,8 +63,23 @@
   </url>
   
   <url>
+    <loc>https://barcode91.github.io/tags/tmux/</loc>
+    <lastmod>2020-08-31T22:53:43+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/posts/2020/08/touch-first/</loc>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/genel/</loc>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://barcode91.github.io/about/</loc>
-    <lastmod>2020-08-24T20:13:09+03:00</lastmod>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
   </url>
   
 </urlset>
