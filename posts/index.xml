@@ -37,6 +37,15 @@ Prefix Key =&amp;gt; Crtl+B Tuşlara aynı anda basılır ve bırakılır daha s
     &lt;Yön Tuşları&gt; pencereler arası gezinti
 </code></pre><h2 id="pencerelerin-kapatılması">Pencerelerin Kapatılması</h2>
 <p>Aktif pencere de <strong><em>$ exit</em></strong> komutu yazılarak yada <strong><em>Ctrl+D</em></strong> tuş kombinasyonu kullanılarak bölme kapatılır.</p>
+<h2 id="pencere-yönetimi">Pencere Yönetimi</h2>
+<p>Ctrl+B Tuş Kombinasyonundan sonra</p>
+<pre><code class="language-tmux" data-lang="tmux">
+    c Yeni pencere açar
+    p Bir önceki pencere
+    n Bir sonraki pencere
+    x Pencereyi kapat (y/n)
+
+</code></pre><p>Daha fazlası için <strong><em>$man tmux</em></strong></p>
 ]]></content>
         </item>
         
