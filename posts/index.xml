@@ -5,8 +5,175 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Mon, 31 Aug 2020 22:53:43 +0300</lastBuildDate>
+        <lastBuildDate>Sat, 12 Sep 2020 20:53:26 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>THM Tartarus Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</link>
+            <pubDate>Sat, 12 Sep 2020 20:53:26 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</guid>
+            <description>Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
+Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.</description>
+            <content type="html"><![CDATA[
+    <img src="/images/thm/tartarus/Screenshot_2020-08-28_13-45-54.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...
+</div>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC 10.10.236.165 
+</code></pre></div>
+    <img src="/images/thm/tartarus/nmap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.</p>
+
+    <img src="/images/thm/tartarus/webpage.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://10.10.236.165 -w /usr/share/wordlists/dirb/common.txt 
+</code></pre></div>
+    <img src="/images/thm/tartarus/gobuster.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Gobuster sonucunda robots.txt dosyası dikkat çekmektedir. Robots.txt, arama motoru örümcekleri sitenizin hangi bölümlerini dizine ekleyebileceğini, hangi dizini taraması gerektiğini, hangi arama motoru yazılımının giriş izni olduğunu veya olmadığını söylemeye yarayan basit bir komut dosyasıdır. Dosya içeriği okunur.
+</div>
+
+    <img src="/images/thm/tartarus/robots.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>
+
+<div style="text-align:justify;">
+Arama motorları tarafından indexlenmesi engellenen <i>/admin-dir</i> dizine giriş yapılır. Dizinde muhtemel kullanıcı adı ve parola listeleri yer almaktadır. Listeler indirilir.  Ftp servisinde anonim olarak erişime açık olan test.txt dosyası incelenir.
+</div>
+
+    <img src="/images/thm/tartarus/cat.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+<p>ftp dizininde dolaşılarak araştırmaya devam edilir. <strong>{&hellip;}</strong> dizini dikkat çekmektedir. Dizin içerisindeki <strong><em>yougotgoodeyes.txt</em></strong> isimli dosya indirilir ve içeriği okunur.</p>
+
+    <img src="/images/thm/tartarus/ftpd.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>İçerisinde bir dizin adı yer almaktadır.</p>
+<p>
+    <img src="/images/thm/tartarus/secretdir.png"  alt="Hello Friend"  class="left"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Tarayıdan giriş yapıldığında bir login ekranı çıkmaktadır. Elde edilen bilgiler ile burpsuite aracı kullanılarak kaba kuvvet saldırısı yapılır. 
+
+iki adet parametre ve iki ayrı liste olduğundan intruder -> Payload Options -> Cluster Bomb seçilerek kaba kuvvet saldırısı için ayarlamalar yapılır. Ayrıntılı bilgi için aşağıdaki linke bakılabilir.
+</div>
+<strong><em><a href="https://portswigger.net/support/using-burp-to-brute-force-a-login-page">https://portswigger.net/support/using-burp-to-brute-force-a-login-page</a></em></strong></p>
+<p>Username ve Password parametleri işaretlenir.</p>
+
+    <img src="/images/thm/tartarus/burp1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Username ve Password parametleri için denenecek verilerin olduğu listeler yüklenir.</p>
+
+    <img src="/images/thm/tartarus/username.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+    <img src="/images/thm/tartarus/passwd.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Saldırı sonucunda kullanıcı adı ve parola bilgisi elde edilir.</p>
+
+    <img src="/images/thm/tartarus/result.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Elde edilen oturum bilgileri ile giriş yapılır. Dosya yükleme sayfası gelmektedir. Reverse shell almak için bir <a href="https://github.com/pentestmonkey/php-reverse-shell">php</a> sayfası upload edilir.</p>
+
+    <img src="/images/thm/tartarus/upload.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Gobuster aracı ile <i style="color:yellow">/sUp3r-s3cr3t</i>  dizini altında dosyanın upload edildiği yeri bulmak için dizin taraması yapılır. Tarama sonucunda image dizini tespit edilir. Bu dizin içerisinde de yükleninen php dosyası bulunmamaktadır. <i style="color:yellow">/sUp3r-s3cr3t/images</i> dizini altında da tarama yapılır ve uploads dizini tespit edilir. 
+</div>
+
+    <img src="/images/thm/tartarus/upload2.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>
+
+<div style="text-align:justify;">
+Localhosttan netcat ile 4444 portu dinlenmeye başlanır. Daha sonra http://10.10.236.156/sUp3r-s3cr3t/images/uploads/reverse.php adresine gidilir ve terminal bağlantısı sağlanır.
+</div>
+
+    <img src="/images/thm/tartarus/ncat.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+<p>Düşük kullanıcı ile shell alındığından user.txt dosyasını okumak için yetki yükselmek gereklidir.
+<code>sudo -l </code> komutu girilir.</p>
+
+    <img src="/images/thm/tartarus/nc2.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+<strong> Thirtytwo </strong> adlı kullanıcı için <i> var/www/gbd</i> uygulaması parola gerektirmeden çalıştırılabildiği tespit edilmektedir. Aşağıda yer alan komut ile kullanıcı bağlanır ve gdb istismar edilerek  thirtytwo kullanıcısına giriş yapılır.
+</div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo -u thirtytwo /var/www/gdb -nx -ex <span style="color:#e6db74">&#39;!sh&#39;</span> -ex quit
+</code></pre></div>
+    <img src="/images/thm/tartarus/32.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Python pty modülü kullanılarak interaktif shelle geçilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">python <span style="color:#f92672">-</span>c <span style="color:#e6db74">&#39;import pty; pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
+</code></pre></div><p>Home dizininde yer alan diğer kullanıcı dizininde yer alan user.txt dosyası okunur.</p>
+
+    <img src="/images/thm/tartarus/user.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Yetki yükseltme aşamasında crontab da zamanlanmış görevlere bakıldığında root yetkisi ile cleanup.py dosyasının her iki dakikada bir çalıştırıldığı görülmektedir.</p>
+
+    <img src="/images/thm/tartarus/crontab.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Dosyanın yetkilerine bakıldığında içeriğinin değiştirilebileceği görülmektedir.</p>
+
+    <img src="/images/thm/tartarus/ls.png"  alt="Hello Friend"  class="left"  style="border-radius: 10px;"  />
+
+
+<p>Cleanup.py dosyasının içeriği aşağıdaki gibi değiştirilir.</p>
+
+    <img src="/images/thm/tartarus/pri.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Netcat ile 5555 numaralı port dinlenir. Zamanlanmış görev çalıştığında root yetkisi ile reverse shell bağlantısı sağlanmış olur.</p>
+
+    <img src="/images/thm/tartarus/reverse.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Root dizini altında yer alan root.txt dosyası okunurak makina tamamlanır.
+
+    <img src="/images/thm/tartarus/root.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+]]></content>
+        </item>
         
         <item>
             <title>$Tmux Notları</title>

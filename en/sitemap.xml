@@ -3,13 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://barcode91.github.io/posts/2020/08/tmux-notlar%C4%B1/</loc>
-    <lastmod>2020-08-31T22:53:43+03:00</lastmod>
+    <loc>https://barcode91.github.io/tags/burpsuite/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/categories/</loc>
-    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -23,8 +23,13 @@
   </url>
   
   <url>
+    <loc>https://barcode91.github.io/tags/crontab/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://barcode91.github.io/</loc>
-    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -38,18 +43,28 @@
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/categories/genel/</loc>
-    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
+    <loc>https://barcode91.github.io/tags/gobuster/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/nmap/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/posts/</loc>
-    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/sudo/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/tags/</loc>
-    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -60,6 +75,36 @@
                 hreflang="en"
                 href="https://barcode91.github.io/tags/"
                 />
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/tryhackme/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/categories/write-up/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/write-up/</loc>
+    <lastmod>2020-09-13T00:43:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/posts/2020/08/tmux-notlar%C4%B1/</loc>
+    <lastmod>2020-08-31T22:53:43+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/categories/genel/</loc>
+    <lastmod>2020-08-31T23:43:12+03:00</lastmod>
   </url>
   
   <url>

@@ -6,10 +6,21 @@
     <description>Recent content on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Mon, 31 Aug 2020 22:53:43 +0300</lastBuildDate>
+    <lastBuildDate>Sat, 12 Sep 2020 20:53:26 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>THM Tartarus Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</link>
+      <pubDate>Sat, 12 Sep 2020 20:53:26 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</guid>
+      <description>Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
+Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.</description>
+    </item>
     
     <item>
       <title>$Tmux Notları</title>
