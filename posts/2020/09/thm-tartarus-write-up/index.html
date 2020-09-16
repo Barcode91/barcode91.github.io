@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="Barcode">
-<meta name="description" content="Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.
+<meta name="description" content="Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
 sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
 Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır." />
 <meta name="keywords" content=", Tryhackme, write-up, gobuster, nmap, sudo, crontab, burpsuite" />
@@ -48,11 +48,9 @@ Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanıl
 
 
 <meta itemprop="name" content="THM Tartarus Write Up">
-<meta itemprop="description" content="Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.
-sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
-Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.">
+<meta itemprop="description" content="Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...">
 <meta itemprop="datePublished" content="2020-09-12T20:53:26+03:00" />
-<meta itemprop="dateModified" content="2020-09-13T00:43:46+03:00" />
+<meta itemprop="dateModified" content="2020-09-16T12:04:56+03:00" />
 <meta itemprop="wordCount" content="458">
 <meta itemprop="image" content="https://barcode91.github.io"/>
 
@@ -64,9 +62,7 @@ Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanıl
 <meta name="twitter:image" content="https://barcode91.github.io"/>
 
 <meta name="twitter:title" content="THM Tartarus Write Up"/>
-<meta name="twitter:description" content="Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.
-sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
-Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır."/>
+<meta name="twitter:description" content="Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar..."/>
 
 
 
@@ -94,6 +90,8 @@ Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanıl
     span.headwidth{
      width: 860px;
     }
+
+
 </style>
 <header class="header">
     <span class="header__inner headwidth">
@@ -140,6 +138,12 @@ Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanıl
 
             <div class="content">
                 
+<style>
+  .center.cover {
+    border-radius: 10px;
+    margin: auto;
+  }
+</style>
   <main class="post">
 
     <div class="post-info">
@@ -160,36 +164,32 @@ Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanıl
       </h1>
 
       
+        <img src="https://barcode91.github.io/images/thm/tartarus/Screenshot_2020-08-28_13-45-54.png" class="center cover" />
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-keşif-aşaması">1. Keşif Aşaması</a></li>
+    <li><a href="#2-erişim-sağlanması">2. Erişim Sağlanması</a></li>
+    <li><a href="#3-yetki-yükseltme">3. Yetki Yükseltme</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
 
-      <div class="post-content"><div id="TableOfContents">
-<ul>
-    
+      
 
-    
-    <li>
-      <a href="#1-ke%c5%9fif-a%c5%9famas%c4%b1">1. Keşif Aşaması</a>
-    
-
-    
-    </li><li>
-          <a href="#2-eri%c5%9fim-sa%c4%9flanmas%c4%b1">2. Erişim Sağlanması</a>
-    
-
-    
-    </li><li>
-          <a href="#3-yetki-y%c3%bckseltme">3. Yetki Yükseltme</a>
-  </li></ul>
-</div>
-    <img src="https://barcode91.github.io/images/thm/tartarus/Screenshot_2020-08-28_13-45-54.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
-
-
-
+      <div class="post-content">
+        
+        
 
 <div style="text-align:justify;">
 Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...
 </div>
 <h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
-<p>Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.</p>
+<p>Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC 10.10.236.165 
 </code></pre></div>
     <img src="https://barcode91.github.io/images/thm/tartarus/nmap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
@@ -474,6 +474,13 @@ Localhosttan netcat ile 4444 portu dinlenmeye başlanır. Daha sonra http://10.1
         </div>
 
         <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="https://barcode91.github.io/posts/2020/09/thm-cmess-write-up/">
+                <span class="button__icon">←</span>
+                <span class="button__text">THM CMess Write Up</span>
+              </a>
+            </span>
           
 
           

