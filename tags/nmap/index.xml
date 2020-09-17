@@ -6,10 +6,20 @@
     <description>Recent content in nmap on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Tue, 15 Sep 2020 20:03:12 +0300</lastBuildDate>
+    <lastBuildDate>Thu, 17 Sep 2020 20:40:54 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/nmap/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULNHUB KB VULN:1 Makinası Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/</link>
+      <pubDate>Thu, 17 Sep 2020 20:40:54 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</description>
+    </item>
     
     <item>
       <title>THM CMess Write Up</title>
