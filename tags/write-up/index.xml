@@ -6,10 +6,20 @@
     <description>Recent content in write-up on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Thu, 17 Sep 2020 20:40:54 +0300</lastBuildDate>
+    <lastBuildDate>Mon, 21 Sep 2020 22:53:05 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/write-up/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULN DevContainer-1 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/09/vuln-devcontainer-1-write-up/</link>
+      <pubDate>Mon, 21 Sep 2020 22:53:05 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/09/vuln-devcontainer-1-write-up/</guid>
+      <description>1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth1  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+Tarayıcı ile web servisine istek atılır. Açılan sayfa ve kaynak kodları incelendiğinde olağan dışı bir bilgiye görülmemektedir.  Gobuster aracı ile Web dizin taraması gerçekleştirilir.</description>
+    </item>
     
     <item>
       <title>VULNHUB KB VULN:1 Makinası Write Up</title>

