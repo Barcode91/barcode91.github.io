@@ -5,8 +5,9 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="Barcode">
-<meta name="description" content="1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth1  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
-Tarayıcı ile web servisine istek atılır. Açılan sayfa ve kaynak kodları incelendiğinde olağan dışı bir bilgiye görülmemektedir.  Gobuster aracı ile Web dizin taraması gerçekleştirilir." />
+<meta name="description" content="&amp;ldquo;Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;&amp;rdquo;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth1  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+Tarayıcı ile web servisine istek atılır." />
 <meta name="keywords" content=", Vulnhub, write-up, Docker, Container, sudo, lfi, burp suite" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="#252627" />
@@ -49,8 +50,8 @@ Tarayıcı ile web servisine istek atılır. Açılan sayfa ve kaynak kodları i
 <meta itemprop="name" content="VULN DevContainer-1 Write Up">
 <meta itemprop="description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/devcontainer-1,548/) &#39;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar...">
 <meta itemprop="datePublished" content="2020-09-21T22:53:05+03:00" />
-<meta itemprop="dateModified" content="2020-09-22T01:18:01+03:00" />
-<meta itemprop="wordCount" content="367">
+<meta itemprop="dateModified" content="2020-09-22T11:17:25+03:00" />
+<meta itemprop="wordCount" content="384">
 <meta itemprop="image" content="https://barcode91.github.io"/>
 
 
@@ -170,7 +171,8 @@ Tarayıcı ile web servisine istek atılır. Açılan sayfa ve kaynak kodları i
 
       <div class="post-content">
         
-        <h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+        <p>&ldquo;Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/devcontainer-1,548/">VULNHUB</a> &lsquo;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;&rdquo;</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
 
 
 <div style="text-align:justify;">
@@ -322,7 +324,7 @@ ls /home/richard/web/upload/files/ | wc -l &gt;&gt; /home/richard/web/Maintenanc
           <line x1="16" y1="17" x2="8" y2="17"></line>
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
-        367 Words
+        384 Words
       </p>
 
       <p>

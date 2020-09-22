@@ -14,9 +14,11 @@
             <pubDate>Mon, 21 Sep 2020 22:53:05 +0300</pubDate>
             
             <guid>https://barcode91.github.io/posts/2020/09/vuln-devcontainer-1-write-up/</guid>
-            <description>1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth1  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
-Tarayıcı ile web servisine istek atılır. Açılan sayfa ve kaynak kodları incelendiğinde olağan dışı bir bilgiye görülmemektedir.  Gobuster aracı ile Web dizin taraması gerçekleştirilir.</description>
-            <content type="html"><![CDATA[<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+            <description>&amp;ldquo;Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;&amp;rdquo;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth1  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+Tarayıcı ile web servisine istek atılır.</description>
+            <content type="html"><![CDATA[<p>&ldquo;Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/devcontainer-1,548/">VULNHUB</a> &lsquo;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;&rdquo;</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
 
 
 <div style="text-align:justify;">
