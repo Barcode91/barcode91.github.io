@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Write-up on Cyber Security Blog</title>
+    <title>write-up on Cyber Security Blog</title>
     <link>https://barcode91.github.io/categories/write-up/</link>
-    <description>Recent content in Write-up on Cyber Security Blog</description>
+    <description>Recent content in write-up on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Tue, 22 Sep 2020 20:59:33 +0300</lastBuildDate>
+    <lastBuildDate>Fri, 25 Sep 2020 20:01:07 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/categories/write-up/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULN KB VULN:2 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/09/vuln-kb-vuln2-write-up/</link>
+      <pubDate>Fri, 25 Sep 2020 20:01:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/09/vuln-kb-vuln2-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan KB-VULN: 2 adlı makinanın çözümünden bahsedeceğim. Makina için KernelBlog ekibine teşekkür ederim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</description>
+    </item>
     
     <item>
       <title>VULN FunBox-1 Write Up</title>

@@ -5,8 +5,109 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Tue, 22 Sep 2020 20:59:33 +0300</lastBuildDate>
+        <lastBuildDate>Fri, 25 Sep 2020 20:01:07 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULN KB VULN:2 Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/09/vuln-kb-vuln2-write-up/</link>
+            <pubDate>Fri, 25 Sep 2020 20:01:07 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/09/vuln-kb-vuln2-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan KB-VULN: 2 adlı makinanın çözümünden bahsedeceğim. Makina için KernelBlog ekibine teşekkür ederim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/kb-vuln-2,562/">VULNHUB</a> &lsquo;da yer alan KB-VULN: 2 adlı makinanın çözümünden bahsedeceğim. Makina için <a href="https://kernelblog.org">KernelBlog</a> ekibine teşekkür ederim. Keyifli okumalar&hellip;</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth0
+</code></pre></div>
+    <img src="/images/vulnhub/kb-vuln2/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Tarayıcı ile istek atıldığında Apache Web server varsayılan sayfası açılmaktadır. Web dizin taraması gerçekleştirilir.</p>
+<pre><code class="language-terminal" data-lang="terminal">gobuster dir -u http://192.168.56.108/ -w /usr/share/wordlists/dirb/big.txt
+</code></pre>
+    <img src="/images/vulnhub/kb-vuln2/gobuster.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><em><strong>/wordpress</strong></em> dizinine istek atıdığında anasayfanın düzgün görüntülenmediği tespit edilir. /etc/hosts dosyasına <code>192.168.56.108  kb.vuln</code> eklenir ve yenilenir. Sayfa kaynak kodları incelenir. Herhangi bir bilgiye rastlanmaz.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/webpage.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Daha sonra Wordpress CMS dizininde tarama gerçekleştirilir. Standart wordpress dosyaları dışında ilave bir bilgi görülmemektedir.</p>
+<pre><code class="language-terminal" data-lang="terminal">gobuster dir -u http://192.168.56.108/wordpress -w /usr/share/wordlists/dirb/big.txt
+</code></pre>
+    <img src="/images/vulnhub/kb-vuln2/gobuster2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Nmap taramasında tespit edilen 445 ve 139 numaralı portlarda çalışan samba uygulaması için (SMB Servisi) için <em><strong>smbclient</strong></em> adlı yazılım ile enumeration yapılır.</p>
+<pre><code class="language-terminal" data-lang="terminal">smbclient -L ///192.168.56.108
+# -L parametresi ağda paylaşılan dosyları listeler
+# Username '', Password '' (Anonim Erişim)
+</code></pre>
+    <img src="/images/vulnhub/kb-vuln2/smb1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Anonymous adlı klasöre şifresiz erişim sağlanabilmektedir. Ayrıca Linux makinalarda samba servisine <em><strong>enum4linux</strong></em> aracı ile tarama işlemi gerçekleştirilebilmektedir. Erişime açık olan klasöre bağlantı sağlanır. ls komutu ile dizin listelenir.</p>
+<pre><code class="language-terminal" data-lang="terminal">smbclient \\\\192.168.56.108\\Anonymous
+</code></pre>
+    <img src="/images/vulnhub/kb-vuln2/smb2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Bir yedek dosyasının şifresiz bir şekilde paylaşıma açıldığı görülmektedir. Dosya get komutu ile indirilir ve arşiv dosyası açılır. Dosya içerisinde çalışan wordpress uygulmasına ait dosyalar ve bir adet remember_me.txt dosya yer almaktadır.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/pass.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Admin kullanıcısına ait parola bilgisi görülmektedir. Wordpress admin paneline giriş yapılır. Daha sonra shell bağlantısı yapmak için tema dosyalarında düzenleme yapılır. Bu işlem için <em><strong>Appearance -&gt; Theme Editor</strong></em> sekmeleri tıklanır. Açılan sayfada tema secilir. Sağ sütunda php sayfaları yer almaktadır. Ben genelde 404.php dosyasında değişiklik yapmaktayım.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/shell.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<pre><code class="language-url" data-lang="url">http://kb.vuln/wordpress/wp-content/themes/twentynineteen/404.php
+</code></pre><p>Netcat ile 4444 numaralı port dinlenir. Yukarıda yer alan adrese istek atıldığında <strong>www-data</strong> kullanıcısı ile terminal bağlantısı sağlanmış olur.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">python <span style="color:#f92672">-</span>c <span style="color:#e6db74">&#39;import pty;pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
+</code></pre></div><p>Komutu ile interaktif shelle geçilir. Home dizinine gidilerek kullanıcılar listelenir.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/home.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>Kbadmin</strong> klasör yetkilerine dikkat edildiğinde tüm kullanıcılar tarafında okuma ve çalıştırma yetkisi verildiği görülmektedir. Dizin içerisine girilir.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/preflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>User.txt değeri okunarak ilk flag elde edilir.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/userflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Kbadmin dizininde yer alan note.txt dosyası okunur. Yetki yükseltilmesi ile ilgili docker kullanılması yönünde bir ipucu olabilir.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/note.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>İlk olarak wordpress admin panelinde elde edilen parola kbadmin kullanıcısı için denenir.  <code>su kbadmin</code> Başarılı bir şekilde kbadmin kullanıcısı ile oturum açılır. 🙈  <code>sudo -l</code> komutu ile kullanıcı yetkileri kontrol edilir.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/sudo.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Kbadmin kullanıcısına sudo işlemlerinde parola girmek şartıyla sınırsız yetki verildiği görülmektedir. <code>sudo su</code> komutu ile root kullanıcısına geçilir. /root dizinine geçilerek flag değeri okunur.</p>
+
+    <img src="/images/vulnhub/kb-vuln2/rootflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>VULN FunBox-1 Write Up</title>
