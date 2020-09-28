@@ -6,10 +6,22 @@
     <description>Recent content in sudo on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Fri, 25 Sep 2020 20:01:07 +0300</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2020 14:55:50 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/sudo/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULNHUB DC-2 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/09/vulnhub-dc-2-write-up/</link>
+      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/09/vulnhub-dc-2-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan DC-2 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile portlar ve portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.109  192.168.56.109 dc-2 /etc/hosts dosyasına eklenir.</description>
+    </item>
     
     <item>
       <title>VULN KB VULN:2 Write Up</title>

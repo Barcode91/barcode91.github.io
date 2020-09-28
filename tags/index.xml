@@ -6,10 +6,55 @@
     <description>Recent content in Tags on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Sat, 26 Sep 2020 15:05:32 +0300</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2020 14:55:50 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>sudo</title>
+      <link>https://barcode91.github.io/tags/sudo/</link>
+      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/sudo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sudoers</title>
+      <link>https://barcode91.github.io/tags/sudoers/</link>
+      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/sudoers/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vi</title>
+      <link>https://barcode91.github.io/tags/vi/</link>
+      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/vi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vulnhub</title>
+      <link>https://barcode91.github.io/tags/vulnhub/</link>
+      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>write-up</title>
+      <link>https://barcode91.github.io/tags/write-up/</link>
+      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/write-up/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>CMS</title>
@@ -48,56 +93,11 @@
     </item>
     
     <item>
-      <title>Vulnhub</title>
-      <link>https://barcode91.github.io/tags/vulnhub/</link>
-      <pubDate>Sat, 26 Sep 2020 15:05:32 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>write-up</title>
-      <link>https://barcode91.github.io/tags/write-up/</link>
-      <pubDate>Sat, 26 Sep 2020 15:05:32 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/write-up/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>samba</title>
       <link>https://barcode91.github.io/tags/samba/</link>
       <pubDate>Fri, 25 Sep 2020 20:01:07 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/samba/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>smb</title>
-      <link>https://barcode91.github.io/tags/smb/</link>
-      <pubDate>Fri, 25 Sep 2020 20:01:07 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/smb/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>smbclient</title>
-      <link>https://barcode91.github.io/tags/smbclient/</link>
-      <pubDate>Fri, 25 Sep 2020 20:01:07 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/smbclient/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sudo</title>
-      <link>https://barcode91.github.io/tags/sudo/</link>
-      <pubDate>Fri, 25 Sep 2020 20:01:07 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/sudo/</guid>
       <description></description>
     </item>
     
