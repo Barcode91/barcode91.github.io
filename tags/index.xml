@@ -6,10 +6,73 @@
     <description>Recent content in Tags on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Mon, 28 Sep 2020 14:55:50 +0300</lastBuildDate>
+    <lastBuildDate>Tue, 29 Sep 2020 13:06:24 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CVE-2016-4557</title>
+      <link>https://barcode91.github.io/tags/cve-2016-4557/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/cve-2016-4557/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CVE-2017-8917</title>
+      <link>https://barcode91.github.io/tags/cve-2017-8917/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/cve-2017-8917/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>joomla</title>
+      <link>https://barcode91.github.io/tags/joomla/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/joomla/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqlinjection</title>
+      <link>https://barcode91.github.io/tags/sqlinjection/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/sqlinjection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqlmap</title>
+      <link>https://barcode91.github.io/tags/sqlmap/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/sqlmap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vulnhub</title>
+      <link>https://barcode91.github.io/tags/vulnhub/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>write-up</title>
+      <link>https://barcode91.github.io/tags/write-up/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/write-up/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>sudo</title>
@@ -35,69 +98,6 @@
       <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/vi/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Vulnhub</title>
-      <link>https://barcode91.github.io/tags/vulnhub/</link>
-      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>write-up</title>
-      <link>https://barcode91.github.io/tags/write-up/</link>
-      <pubDate>Mon, 28 Sep 2020 14:55:50 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/write-up/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>CMS</title>
-      <link>https://barcode91.github.io/tags/cms/</link>
-      <pubDate>Sat, 26 Sep 2020 15:05:32 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/cms/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>drupal</title>
-      <link>https://barcode91.github.io/tags/drupal/</link>
-      <pubDate>Sat, 26 Sep 2020 15:05:32 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/drupal/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>find</title>
-      <link>https://barcode91.github.io/tags/find/</link>
-      <pubDate>Sat, 26 Sep 2020 15:05:32 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/find/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Metasploit</title>
-      <link>https://barcode91.github.io/tags/metasploit/</link>
-      <pubDate>Sat, 26 Sep 2020 15:05:32 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/metasploit/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>samba</title>
-      <link>https://barcode91.github.io/tags/samba/</link>
-      <pubDate>Fri, 25 Sep 2020 20:01:07 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/samba/</guid>
       <description></description>
     </item>
     

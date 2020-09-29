@@ -6,10 +6,22 @@
     <description>Recent content on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Mon, 28 Sep 2020 14:55:50 +0300</lastBuildDate>
+    <lastBuildDate>Tue, 29 Sep 2020 13:06:24 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULNHUB DC-3 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/09/vulnhub-dc-3-write-up/</link>
+      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/09/vulnhub-dc-3-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan DC-3 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.111  80 portunda çalışan web servisine tarayıcından istek atılır.</description>
+    </item>
     
     <item>
       <title>VULNHUB DC-2 Write Up</title>
@@ -109,17 +121,6 @@ Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanıl
 Tmux bir terminal çoklayıcıdır. Bir terminal ekranında birden fazla pencere ve bu pencere içerisinde biden fazla bölme oluşturulabilmektedir. Terminal üzerinde çalışanlar için oldukça bir araçtır.
 Kurulum #Debian, Ubuntu ve Türevleri için Kurulum Komutları $ sudo apt-get install tmux #Centos Kurulum Komutları $ yum -y install tmux Çalıştırma ve Kullanım #Tmux çalıştırılması $tmux Tmux çeşitli tuş kombinasyonları ile kullanılmaktadır. Komutlar prefix key tuşuna basıldıktan sonra girilmektedir.
 Prefix Key =&amp;gt; Crtl+B Tuşlara aynı anda basılır ve bırakılır daha sonra diğer tuşlara basılır.</description>
-    </item>
-    
-    <item>
-      <title>$touch First</title>
-      <link>https://barcode91.github.io/posts/2020/08/touch-first/</link>
-      <pubDate>Mon, 24 Aug 2020 19:41:25 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/posts/2020/08/touch-first/</guid>
-      <description>Kısa bir giriş Bilginin paylaştıkça çoğaldığına inanırım. Ayrıca Yunus Emre&amp;rsquo;nin güzel sözünüde hatırlamak gerekir; &amp;ldquo;Bölüşürsek tok oluruz, bölünürsek yok oluruz&amp;rdquo;. Hal böyle iken edindiğim bilgileri siz değerli insalarla paylaşmayı kendime bir vazife belledim.
-Blogumda siber güvenlik, network, bulut bilişim teknolojilerine dair bilgiler paylaşacağım.
- Siber güvenlik alanında hackthebox, tryhackme, priviahub vb. platformlarda yer alan zafiyetli makinalar ile challenge çözümleri Network alanında router, switch yapılandırmaları, network trafiğinin monitör edilmesi için kullanılan araçlar ve kurulumları gibi konular Bulut Bilişim alanında ise docker, kubernets, openvswitch vb.</description>
     </item>
     
   </channel>

