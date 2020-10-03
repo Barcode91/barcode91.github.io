@@ -6,10 +6,22 @@
     <description>Recent content on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Tue, 29 Sep 2020 13:06:24 +0300</lastBuildDate>
+    <lastBuildDate>Sat, 03 Oct 2020 13:30:54 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULNHUB DC-4 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/10/vulnhub-dc-4-write-up/</link>
+      <pubDate>Sat, 03 Oct 2020 13:30:54 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/vulnhub-dc-4-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan DC-4 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.113  80 portunda çalışan web servisine tarayıcından istek atılır.</description>
+    </item>
     
     <item>
       <title>VULNHUB DC-3 Write Up</title>
@@ -109,18 +121,6 @@ sudo nmap -sV -sC 10.10.190.58   cmess.thm  alan adı  /etc/hosts  dosyasına dn
       <description>Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
 sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
 Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.</description>
-    </item>
-    
-    <item>
-      <title>$Tmux Notları</title>
-      <link>https://barcode91.github.io/posts/2020/08/tmux-notlar%C4%B1/</link>
-      <pubDate>Mon, 31 Aug 2020 22:53:43 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/posts/2020/08/tmux-notlar%C4%B1/</guid>
-      <description>Tmux -&amp;gt; Terminal Multiplexer
-Tmux bir terminal çoklayıcıdır. Bir terminal ekranında birden fazla pencere ve bu pencere içerisinde biden fazla bölme oluşturulabilmektedir. Terminal üzerinde çalışanlar için oldukça bir araçtır.
-Kurulum #Debian, Ubuntu ve Türevleri için Kurulum Komutları $ sudo apt-get install tmux #Centos Kurulum Komutları $ yum -y install tmux Çalıştırma ve Kullanım #Tmux çalıştırılması $tmux Tmux çeşitli tuş kombinasyonları ile kullanılmaktadır. Komutlar prefix key tuşuna basıldıktan sonra girilmektedir.
-Prefix Key =&amp;gt; Crtl+B Tuşlara aynı anda basılır ve bırakılır daha sonra diğer tuşlara basılır.</description>
     </item>
     
   </channel>

