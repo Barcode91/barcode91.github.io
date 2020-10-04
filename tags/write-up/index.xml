@@ -6,10 +6,22 @@
     <description>Recent content in write-up on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Sat, 03 Oct 2020 13:30:54 +0300</lastBuildDate>
+    <lastBuildDate>Sun, 04 Oct 2020 18:13:49 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/write-up/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULNHUB Symfonos-1 Write up</title>
+      <link>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-1-write-up/</link>
+      <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-1-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan Symfonos-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+İlk olarak tasarımcı tarafından belirtilen alan adı /etc/hosts dosyasına ip adresi symfonos.local şeklinde eklenir.
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Her zaman olduğu gibi nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</description>
+    </item>
     
     <item>
       <title>VULNHUB DC-4 Write Up</title>
@@ -110,17 +122,6 @@ Tarayıcı ile web servisine istek atılır.</description>
       <guid>https://barcode91.github.io/posts/2020/09/thm-cmess-write-up/</guid>
       <description>Merhaba, bu yazımda TryHackMe platformunda yer alan, orta seviye zorlukta olan CMess adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
 sudo nmap -sV -sC 10.10.190.58   cmess.thm  alan adı  /etc/hosts  dosyasına dns çözümlemesi için eklenmesi, makina tasarımcı tarafından istenmektedir.  sudo nano /etc/hosts -------------------- ##Ekleme 10.</description>
-    </item>
-    
-    <item>
-      <title>THM Tartarus Write Up</title>
-      <link>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</link>
-      <pubDate>Sat, 12 Sep 2020 20:53:26 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/posts/2020/09/thm-tartarus-write-up/</guid>
-      <description>Merhaba, Siber güvenliğe yeni başlayanların ofansif yeteneklerini geliştirebileceği TryHackMe platformunda yer alan, başlangıç seviyesi olan Tartarus adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
-sudo nmap -sV -sC 10.10.236.165  Tarayıcı ile web servisine istek atılır. Apache yazılımına ait varsayılan web sayfası açılmaktadır.
-Web dizininde yer alan dosyalar ve klasörlerin tespiti için gobuster kullanılır.</description>
     </item>
     
   </channel>

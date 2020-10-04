@@ -6,10 +6,64 @@
     <description>Recent content in Tags on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Sat, 03 Oct 2020 13:30:54 +0300</lastBuildDate>
+    <lastBuildDate>Sun, 04 Oct 2020 18:13:49 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>curl</title>
+      <link>https://barcode91.github.io/tags/curl/</link>
+      <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/curl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CVE:2018-7422</title>
+      <link>https://barcode91.github.io/tags/cve2018-7422/</link>
+      <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/cve2018-7422/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lfi</title>
+      <link>https://barcode91.github.io/tags/lfi/</link>
+      <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/lfi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>smtp</title>
+      <link>https://barcode91.github.io/tags/smtp/</link>
+      <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/smtp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vulnhub</title>
+      <link>https://barcode91.github.io/tags/vulnhub/</link>
+      <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>write-up</title>
+      <link>https://barcode91.github.io/tags/write-up/</link>
+      <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/write-up/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>brute force</title>
@@ -44,60 +98,6 @@
       <pubDate>Sat, 03 Oct 2020 13:30:54 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/tee/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Vulnhub</title>
-      <link>https://barcode91.github.io/tags/vulnhub/</link>
-      <pubDate>Sat, 03 Oct 2020 13:30:54 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>write-up</title>
-      <link>https://barcode91.github.io/tags/write-up/</link>
-      <pubDate>Sat, 03 Oct 2020 13:30:54 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/write-up/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>CVE-2016-4557</title>
-      <link>https://barcode91.github.io/tags/cve-2016-4557/</link>
-      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/cve-2016-4557/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>CVE-2017-8917</title>
-      <link>https://barcode91.github.io/tags/cve-2017-8917/</link>
-      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/cve-2017-8917/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>joomla</title>
-      <link>https://barcode91.github.io/tags/joomla/</link>
-      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/joomla/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sqlinjection</title>
-      <link>https://barcode91.github.io/tags/sqlinjection/</link>
-      <pubDate>Tue, 29 Sep 2020 13:06:24 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/sqlinjection/</guid>
       <description></description>
     </item>
     

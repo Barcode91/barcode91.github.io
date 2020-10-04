@@ -3,13 +3,8 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://barcode91.github.io/tags/brute-force/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://barcode91.github.io/categories/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -23,8 +18,18 @@
   </url>
   
   <url>
+    <loc>https://barcode91.github.io/tags/curl/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/cve2018-7422/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://barcode91.github.io/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -38,23 +43,23 @@
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/tags/hydra/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+    <loc>https://barcode91.github.io/tags/lfi/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/posts/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/tags/ssh/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+    <loc>https://barcode91.github.io/tags/smtp/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/tags/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -68,27 +73,47 @@
   </url>
   
   <url>
+    <loc>https://barcode91.github.io/tags/vulnhub/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-1-write-up/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/write-up/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/categories/write-up/</loc>
+    <lastmod>2020-10-05T00:00:46+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/brute-force/</loc>
+    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/hydra/</loc>
+    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/ssh/</loc>
+    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://barcode91.github.io/tags/tee/</loc>
     <lastmod>2020-10-03T15:27:07+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/tags/vulnhub/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://barcode91.github.io/posts/2020/10/vulnhub-dc-4-write-up/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://barcode91.github.io/tags/write-up/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://barcode91.github.io/categories/write-up/</loc>
     <lastmod>2020-10-03T15:27:07+03:00</lastmod>
   </url>
   
@@ -214,11 +239,6 @@
   
   <url>
     <loc>https://barcode91.github.io/tags/docker/</loc>
-    <lastmod>2020-09-22T11:18:53+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://barcode91.github.io/tags/lfi/</loc>
     <lastmod>2020-09-22T11:18:53+03:00</lastmod>
   </url>
   
