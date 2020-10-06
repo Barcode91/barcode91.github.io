@@ -6,10 +6,21 @@
     <description>Recent content in Vulnhub on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Sun, 04 Oct 2020 18:13:49 +0300</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2020 11:25:38 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/vulnhub/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULNHUB Symfonos-2 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-2-write-up/</link>
+      <pubDate>Tue, 06 Oct 2020 11:25:38 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-2-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan Symfonos serisinin OSCP tadında olan 2. makinasının çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Her zaman olduğu gibi nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</description>
+    </item>
     
     <item>
       <title>VULNHUB Symfonos-1 Write up</title>

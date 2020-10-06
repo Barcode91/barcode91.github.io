@@ -6,10 +6,21 @@
     <description>Recent content on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Sun, 04 Oct 2020 18:13:49 +0300</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2020 11:25:38 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>VULNHUB Symfonos-2 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-2-write-up/</link>
+      <pubDate>Tue, 06 Oct 2020 11:25:38 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-2-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan Symfonos serisinin OSCP tadında olan 2. makinasının çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Her zaman olduğu gibi nmap ile tüm portlar ve açık olan portlarda çalışan servisler tespit edilir.</description>
+    </item>
     
     <item>
       <title>VULNHUB Symfonos-1 Write up</title>
@@ -112,16 +123,6 @@ Tarayıcı ile web servisine istek atılır.</description>
       <guid>https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/</guid>
       <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
 1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</description>
-    </item>
-    
-    <item>
-      <title>THM CMess Write Up</title>
-      <link>https://barcode91.github.io/posts/2020/09/thm-cmess-write-up/</link>
-      <pubDate>Tue, 15 Sep 2020 20:03:12 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/posts/2020/09/thm-cmess-write-up/</guid>
-      <description>Merhaba, bu yazımda TryHackMe platformunda yer alan, orta seviye zorlukta olan CMess adlı makinanın çözümünden bahsedeğim. Hatalı yada ilave açıklama gerektiren yerler için yorum bırakabilirsiniz. Keyifli okumalar...  1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
-sudo nmap -sV -sC 10.10.190.58   cmess.thm  alan adı  /etc/hosts  dosyasına dns çözümlemesi için eklenmesi, makina tasarımcı tarafından istenmektedir.  sudo nano /etc/hosts -------------------- ##Ekleme 10.</description>
     </item>
     
   </channel>
