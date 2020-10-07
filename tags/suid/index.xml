@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>suid on Cyber Security Blog</title>
+    <link>https://barcode91.github.io/tags/suid/</link>
+    <description>Recent content in suid on Cyber Security Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>tr</language>
+    <lastBuildDate>Wed, 07 Oct 2020 11:49:09 +0300</lastBuildDate>
+    
+	<atom:link href="https://barcode91.github.io/tags/suid/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>THM Blog Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/10/thm-blog-write-up/</link>
+      <pubDate>Wed, 07 Oct 2020 11:49:09 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/thm-blog-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki Blog adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+İlk olarak tasarımcı tarafından belirtilen domain adı /etc/hosts dosyasına eklenir.
+1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.25.92  Samba servisinde anonymous olarak paylaşıma açık olan dizinler kontrol edilir.
+─[barcode@parrot]─[~]$ smbclient -L //10.10.25.92 Enter WORKGROUP\barcode&amp;#39;s password: Sharename Type Comment --------- ---- ------- print$ Disk Printer Drivers BillySMB Disk Billy&amp;#39;s local SMB Share IPC$ IPC IPC Service (blog server (Samba, Ubuntu)) SMB1 disabled -- no workgroup available BillySMB klasörü içeriğine bakılır.</description>
+    </item>
+    
+  </channel>
+</rss>

