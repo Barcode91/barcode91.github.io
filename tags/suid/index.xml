@@ -6,10 +6,23 @@
     <description>Recent content in suid on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Wed, 07 Oct 2020 11:49:09 +0300</lastBuildDate>
+    <lastBuildDate>Thu, 08 Oct 2020 12:39:20 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/suid/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>THM Wonderland Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/10/thm-wonderland-write-up/</link>
+      <pubDate>Thu, 08 Oct 2020 12:39:20 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/thm-wonderland-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki Wonderland adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.248.80  Sistemde sadece 2 port açıktır. Web sayfasına giriş yapılır.
+Gobuster aracı ile dizin taraması yapılır. 3 adet dizin tespit edilir.
+gobuster dir -u http://10.10.248.80/ -w /usr/share/wordlists/dirb/big.txt  /img dizine girilir. Dizindeki tüm resim dosyaları indirilir.</description>
+    </item>
     
     <item>
       <title>THM Blog Write Up</title>
