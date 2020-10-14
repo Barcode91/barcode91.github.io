@@ -6,10 +6,23 @@
     <description>Recent content on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Thu, 08 Oct 2020 12:39:20 +0300</lastBuildDate>
+    <lastBuildDate>Wed, 14 Oct 2020 21:45:22 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>THM Dogcat Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/10/thm-dogcat-write-up/</link>
+      <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/thm-dogcat-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki DogCat adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.35.38  Sistemde sadece 2 port açıktır. Web sayfasına giriş yapılır. Anasayfada yer alan dog ve cat butonlarına tıklanarak adres çubuğuna dikkatle bakılır.
+ LFI zafiyeti kontrolü için /etc/passwd dosyası okunmaya çalışılır.
+Dog ve cat dışındaki dosyalar filtreye takılımaktadır.</description>
+    </item>
     
     <item>
       <title>THM Wonderland Write Up</title>
@@ -117,17 +130,6 @@ sudo nmap -sV -sC -p- 192.168.56.107  80 portunda çalışan web servisine taray
       <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan KB-VULN: 2 adlı makinanın çözümünden bahsedeceğim. Makina için KernelBlog ekibine teşekkür ederim. Keyifli okumalar&amp;hellip;
 1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
 netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</description>
-    </item>
-    
-    <item>
-      <title>VULN FunBox-1 Write Up</title>
-      <link>https://barcode91.github.io/posts/2020/09/vuln-funbox-1-write-up/</link>
-      <pubDate>Tue, 22 Sep 2020 20:59:33 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/posts/2020/09/vuln-funbox-1-write-up/</guid>
-      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan FunBox-1 adlı makinanın çözümünden bahsedeceğim. Ben çözerken keyif aldım umarım sizde okurken keyif alırsınız&amp;hellip; 😊
-1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
-netdiscover -i eth1  İp adresi tespit edildikten sonra nmap ile makinenin tüm portları taranır. Açık portlarda çalışan servisler tespit edilir.</description>
     </item>
     
   </channel>
