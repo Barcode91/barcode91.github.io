@@ -12,15 +12,6 @@
     
     
     <item>
-      <title>cron</title>
-      <link>https://barcode91.github.io/tags/cron/</link>
-      <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/cron/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>docker</title>
       <link>https://barcode91.github.io/tags/docker/</link>
       <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
@@ -30,20 +21,38 @@
     </item>
     
     <item>
-      <title>ftp</title>
-      <link>https://barcode91.github.io/tags/ftp/</link>
-      <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/ftp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Lfi</title>
       <link>https://barcode91.github.io/tags/lfi/</link>
       <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/lfi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Php-filter</title>
+      <link>https://barcode91.github.io/tags/php-filter/</link>
+      <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/php-filter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rce</title>
+      <link>https://barcode91.github.io/tags/rce/</link>
+      <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/rce/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sudo</title>
+      <link>https://barcode91.github.io/tags/sudo/</link>
+      <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/sudo/</guid>
       <description></description>
     </item>
     
@@ -89,15 +98,6 @@
       <pubDate>Thu, 08 Oct 2020 12:39:20 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/library-hijacking/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>steghide</title>
-      <link>https://barcode91.github.io/tags/steghide/</link>
-      <pubDate>Thu, 08 Oct 2020 12:39:20 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/steghide/</guid>
       <description></description>
     </item>
     

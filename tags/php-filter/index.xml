@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Php-filter on Cyber Security Blog</title>
+    <link>https://barcode91.github.io/tags/php-filter/</link>
+    <description>Recent content in Php-filter on Cyber Security Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>tr</language>
+    <lastBuildDate>Wed, 14 Oct 2020 21:45:22 +0300</lastBuildDate>
+    
+	<atom:link href="https://barcode91.github.io/tags/php-filter/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>THM Dogcat Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/10/thm-dogcat-write-up/</link>
+      <pubDate>Wed, 14 Oct 2020 21:45:22 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/10/thm-dogcat-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki DogCat adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
+sudo nmap -sV -sC 10.10.35.38  Sistemde sadece 2 port açıktır. Web sayfasına giriş yapılır. Anasayfada yer alan dog ve cat butonlarına tıklanarak adres çubuğuna dikkatle bakılır.
+ LFI zafiyeti kontrolü için /etc/passwd dosyası okunmaya çalışılır.
+Dog ve cat dışındaki dosyalar filtreye takılımaktadır.</description>
+    </item>
+    
+  </channel>
+</rss>
