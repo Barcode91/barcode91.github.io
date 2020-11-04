@@ -3,8 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://barcode91.github.io/tags/banner/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://barcode91.github.io/categories/</loc>
-    <lastmod>2020-10-14T23:49:33+03:00</lastmod>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -19,7 +24,7 @@
   
   <url>
     <loc>https://barcode91.github.io/</loc>
-    <lastmod>2020-10-14T23:49:33+03:00</lastmod>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="tr"
@@ -30,6 +35,66 @@
                 hreflang="en"
                 href="https://barcode91.github.io/"
                 />
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/getcap/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/irb/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/posts/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/ssh/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="tr"
+                href="https://barcode91.github.io/tr/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://barcode91.github.io/tags/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/tar/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/posts/2020/11/thm-the-server-from-hell-write-up/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/vulnhub/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/tags/write-up/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://barcode91.github.io/categories/write-up/</loc>
+    <lastmod>2020-11-04T23:28:57+03:00</lastmod>
   </url>
   
   <url>
@@ -48,11 +113,6 @@
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/posts/</loc>
-    <lastmod>2020-10-14T23:49:33+03:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://barcode91.github.io/tags/rce/</loc>
     <lastmod>2020-10-14T23:49:33+03:00</lastmod>
   </url>
@@ -63,37 +123,12 @@
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/tags/</loc>
-    <lastmod>2020-10-14T23:49:33+03:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="tr"
-                href="https://barcode91.github.io/tr/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://barcode91.github.io/tags/"
-                />
-  </url>
-  
-  <url>
     <loc>https://barcode91.github.io/posts/2020/10/thm-dogcat-write-up/</loc>
     <lastmod>2020-10-14T23:49:33+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://barcode91.github.io/tags/tryhackme/</loc>
-    <lastmod>2020-10-14T23:49:33+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://barcode91.github.io/tags/write-up/</loc>
-    <lastmod>2020-10-14T23:49:33+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://barcode91.github.io/categories/write-up/</loc>
     <lastmod>2020-10-14T23:49:33+03:00</lastmod>
   </url>
   
@@ -183,11 +218,6 @@
   </url>
   
   <url>
-    <loc>https://barcode91.github.io/tags/vulnhub/</loc>
-    <lastmod>2020-10-06T15:23:39+03:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://barcode91.github.io/posts/2020/10/vulnhub-symfonos-2-write-up/</loc>
     <lastmod>2020-10-06T15:23:39+03:00</lastmod>
   </url>
@@ -219,11 +249,6 @@
   
   <url>
     <loc>https://barcode91.github.io/tags/hydra/</loc>
-    <lastmod>2020-10-03T15:27:07+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://barcode91.github.io/tags/ssh/</loc>
     <lastmod>2020-10-03T15:27:07+03:00</lastmod>
   </url>
   
@@ -359,11 +384,6 @@
   
   <url>
     <loc>https://barcode91.github.io/tags/gobuster/</loc>
-    <lastmod>2020-09-16T12:04:56+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://barcode91.github.io/tags/tar/</loc>
     <lastmod>2020-09-16T12:04:56+03:00</lastmod>
   </url>
   

@@ -6,10 +6,21 @@
     <description>Recent content in Vulnhub on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Tue, 06 Oct 2020 11:25:38 +0300</lastBuildDate>
+    <lastBuildDate>Wed, 04 Nov 2020 21:49:09 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/vulnhub/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>THM The Server From Hell Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/11/thm-the-server-from-hell-write-up/</link>
+      <pubDate>Wed, 04 Nov 2020 21:49:09 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/11/thm-the-server-from-hell-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere Tryhackme&amp;rsquo;de yer alan orta seviye zorluktaki The Server From Hell adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Nmap ile port taraması yapıldığında tüm portların açık olduğu görülmektedir.😥 Makina tasarımcısı tarafından keşif işlemine 1337 numaralı port ile başlamamız söylenmektedir. Telnet ile porta bağlantı sağlanır.
+telnet 10.10.225.52 1337  Bağlantı ile ilgili ipucunun ilk 100 portta yer aldığı ve tespit için bannerların yazdırılarak bulunabileceği belirtilmiştir. (Bir şu trollface meselesi var.</description>
+    </item>
     
     <item>
       <title>VULNHUB Symfonos-2 Write Up</title>
@@ -113,16 +124,6 @@ netdiscover -i eth1  İp adresi tespit edildikten sonra nmap ile makinenin tüm 
       <description>&amp;ldquo;Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye DevContainer-1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;&amp;rdquo;
 1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth1  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.
 Tarayıcı ile web servisine istek atılır.</description>
-    </item>
-    
-    <item>
-      <title>VULNHUB KB VULN:1 Makinası Write Up</title>
-      <link>https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/</link>
-      <pubDate>Thu, 17 Sep 2020 20:40:54 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/posts/2020/09/vulnhub-kb-vuln1-makinas%C4%B1-write-up/</guid>
-      <description>Merhaba, Bu yazımda sizlere VULNHUB &amp;lsquo;da yer alan medium seviye KB-VULN: 1 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
-1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.  netdiscover -i eth0  Ip adresi tespit edildikten sonra nmap ile makinenin açık portları ve portlarda çalışan servisleri tespit edilir.</description>
     </item>
     
   </channel>
