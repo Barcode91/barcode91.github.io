@@ -6,7 +6,7 @@
     <description>Recent content in Tags on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Sun, 08 Nov 2020 14:58:36 +0300</lastBuildDate>
+    <lastBuildDate>Tue, 10 Nov 2020 20:17:56 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,54 @@
     <item>
       <title>CVE-2014-6278</title>
       <link>https://barcode91.github.io/tags/cve-2014-6278/</link>
-      <pubDate>Sun, 08 Nov 2020 14:58:36 +0300</pubDate>
+      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/cve-2014-6278/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Library Hijacking</title>
+      <link>https://barcode91.github.io/tags/library-hijacking/</link>
+      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/library-hijacking/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shellshock</title>
+      <link>https://barcode91.github.io/tags/shellshock/</link>
+      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/shellshock/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tcpdump</title>
+      <link>https://barcode91.github.io/tags/tcpdump/</link>
+      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/tcpdump/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vulnhub</title>
+      <link>https://barcode91.github.io/tags/vulnhub/</link>
+      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>write-up</title>
+      <link>https://barcode91.github.io/tags/write-up/</link>
+      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/write-up/</guid>
       <description></description>
     </item>
     
@@ -39,15 +84,6 @@
     </item>
     
     <item>
-      <title>shellshock</title>
-      <link>https://barcode91.github.io/tags/shellshock/</link>
-      <pubDate>Sun, 08 Nov 2020 14:58:36 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/shellshock/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Tryhackme</title>
       <link>https://barcode91.github.io/tags/tryhackme/</link>
       <pubDate>Sun, 08 Nov 2020 14:58:36 +0300</pubDate>
@@ -57,47 +93,11 @@
     </item>
     
     <item>
-      <title>write-up</title>
-      <link>https://barcode91.github.io/tags/write-up/</link>
-      <pubDate>Sun, 08 Nov 2020 14:58:36 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/write-up/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>banner</title>
       <link>https://barcode91.github.io/tags/banner/</link>
       <pubDate>Wed, 04 Nov 2020 21:49:09 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/banner/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>getcap</title>
-      <link>https://barcode91.github.io/tags/getcap/</link>
-      <pubDate>Wed, 04 Nov 2020 21:49:09 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/getcap/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>irb</title>
-      <link>https://barcode91.github.io/tags/irb/</link>
-      <pubDate>Wed, 04 Nov 2020 21:49:09 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/irb/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ssh</title>
-      <link>https://barcode91.github.io/tags/ssh/</link>
-      <pubDate>Wed, 04 Nov 2020 21:49:09 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/ssh/</guid>
       <description></description>
     </item>
     
