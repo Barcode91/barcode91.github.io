@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>socat on Cyber Security Blog</title>
+    <link>https://barcode91.github.io/tags/socat/</link>
+    <description>Recent content in socat on Cyber Security Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>tr</language>
+    <lastBuildDate>Sun, 22 Nov 2020 20:45:07 +0300</lastBuildDate>
+    
+	<atom:link href="https://barcode91.github.io/tags/socat/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>VULNHUB Symfonos-4 Write Up</title>
+      <link>https://barcode91.github.io/posts/2020/11/vulnhub-symfonos-4-write-up/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/posts/2020/11/vulnhub-symfonos-4-write-up/</guid>
+      <description>Merhaba, Bu yazımda sizlere Vulnhub &amp;lsquo;da yer alan Symfonos-4 adlı makinanın çözümünden bahsedeceğim. Keyifli okumalar&amp;hellip;
+1. Keşif Aşaması Makina kalıp dosyası siteden indirildikten sonra sanallaştırma yazılımları tarafından import edilir ve çalıştırılır. DHCP servisi tarafından atanan ip adresinin tespit edilmesi için netdiscover aracı ile ağda tarama yapılır.
+netdiscover -i eth1  Nmap ile port ve servis taraması yapılır.
+sudo nmap -sV -sC -p- 192.168.56.123  80 portunda çalışan web servisi ile keşif aşamasına devam edilir.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -6,10 +6,82 @@
     <description>Recent content in Tags on Cyber Security Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>tr</language>
-    <lastBuildDate>Tue, 10 Nov 2020 20:17:56 +0300</lastBuildDate>
+    <lastBuildDate>Sun, 22 Nov 2020 20:45:07 +0300</lastBuildDate>
     
 	<atom:link href="https://barcode91.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Insecure Deserialization</title>
+      <link>https://barcode91.github.io/tags/insecure-deserialization/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/insecure-deserialization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>jsonpickle</title>
+      <link>https://barcode91.github.io/tags/jsonpickle/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/jsonpickle/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Lfi</title>
+      <link>https://barcode91.github.io/tags/lfi/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/lfi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Port Forwarding</title>
+      <link>https://barcode91.github.io/tags/port-forwarding/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/port-forwarding/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>socat</title>
+      <link>https://barcode91.github.io/tags/socat/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/socat/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqlinjection</title>
+      <link>https://barcode91.github.io/tags/sqlinjection/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/sqlinjection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vulnhub</title>
+      <link>https://barcode91.github.io/tags/vulnhub/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>write-up</title>
+      <link>https://barcode91.github.io/tags/write-up/</link>
+      <pubDate>Sun, 22 Nov 2020 20:45:07 +0300</pubDate>
+      
+      <guid>https://barcode91.github.io/tags/write-up/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>CVE-2014-6278</title>
@@ -26,78 +98,6 @@
       <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
       
       <guid>https://barcode91.github.io/tags/library-hijacking/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>shellshock</title>
-      <link>https://barcode91.github.io/tags/shellshock/</link>
-      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/shellshock/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tcpdump</title>
-      <link>https://barcode91.github.io/tags/tcpdump/</link>
-      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/tcpdump/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Vulnhub</title>
-      <link>https://barcode91.github.io/tags/vulnhub/</link>
-      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/vulnhub/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>write-up</title>
-      <link>https://barcode91.github.io/tags/write-up/</link>
-      <pubDate>Tue, 10 Nov 2020 20:17:56 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/write-up/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>CVE-2016-5195</title>
-      <link>https://barcode91.github.io/tags/cve-2016-5195/</link>
-      <pubDate>Sun, 08 Nov 2020 14:58:36 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/cve-2016-5195/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>dirtyCow</title>
-      <link>https://barcode91.github.io/tags/dirtycow/</link>
-      <pubDate>Sun, 08 Nov 2020 14:58:36 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/dirtycow/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tryhackme</title>
-      <link>https://barcode91.github.io/tags/tryhackme/</link>
-      <pubDate>Sun, 08 Nov 2020 14:58:36 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/tryhackme/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>banner</title>
-      <link>https://barcode91.github.io/tags/banner/</link>
-      <pubDate>Wed, 04 Nov 2020 21:49:09 +0300</pubDate>
-      
-      <guid>https://barcode91.github.io/tags/banner/</guid>
       <description></description>
     </item>
     
